@@ -1,6 +1,8 @@
-// Builds /blog from content/posts/*.md: one folder per post, a blog index,
-// feed.xml and sitemap.xml. Run `npm run build:blog` before deploying.
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
+// Builds the deployable site into dist/: index.html plus /blog from
+// content/posts/*.md (one folder per post, a blog index), feed.xml, sitemap.xml
+// and robots.txt. `npm run deploy` runs this and uploads dist/ (functions/ is
+// picked up from the repo root by wrangler).
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
@@ -8,6 +10,10 @@ import { marked } from "marked";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
 const POSTS_DIR = join(root, "content/posts");
+const OUT = join(root, "dist");
+rmSync(OUT, { recursive: true, force: true });
+mkdirSync(OUT, { recursive: true });
+copyFileSync(join(root, "index.html"), join(OUT, "index.html"));
 
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -119,7 +125,7 @@ const posts = readdirSync(POSTS_DIR)
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 
 for (const p of posts) {
-  const dir = join(root, "blog", p.slug);
+  const dir = join(OUT, "blog", p.slug);
   mkdirSync(dir, { recursive: true });
   const jsonld = {
     "@context": "https://schema.org",
@@ -147,14 +153,14 @@ ${(p.tags ?? []).map((t) => `<meta property="article:tag" content="${esc(t)}">`)
 }
 
 // Blog index
-mkdirSync(join(root, "blog"), { recursive: true });
+mkdirSync(join(OUT, "blog"), { recursive: true });
 const list = posts
   .map(
     (p) => `<li><a class="t" href="/blog/${p.slug}/">${esc(p.title)}</a><p class="meta" style="margin:6px 0 0"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p><p>${esc(p.description)}</p></li>`,
   )
   .join("\n");
 writeFileSync(
-  join(root, "blog/index.html"),
+  join(OUT, "blog/index.html"),
   page({
     title: "Blog — Agentwright",
     description: "Practical notes on building Claude-powered SaaS: metering, billing, agent loops, MCP and evals. From the team behind Agentwright Starter.",
@@ -188,7 +194,7 @@ ${posts
 </channel>
 </rss>
 `;
-writeFileSync(join(root, "feed.xml"), rss);
+writeFileSync(join(OUT, "feed.xml"), rss);
 
 // Sitemap
 const urls = [
@@ -197,13 +203,13 @@ const urls = [
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
 writeFileSync(
-  join(root, "sitemap.xml"),
+  join(OUT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `<url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.priority}</priority></url>`).join("\n")}
 </urlset>
 `,
 );
-writeFileSync(join(root, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 
-console.log(`Built ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}`);
+console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}`);

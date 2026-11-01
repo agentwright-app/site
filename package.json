@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc -p functions/tsconfig.json",
-    "dev": "wrangler pages dev . --kv WAITLIST",
-    "deploy": "npm run build:blog && wrangler pages deploy . --project-name agentwright --branch main --commit-dirty=true",
+    "dev": "npm run build:blog && wrangler pages dev dist --kv WAITLIST",
+    "deploy": "npm run build:blog && wrangler pages deploy dist --project-name agentwright --branch main --commit-dirty=true",
     "build:blog": "node scripts/build-blog.mjs"
   },
   "devDependencies": {
