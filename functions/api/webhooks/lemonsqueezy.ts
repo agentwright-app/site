@@ -1,20 +1,42 @@
 /**
- * POST /api/webhooks/lemonsqueezy — stable webhook address for the Lemon Squeezy store.
+ * POST /api/webhooks/lemonsqueezy — Lemon Squeezy webhook receiver (webhook id 148198).
  *
- * The store's webhook points at https://agentwright.app/api/webhooks/lemonsqueezy so the
- * address never changes when the license app moves hosts. This Pages Function forwards the
- * untouched body and the `X-Signature` / `X-Event-Name` headers to the license app
- * (the `starter` repo's app/api/webhooks/lemonsqueezy route), which verifies the HMAC
- * against LEMONSQUEEZY_WEBHOOK_SECRET and issues the license.
+ * Verifies the `X-Signature` HMAC against LEMONSQUEEZY_WEBHOOK_SECRET, then:
+ *   order_created  (Starter variant) → issue a license key, store it in KV `LICENSES`,
+ *                                      and attach a signed download link
+ *   order_refunded                   → mark that order's license as revoked
+ *   anything else                    → acknowledged and ignored
  *
- * Config: Pages project → Settings → Environment variables →
- *   LS_WEBHOOK_UPSTREAM = https://<license-app-host>/api/webhooks/lemonsqueezy
- * Until it is set the function answers 503 so Lemon Squeezy records the delivery as failed
- * and the event can be resent from Settings → Webhooks once the app is live.
+ * Email delivery is not wired yet: each record carries `emailSent: false` so a later
+ * job can send the key. Keys are readable via the KV REST API (`license:` prefix).
+ *
+ * Config (Pages project → Settings → Bindings / Variables and Secrets):
+ *   KV LICENSES, secret LEMONSQUEEZY_WEBHOOK_SECRET, var LICENSE_VARIANT_ID.
  */
+import {
+  type LicenseEnv,
+  type LicenseRecord,
+  generateLicenseKey,
+  getLicense,
+  saveLicense,
+  signDownloadToken,
+  verifyLemonSqueezySignature,
+} from "../../../lib/license";
 
-interface Env {
-  LS_WEBHOOK_UPSTREAM?: string;
+interface WebhookPayload {
+  meta?: { event_name?: string; custom_data?: Record<string, unknown> };
+  data?: {
+    id?: string;
+    attributes?: {
+      status?: string;
+      identifier?: string;
+      order_number?: number | string;
+      user_email?: string;
+      user_name?: string | null;
+      test_mode?: boolean;
+      first_order_item?: { variant_id?: number | string };
+    };
+  };
 }
 
 const json = (status: number, body: Record<string, unknown>) =>
@@ -23,27 +45,74 @@ const json = (status: number, body: Record<string, unknown>) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const upstream = env.LS_WEBHOOK_UPSTREAM;
-  if (!upstream) return json(503, { error: "License server not configured (LS_WEBHOOK_UPSTREAM)" });
+export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env }) => {
+  const secret = env.LEMONSQUEEZY_WEBHOOK_SECRET;
+  if (!secret) return json(503, { error: "Webhook secret not configured" });
+  if (!env.LICENSES) return json(503, { error: "License storage not configured" });
 
-  const body = await request.text();
-  const headers = new Headers({ "content-type": request.headers.get("content-type") ?? "application/json" });
-  for (const h of ["x-signature", "x-event-name", "user-agent"]) {
-    const v = request.headers.get(h);
-    if (v) headers.set(h, v);
+  const rawBody = await request.text();
+  if (!(await verifyLemonSqueezySignature(rawBody, request.headers.get("x-signature"), secret))) {
+    return json(401, { error: "Invalid signature" });
   }
 
+  let payload: WebhookPayload;
   try {
-    const res = await fetch(upstream, { method: "POST", headers, body });
-    return new Response(await res.text(), {
-      status: res.status,
-      headers: { "content-type": res.headers.get("content-type") ?? "application/json", "cache-control": "no-store" },
-    });
-  } catch (err) {
-    return json(502, { error: "Upstream unreachable", detail: err instanceof Error ? err.message : String(err) });
+    payload = JSON.parse(rawBody) as WebhookPayload;
+  } catch {
+    return json(400, { error: "Invalid JSON" });
   }
+
+  const event = payload.meta?.event_name ?? request.headers.get("x-event-name") ?? "";
+  const orderId = payload.data?.id ?? "";
+  const attrs = payload.data?.attributes ?? {};
+  const variantId = attrs.first_order_item?.variant_id != null ? String(attrs.first_order_item.variant_id) : null;
+
+  if (!orderId) return json(400, { error: "Missing data.id" });
+
+  if (event === "order_created") {
+    if (env.LICENSE_VARIANT_ID && variantId !== env.LICENSE_VARIANT_ID) {
+      return json(200, { ok: true, result: `ignored: variant ${variantId}` });
+    }
+    const existingKey = await env.LICENSES.get(`order:${orderId}`);
+    if (existingKey) return json(200, { ok: true, result: "already issued" });
+
+    const key = generateLicenseKey();
+    const origin = new URL(request.url).origin;
+    const record: LicenseRecord = {
+      key,
+      status: "active",
+      orderId,
+      orderNumber: attrs.order_number != null ? String(attrs.order_number) : null,
+      orderIdentifier: attrs.identifier ?? null,
+      email: (attrs.user_email ?? "").toLowerCase(),
+      name: attrs.user_name ?? null,
+      variantId,
+      testMode: Boolean(attrs.test_mode),
+      downloadUrl: `${origin}/api/download?token=${encodeURIComponent(await signDownloadToken(key, secret))}`,
+      emailSent: false,
+      createdAt: new Date().toISOString(),
+    };
+    await saveLicense(env.LICENSES, record);
+    return json(200, { ok: true, result: "license issued" });
+  }
+
+  if (event === "order_refunded") {
+    const key = await env.LICENSES.get(`order:${orderId}`);
+    const record = key ? await getLicense(env.LICENSES, key) : null;
+    if (!record) return json(200, { ok: true, result: "ignored: no license for order" });
+    if (record.status !== "revoked") {
+      await saveLicense(env.LICENSES, { ...record, status: "revoked", revokedAt: new Date().toISOString() });
+    }
+    return json(200, { ok: true, result: "license revoked" });
+  }
+
+  return json(200, { ok: true, result: `ignored: ${event}` });
 };
 
-export const onRequestGet: PagesFunction<Env> = async ({ env }) =>
-  json(200, { ok: true, upstream: env.LS_WEBHOOK_UPSTREAM ? "configured" : "missing" });
+/** Health check: GET → whether the secret and KV binding are present. */
+export const onRequestGet: PagesFunction<LicenseEnv> = async ({ env }) =>
+  json(200, {
+    ok: true,
+    secret: env.LEMONSQUEEZY_WEBHOOK_SECRET ? "configured" : "missing",
+    storage: env.LICENSES ? "kv" : "missing",
+  });
