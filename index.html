@@ -39,7 +39,7 @@ footer{padding:48px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="#features">What's inside</a><a href="#pricing">Pricing</a><a href="https://github.com/agentwright">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="#features">What's inside</a><a href="#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 
 <section class="hero">
 <h1>Ship production AI agents<br>in a weekend.</h1>
@@ -73,10 +73,37 @@ $ pnpm dev   →  http://localhost:3000</code></pre>
 <section id="waitlist" style="text-align:center;padding:24px 0">
 <h2 style="letter-spacing:-.02em">Get notified at launch</h2>
 <p style="color:var(--muted)">No spam. One email when it ships, plus the free token-cost calculator.</p>
-<form action="#" method="post"><input type="email" name="email" placeholder="you@company.com" required><button class="btn" type="submit">Notify me</button></form>
+<form id="waitlist-form" action="/api/subscribe" method="post" novalidate>
+<input type="email" name="email" placeholder="you@company.com" required autocomplete="email">
+<input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+<input type="hidden" name="ts" value="">
+<input type="hidden" name="source" value="landing">
+<button class="btn" type="submit">Notify me</button>
+</form>
+<p id="waitlist-msg" class="note" role="status" aria-live="polite"></p>
+<script>
+(function(){
+var f=document.getElementById('waitlist-form'),m=document.getElementById('waitlist-msg');
+f.ts.value=Date.now();
+f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var email=f.email.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){m.textContent='Please enter a valid email address.';return;}
+  var btn=f.querySelector('button');btn.disabled=true;m.textContent='Saving\u2026';
+  fetch(f.action,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:email,website:f.website.value,ts:Number(f.ts.value),source:f.source.value})})
+  .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
+  .then(function(res){
+    if(res.body&&res.body.ok){m.textContent=res.body.already?'You\u2019re already on the list \u2014 see you at launch.':'You\u2019re on the list. We\u2019ll email you once, at launch.';f.email.value='';}
+    else{m.innerHTML=(res.body&&res.body.error?res.body.error:'Something went wrong.')+' You can also write to <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.';}
+  })
+  .catch(function(){m.innerHTML='Network error. Please email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.';})
+  .finally(function(){btn.disabled=false;});
+});
+})();
+</script>
 </section>
 
-<footer>© 2026 Agentwright · <a href="mailto:hello@agentwright.dev" style="color:inherit">hello@agentwright.dev</a></footer>
+<footer>© 2026 Agentwright · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>
