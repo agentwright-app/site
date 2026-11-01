@@ -4,10 +4,12 @@
   "scripts": {
     "typecheck": "tsc -p functions/tsconfig.json",
     "dev": "wrangler pages dev . --kv WAITLIST",
-    "deploy": "wrangler pages deploy . --project-name agentwright --branch main --commit-dirty=true"
+    "deploy": "npm run build:blog && wrangler pages deploy . --project-name agentwright --branch main --commit-dirty=true",
+    "build:blog": "node scripts/build-blog.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261101.1",
+    "marked": "^16.4.2",
     "typescript": "^5.9.3",
     "wrangler": "^4.156.0"
   }

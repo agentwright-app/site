@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Agentwright blog</title>
+<link>https://agentwright.app/blog/</link>
+<description>Practical notes on building Claude-powered SaaS.</description>
+<language>en</language>
+<lastBuildDate>Sun, 01 Nov 2026 00:00:00 GMT</lastBuildDate>
+<atom:link href="https://agentwright.app/feed.xml" rel="self" type="application/rss+xml"/>
+<item>
+<title>How to meter Claude API costs per user in a Next.js SaaS (with code)</title>
+<link>https://agentwright.app/blog/meter-claude-api-costs-per-user-nextjs/</link>
+<guid isPermaLink="true">https://agentwright.app/blog/meter-claude-api-costs-per-user-nextjs/</guid>
+<pubDate>Sun, 01 Nov 2026 00:00:00 GMT</pubDate>
+<description>Record every Claude API call per user, convert tokens to dollars with the official Claude 5.5 prices, enforce plan caps, and show a usage page. Drizzle + Postgres + the Anthropic TypeScript SDK.</description>
+<content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA[<p>If you charge users for an AI feature, you need to know what each of them costs you. Not in aggregate, on the Anthropic invoice at the end of the month, but per user, per request, in real time, so you can cap free accounts, show a usage page, and find out which 2% of users are 60% of your bill.</p>
+<p>This post walks through the metering layer we use in <a href="https://agentwright.app">Agentwright Starter</a>: a Next.js 15 app with Drizzle + Postgres and the official <code>@anthropic-ai/sdk</code>. Everything below is plain TypeScript you can drop into an existing project. The design is small on purpose: one table, one pure pricing module, two functions.</p>
+<h2>What the API gives you</h2>
+<p>Every response from the Messages API carries a <code>usage</code> object. For a streaming request, the SDK&#39;s <code>finalMessage()</code> returns the assembled message with the same fields:</p>
+<pre><code class="language-ts">const stream = client.messages.stream({ model, max_tokens, system, tools, messages });
+const final = await stream.finalMessage();
+
+final.usage.input_tokens;                 // uncached input, billed at the base input price
+final.usage.output_tokens;                // billed at the output price
+final.usage.cache_read_input_tokens;      // served from the prompt cache (cheap)
+final.usage.cache_creation_input_tokens;  // written to the prompt cache (slightly more than base)
+</code></pre>
+<p>Two things trip people up here.</p>
+<p>First, the four numbers are billed at four different rates. If you only store <code>input_tokens + output_tokens</code>, your cost estimate will be wrong as soon as you enable prompt caching, which you should, because a cached system prompt plus tool definitions is the single biggest saving in an agent loop.</p>
+<p>Second, an agent turn is not one request. A loop that calls a tool three times makes four API requests, and each one has its own <code>usage</code>. Meter per request, not per user message.</p>
+<h2>The official prices (checked 2026-11-01)</h2>
+<p>These are the Claude API list prices from the <a href="https://platform.claude.com/docs/en/about-claude/pricing">official pricing page</a>, in USD per million tokens. Verify them yourself before copying; pricing pages change, and this table will not update itself.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Input</th>
+<th>Output</th>
+<th>Cache write (5 min)</th>
+<th>Cache read</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Opus 5.5</td>
+<td>$4.00</td>
+<td>$20.00</td>
+<td>$5.00</td>
+<td>$0.20</td>
+</tr>
+<tr>
+<td>Claude Sonnet 5.5</td>
+<td>$2.00</td>
+<td>$10.00</td>
+<td>$2.50</td>
+<td>$0.10</td>
+</tr>
+<tr>
+<td>Claude Haiku 5.5 (prompt ≤ 100K tokens)</td>
+<td>$0.10</td>
+<td>$0.50</td>
+<td>$0.125</td>
+<td>$0.01</td>
+</tr>
+<tr>
+<td>Claude Haiku 5.5 (prompt &gt; 100K tokens)</td>
+<td>$0.50</td>
+<td>$2.50</td>
+<td>$0.625</td>
+<td>$0.05</td>
+</tr>
+</tbody></table>
+<p>Notes that matter for metering:</p>
+<ul>
+<li>Cache reads on Opus 5.5 and Sonnet 5.5 are 5% of the base input price, not the 10% that older models use. Cache reads on Fable 5.1 are 2.5%. Do not hard-code &quot;cache read = input / 10&quot;.</li>
+<li>The 5-minute cache write is 1.25x the base input price; the 1-hour write is 2x. The code below assumes the 5-minute TTL. If you use <code>ttl: &quot;1h&quot;</code>, add a separate rate.</li>
+<li>Haiku 5.5 is the only current model with a long-context tier. The whole request is priced at the higher tier when its prompt (including cache reads and writes) exceeds 100,000 tokens.</li>
+<li>Opus 5.5, Sonnet 5.5 and Haiku 5.5 all have a 1M-token context window, and apart from the Haiku tier above, there is no long-context surcharge.</li>
+<li>The Batch API is 50% off input and output. If you move background jobs to batches, meter them at half price.</li>
+</ul>
+<h2>Step 1: a pure pricing module</h2>
+<p>Keep prices in a module with no database import, so your eval runner, a cost calculator in the browser, and the server can all use the same numbers. Store cost as an integer number of micro-dollars (1e-6 USD). Floating-point dollars in a <code>SUM()</code> look fine for a week and then drift.</p>
+<pre><code class="language-ts">// lib/billing/pricing.ts
+export type ModelPrice = { in: number; out: number; cacheRead: number; cacheWrite: number };
+
+/** USD per million tokens. Source: platform.claude.com/docs/en/about-claude/pricing */
+export const PRICE_PER_MTOK: Record&lt;string, ModelPrice&gt; = {
+  &quot;claude-opus-5-5&quot;:   { in: 4,   out: 20,  cacheRead: 0.2,  cacheWrite: 5 },
+  &quot;claude-sonnet-5-5&quot;: { in: 2,   out: 10,  cacheRead: 0.1,  cacheWrite: 2.5 },
+  // Prompts over 100K tokens are billed at the higher Haiku tier (see haikuPrice below).
+  &quot;claude-haiku-5-5&quot;:  { in: 0.1, out: 0.5, cacheRead: 0.01, cacheWrite: 0.125 },
+};
+
+const HAIKU_LONG: ModelPrice = { in: 0.5, out: 2.5, cacheRead: 0.05, cacheWrite: 0.625 };
+
+export type Usage = { input: number; output: number; cacheRead?: number; cacheWrite?: number };
+
+function priceFor(model: string, u: Usage): ModelPrice {
+  const p = PRICE_PER_MTOK[model];
+  if (!p) throw new Error(`Unknown model pricing: ${model}`);
+  if (model === &quot;claude-haiku-5-5&quot;) {
+    const promptTokens = u.input + (u.cacheRead ?? 0) + (u.cacheWrite ?? 0);
+    if (promptTokens &gt; 100_000) return HAIKU_LONG;
+  }
+  return p;
+}
+
+/** Cost in micro-dollars (1e-6 USD) so it can be stored as a bigint. */
+export function costMicroUsd(model: string, u: Usage): number {
+  const p = priceFor(model, u);
+  const usd =
+    (u.input * p.in +
+      u.output * p.out +
+      (u.cacheRead ?? 0) * p.cacheRead +
+      (u.cacheWrite ?? 0) * p.cacheWrite) / 1e6;
+  return Math.round(usd * 1e6);
+}
+
+export function formatUsd(microUsd: number, digits = 4): string {
+  return `$${(microUsd / 1e6).toFixed(digits)}`;
+}
+</code></pre>
+<p>A quick sanity check: one Sonnet 5.5 request with 3,000 uncached input tokens, 8,000 cache-read tokens and 600 output tokens costs 3,000 × $2 + 8,000 × $0.10 + 600 × $10 = $6,000 + $800 + $6,000 per million, which is $0.0128. With <code>costMicroUsd</code> that is <code>12800</code>. Without caching the same prompt would have been 11,000 × $2 + 600 × $10 = $0.028, so the cache cut this request&#39;s cost by more than half. That is why you must meter cache reads separately: if you bill them as full input you will overcharge users and under-sell your own margins.</p>
+<p>Throwing on an unknown model is deliberate. A silent <code>?? 0</code> means a new model ships, someone sets <code>AGENT_MODEL</code>, and every request is recorded as free.</p>
+<h2>Step 2: one table</h2>
+<pre><code class="language-ts">// lib/db/schema.ts (excerpt)
+export const usageEvents = pgTable(
+  &quot;usage_events&quot;,
+  {
+    id: uuid(&quot;id&quot;).primaryKey().defaultRandom(),
+    userId: uuid(&quot;user_id&quot;).notNull().references(() =&gt; users.id, { onDelete: &quot;cascade&quot; }),
+    model: text(&quot;model&quot;).notNull(),
+    inputTokens: integer(&quot;input_tokens&quot;).notNull(),
+    outputTokens: integer(&quot;output_tokens&quot;).notNull(),
+    cacheReadTokens: integer(&quot;cache_read_tokens&quot;).notNull().default(0),
+    cacheWriteTokens: integer(&quot;cache_write_tokens&quot;).notNull().default(0),
+    costMicroUsd: bigint(&quot;cost_micro_usd&quot;, { mode: &quot;number&quot; }).notNull(),
+    createdAt: timestamp(&quot;created_at&quot;).defaultNow().notNull(),
+  },
+  (t) =&gt; [index(&quot;usage_events_user_created_idx&quot;).on(t.userId, t.createdAt)],
+);
+
+export const plans = pgTable(&quot;plans&quot;, {
+  id: text(&quot;id&quot;).primaryKey(), // free | pro | team
+  monthlyTokenCap: bigint(&quot;monthly_token_cap&quot;, { mode: &quot;number&quot; }).notNull(),
+  overageAllowed: integer(&quot;overage_allowed&quot;).notNull().default(0),
+});
+</code></pre>
+<p>One row per API request. Store the raw token counts and the computed cost. The raw counts let you re-price history if you discover a bug or Anthropic changes a price; the stored cost makes the usage page a single <code>SUM()</code>.</p>
+<p>The composite index on <code>(user_id, created_at)</code> is the only one you need. Every query below is &quot;this user, this month&quot;.</p>
+<h2>Step 3: record and enforce</h2>
+<pre><code class="language-ts">// lib/billing/metering.ts
+import { db } from &quot;@/lib/db&quot;;
+import { usageEvents, users, plans } from &quot;@/lib/db/schema&quot;;
+import { and, eq, gte, sql } from &quot;drizzle-orm&quot;;
+import { costMicroUsd, type Usage } from &quot;./pricing&quot;;
+
+export async function recordUsage(userId: string, model: string, u: Usage) {
+  await db.insert(usageEvents).values({
+    userId,
+    model,
+    inputTokens: u.input,
+    outputTokens: u.output,
+    cacheReadTokens: u.cacheRead ?? 0,
+    cacheWriteTokens: u.cacheWrite ?? 0,
+    costMicroUsd: costMicroUsd(model, u),
+  });
+}
+
+export async function assertWithinCap(userId: string): Promise&lt;void&gt; {
+  const monthStart = new Date();
+  monthStart.setUTCDate(1);
+  monthStart.setUTCHours(0, 0, 0, 0);
+
+  const [user] = await db.select().from(users).where(eq(users.id, userId));
+  const [plan] = await db.select().from(plans).where(eq(plans.id, user.plan));
+  const [{ used }] = await db
+    .select({
+      used: sql&lt;number&gt;`coalesce(sum(${usageEvents.inputTokens} + ${usageEvents.outputTokens}), 0)`,
+    })
+    .from(usageEvents)
+    .where(and(eq(usageEvents.userId, userId), gte(usageEvents.createdAt, monthStart)));
+
+  if (Number(used) &gt;= plan.monthlyTokenCap &amp;&amp; !plan.overageAllowed) {
+    const err = new Error(&quot;Monthly token cap reached. Upgrade your plan to continue.&quot;);
+    (err as any).code = &quot;CAP_REACHED&quot;;
+    throw err;
+  }
+}
+</code></pre>
+<p>The cap here is in tokens, not dollars, because that is what users can reason about on a pricing page (&quot;2 million tokens a month&quot;). If you prefer dollar caps, sum <code>cost_micro_usd</code> instead; the table supports both.</p>
+<p>One honest limitation: this check reads before the request and writes after it, so a user can exceed the cap by one request. For a chat product that is fine. If you need a hard ceiling, reserve an estimate before the call (count input tokens with <code>client.messages.countTokens</code> and assume <code>max_tokens</code> output), then reconcile after.</p>
+<h2>Step 4: wire it into the agent loop</h2>
+<p>Metering goes around each request in the loop, not around the whole conversation:</p>
+<pre><code class="language-ts">// lib/agent/loop.ts (excerpt)
+for (let turn = 0; turn &lt; MAX_TURNS; turn++) {
+  if (opts.userId) await assertWithinCap(opts.userId);
+
+  const stream = client.messages.stream({
+    model,
+    max_tokens: opts.maxTokens ?? 8192,
+    system: [{ type: &quot;text&quot;, text: opts.system, cache_control: { type: &quot;ephemeral&quot; } }],
+    tools,
+    messages,
+  });
+  stream.on(&quot;text&quot;, (t) =&gt; opts.onText?.(t));
+  const final = await stream.finalMessage();
+
+  if (opts.userId) {
+    await recordUsage(opts.userId, model, {
+      input: final.usage.input_tokens,
+      output: final.usage.output_tokens,
+      cacheRead: final.usage.cache_read_input_tokens ?? 0,
+      cacheWrite: final.usage.cache_creation_input_tokens ?? 0,
+    });
+  }
+
+  messages.push({ role: &quot;assistant&quot;, content: final.content });
+  if (final.stop_reason !== &quot;tool_use&quot;) return messages;
+  // ...execute tool calls, push results, continue
+}
+</code></pre>
+<p>Making <code>userId</code> optional is a small thing that pays off: your eval runner and smoke tests can call the same loop without a database, and production always passes a user.</p>
+<p>In the API route, catch <code>CAP_REACHED</code> and return something the client can act on. We stream server-sent events, so the route emits <code>{ event: &quot;error&quot;, data: { code: &quot;CAP_REACHED&quot;, message } }</code> and the chat UI shows an upgrade link instead of a generic failure.</p>
+<h2>Step 5: the usage page</h2>
+<p>With cost already in the table, the per-user page is three aggregate queries. The one users look at most is cost by model this month:</p>
+<pre><code class="language-ts">const byModel = await db
+  .select({
+    model: usageEvents.model,
+    requests: sql&lt;number&gt;`count(*)`,
+    tokens: sql&lt;number&gt;`coalesce(sum(${usageEvents.inputTokens} + ${usageEvents.outputTokens}), 0)`,
+    costMicroUsd: sql&lt;number&gt;`coalesce(sum(${usageEvents.costMicroUsd}), 0)`,
+  })
+  .from(usageEvents)
+  .where(and(eq(usageEvents.userId, userId), gte(usageEvents.createdAt, monthStart)))
+  .groupBy(usageEvents.model)
+  .orderBy(desc(sql`sum(${usageEvents.costMicroUsd})`));
+</code></pre>
+<p>Postgres returns <code>sum()</code> as a string for bigint columns, so wrap results in <code>Number()</code> before sending them to the client. Add a daily series for the last 30 days (<code>date_trunc(&#39;day&#39;, created_at)</code>) and the 20 most recent requests, and you have everything a user needs to understand their bill. The same queries, without the <code>userId</code> filter, are your admin view.</p>
+<h2>The mistakes to avoid</h2>
+<ul>
+<li><strong>Metering only the final turn.</strong> A tool-heavy conversation can make five requests for one user message. If you record one row per message, the bill looks several times cheaper than it is.</li>
+<li><strong>Treating cache reads as input.</strong> On a well-cached agent prompt, most input tokens are cache reads at 5% to 10% of the base price. Billing them as full input overstates cost by a wide margin, and the multiplier differs per model.</li>
+<li><strong>Floats for money.</strong> <code>SUM(cost_usd)</code> across a month happily produces <code>0.30000000000000004</code>. Integer micro-dollars avoid the problem entirely.</li>
+<li><strong>Treating prices as constants.</strong> Keep the source URL and the check date next to the table, and re-check it when a model ships. Pricing is a dependency, not a fact.</li>
+</ul>
+<h2>What this does not cover</h2>
+<p>Rate limiting (requests per minute per plan) is a separate concern and lives in its own table. Neither does this post cover overage billing: <code>overageAllowed</code> lets a plan continue past the cap, and a monthly job can sum <code>cost_micro_usd</code> and create a usage-based charge with your payment provider. Both are in the starter.</p>
+<hr>
+<p><em>Agentwright Starter is a Next.js 15 starter kit for Claude-powered SaaS: GitHub and magic-link auth, the streaming agent loop above with tool calls and MCP, per-user metering and plan caps, Lemon Squeezy billing, an eval runner and a usage dashboard, already wired together. It launches in December 2026 at $99. Details and a launch-list signup are at <a href="https://agentwright.app">agentwright.app</a>.</em></p>
+]]></content:encoded>
+</item>
+</channel>
+</rss>

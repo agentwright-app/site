@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://agentwright.app/sitemap.xml
