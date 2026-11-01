@@ -2,7 +2,7 @@
 // content/posts/*.md (one folder per post, a blog index), feed.xml, sitemap.xml
 // and robots.txt. `npm run deploy` runs this and uploads dist/ (functions/ is
 // picked up from the repo root by wrangler).
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync, cpSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
@@ -104,11 +104,11 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 <main>
 ${body}
 </main>
-<footer>© 2026 Agentwright · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>
@@ -196,9 +196,46 @@ ${posts
 `;
 writeFileSync(join(OUT, "feed.xml"), rss);
 
+// Tools: static pages under tools/<slug>/ are copied as-is; the cost calculator
+// gets its pricing.json inlined so the page renders without a second request.
+const TOOLS_DIR = join(root, "tools");
+const tools = readdirSync(TOOLS_DIR, { withFileTypes: true })
+  .filter((d) => d.isDirectory())
+  .map((d) => {
+    const src = join(TOOLS_DIR, d.name);
+    const html = readFileSync(join(src, "index.html"), "utf8");
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? d.name;
+    const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+    return { slug: d.name, src, html, title: title.split(" — ")[0], description };
+  });
+for (const t of tools) {
+  const dir = join(OUT, "tools", t.slug);
+  cpSync(t.src, dir, { recursive: true });
+  let html = t.html;
+  try {
+    const pricing = readFileSync(join(t.src, "pricing.json"), "utf8");
+    html = html.replace("__PRICING_JSON__", JSON.stringify(JSON.parse(pricing)));
+  } catch {}
+  writeFileSync(join(dir, "index.html"), html);
+}
+const toolList = tools
+  .map((t) => `<li><a class="t" href="/tools/${t.slug}/">${esc(t.title)}</a><p>${t.description}</p></li>`)
+  .join("\n");
+writeFileSync(
+  join(OUT, "tools/index.html"),
+  page({
+    title: "Free tools — Agentwright",
+    description: "Free calculators and templates for teams building Claude-powered products.",
+    url: `${SITE}/tools/`,
+    body: `<h1>Tools</h1><p class="lede">Free calculators and templates for teams building Claude-powered products. No sign-up.</p><ul class="post-list">${toolList}</ul>`,
+  }),
+);
+
 // Sitemap
 const urls = [
   { loc: `${SITE}/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "1.0" },
+  { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
+  ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
@@ -221,4 +258,4 @@ writeFileSync(
 );
 writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 
-console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}`);
+console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}; ${tools.length} tool(s): ${tools.map((t) => t.slug).join(", ")}`);

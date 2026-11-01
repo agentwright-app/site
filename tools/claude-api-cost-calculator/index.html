@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude API Cost Calculator — monthly and per-user cost for Opus, Sonnet and Haiku 5.5</title>
+<meta name="description" content="Free Claude API pricing calculator. Enter requests per month, input/output tokens and prompt-cache hit rate to get monthly cost, cost per request and cost per user for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5. Shareable results.">
+<link rel="canonical" href="https://agentwright.app/tools/claude-api-cost-calculator/">
+<link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="/feed.xml">
+<meta property="og:site_name" content="Agentwright">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claude API Cost Calculator">
+<meta property="og:description" content="Monthly, per-request and per-user cost for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API. Official prices, shareable link.">
+<meta property="og:url" content="https://agentwright.app/tools/claude-api-cost-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Claude API Cost Calculator">
+<meta name="twitter:description" content="Monthly, per-request and per-user cost for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Claude API Cost Calculator","url":"https://agentwright.app/tools/claude-api-cost-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Agentwright","url":"https://agentwright.app"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF9;--ink:#1C1917;--muted:#57534E;--primary:#0F172A;--accent:#F59E0B;--card:#FFFFFF;--line:#E7E5E4;--link:#B45309;--soft:#FFFBEB}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}}
+:root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
+nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:15px}
+main{padding:16px 0 48px}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
+.lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.01em}
+label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+label small{color:var(--muted);font-weight:400}
+input[type=number],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:var(--bg);color:var(--ink);font-family:inherit}
+input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.row{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15px}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.big{font-size:clamp(34px,6vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1;margin:4px 0 2px;font-family:"JetBrains Mono",ui-monospace,monospace}
+.sub{color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 6px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:20px;font-weight:600}
+.stat .k{font-size:13px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin:12px 0 0;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-family:"JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
+tr.sel td{background:var(--soft)}
+.btn{display:inline-block;background:var(--primary);color:var(--bg);padding:11px 18px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px;border:0;cursor:pointer;font-family:inherit}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.warn{display:none;background:var(--soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:14px}
+.warn.on{display:block}
+section.text{max-width:720px;margin:44px 0 0}
+section.text h2{font-size:22px;letter-spacing:-.02em;margin:32px 0 10px}
+section.text p,section.text li{font-size:16px;color:var(--ink)}
+section.text a{color:var(--link)}
+section.text table{display:block;overflow-x:auto}
+section.text th,section.text td{white-space:nowrap}
+.cta{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card);margin-top:40px;max-width:720px}
+.cta p{margin:0 0 12px}
+footer{padding:36px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="/">agentwright</a><nav><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<main>
+<h1>Claude API Cost Calculator</h1>
+<p class="lede">Estimate what a Claude-powered feature costs per month, per request and per user. Uses the official Claude API prices for Opus 5.5, Sonnet 5.5 and Haiku 5.5, including prompt caching and the Batch API discount. Change any input and the link updates, so you can share the result.</p>
+
+<div class="layout">
+<form class="panel" id="f" onsubmit="return false">
+<h2>Your workload</h2>
+<label for="model">Model</label>
+<select id="model"></select>
+<label for="req">Requests per month</label>
+<input type="number" id="req" min="0" step="1000" value="100000" inputmode="numeric">
+<div class="row">
+<div><label for="inp">Input tokens per request <small>(prompt, history, tools)</small></label><input type="number" id="inp" min="0" step="100" value="3000" inputmode="numeric"></div>
+<div><label for="out">Output tokens per request</label><input type="number" id="out" min="0" step="50" value="500" inputmode="numeric"></div>
+</div>
+<label for="cache">Prompt cache hit rate <small>(share of input tokens read from cache)</small> — <strong id="cacheV">50%</strong></label>
+<input type="range" id="cache" min="0" max="100" step="5" value="50">
+<label for="users">Monthly active users <small>(for cost per user)</small></label>
+<input type="number" id="users" min="1" step="100" value="1000" inputmode="numeric">
+<div class="check"><input type="checkbox" id="batch"><label for="batch" style="margin:0">Batch API (asynchronous, 50% off input and output)</label></div>
+<div class="warn" id="warn"></div>
+<div class="actions"><button class="btn" id="copy" type="button">Copy share link</button><button class="btn alt" id="reset" type="button">Reset</button><span class="sub" id="copied"></span></div>
+</form>
+
+<div>
+<div class="panel">
+<h2>Estimated cost</h2>
+<div class="big" id="monthly">$0.00</div>
+<div class="sub">per month · <span id="modelName"></span></div>
+<div class="stats">
+<div class="stat"><div class="v" id="perUser">$0.00</div><div class="k">per active user / month</div></div>
+<div class="stat"><div class="v" id="perReq">$0.0000</div><div class="k">per request</div></div>
+<div class="stat"><div class="v" id="inCost">$0.00</div><div class="k">input (incl. cache reads)</div></div>
+<div class="stat"><div class="v" id="outCost">$0.00</div><div class="k">output</div></div>
+</div>
+<div class="note" id="savings"></div>
+</div>
+<div class="panel" style="margin-top:20px">
+<h2>Same workload on each model</h2>
+<table><thead><tr><th>Model</th><th class="n">Monthly</th><th class="n">Per user</th><th class="n">Per request</th></tr></thead><tbody id="cmp"></tbody></table>
+<p class="note">Prices updated <strong id="updated"></strong> from the <a id="src" href="#" style="color:var(--link)">official pricing page</a>. Cache reads are billed at $0.20 (Opus 5.5), $0.10 (Sonnet 5.5) and $0.01 (Haiku 5.5) per million tokens. Haiku 5.5 requests with a prompt over 100,000 tokens use the higher long-prompt tier automatically.</p>
+</div>
+</div>
+</div>
+
+<section class="text">
+<h2>How the estimate works</h2>
+<p>Monthly cost = requests × (uncached input tokens × input price + cached input tokens × cache-read price + output tokens × output price). Cost per user divides that by your monthly active users; cost per request divides it by requests. With Batch API on, input, cache and output prices are halved, which matches the published 50% discount.</p>
+<p>Cache hit rate means the share of each request's input tokens that are served from the prompt cache. A chat app with a long system prompt and tool definitions usually sees 60–90%. The calculator does not add the one-time cache-write surcharge (1.25× input for a 5-minute cache, 2× for 1 hour), because it is paid once per cache window rather than per request. For most production workloads it adds a few percent at most. Extended thinking tokens are billed as output tokens, so add them to the output figure if you use it.</p>
+<h2>Current Claude API prices (USD per million tokens)</h2>
+<table id="priceTable"><thead><tr><th>Model</th><th class="n">Input</th><th class="n">Output</th><th class="n">Cache read</th><th class="n">Cache write (5m)</th><th class="n">Batch input</th><th class="n">Batch output</th></tr></thead><tbody></tbody></table>
+<p class="note">Haiku 5.5: prompts over 100,000 tokens are billed at $0.50 input / $2.50 output / $0.05 cache read. Prompt cache reads are 0.05× the input price on Opus 5.5 and Sonnet 5.5, and 0.1× on Haiku 5.5. The price table lives in <a href="pricing.json">pricing.json</a> and is checked against the official page on the date shown above.</p>
+<h2>Three ways to lower the number</h2>
+<ul>
+<li><strong>Cache the prefix.</strong> Put the system prompt, tool definitions and long documents first, and the volatile question last. Cache reads cost 5–10% of the input price.</li>
+<li><strong>Route by task.</strong> Classification, extraction and short replies on Haiku 5.5; agentic coding and multi-step tool use on Sonnet 5.5; reserve Opus 5.5 for the work where quality visibly matters. Try the comparison table above with your real token counts.</li>
+<li><strong>Batch what is not interactive.</strong> Nightly summaries, evals, backfills and reports can run through the Batch API at half price.</li>
+</ul>
+<p>To see actual per-user numbers instead of estimates, read <a href="/blog/meter-claude-api-costs-per-user-nextjs/">How to meter Claude API costs per user in a Next.js SaaS</a>. It walks through recording every call's token usage per user and converting it to dollars with the same price table.</p>
+</section>
+
+<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with this metering built in: per-user token tracking in Postgres, plan caps and rate limits, a streaming agent loop with tool calls, MCP, evals, auth and Lemon Squeezy billing. Launching December 2026 at $99.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>
+</main>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+</div>
+<script id="pricing-data" type="application/json">__PRICING_JSON__</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var DEF = { model: "claude-sonnet-5-5", req: 100000, inp: 3000, out: 500, cache: 50, users: 1000, batch: 0 };
+  var ids = ["model", "req", "inp", "out", "cache", "users", "batch"];
+  var P;
+  try { P = JSON.parse($("pricing-data").textContent); } catch (e) { P = null; }
+  if (!P || !P.models) {
+    fetch("pricing.json").then(function (r) { return r.json(); }).then(function (j) { P = j; init(); });
+  } else { init(); }
+
+
+  function read() {
+    return {
+      model: $("model").value,
+      req: num($("req").value), inp: num($("inp").value), out: num($("out").value),
+      cache: Math.min(100, Math.max(0, num($("cache").value))),
+      users: Math.max(1, num($("users").value)),
+      batch: $("batch").checked ? 1 : 0
+    };
+  }
+  function num(v) { v = Number(v); return isFinite(v) && v >= 0 ? v : 0; }
+  function money(v, d) {
+    if (d === undefined) d = v >= 100 ? 0 : v >= 0.1 ? 2 : 4;
+    return "$" + v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function tier(m, s) {
+    if (m.longPrompt && s.inp > m.longPrompt.thresholdTokens) return { p: m.longPrompt, long: true };
+    return { p: m, long: false };
+  }
+  function cost(m, s) {
+    var t = tier(m, s), p = t.p, k = s.batch ? P.batchDiscount : 1;
+    var cached = s.inp * s.cache / 100, fresh = s.inp - cached;
+    var inC = s.req * (fresh * p.input + cached * p.cacheRead) / 1e6 * k;
+    var outC = s.req * s.out * p.output / 1e6 * k;
+    var noCache = s.req * (s.inp * p.input + s.out * p.output) / 1e6 * k;
+    return { total: inC + outC, inC: inC, outC: outC, noCache: noCache, long: t.long };
+  }
+
+  function render() {
+    var s = read(), m = P.models.filter(function (x) { return x.id === s.model; })[0] || P.models[0];
+    var c = cost(m, s);
+    $("cacheV").textContent = s.cache + "%";
+    $("monthly").textContent = money(c.total, c.total >= 100 ? 0 : 2);
+    $("modelName").textContent = m.name + (s.batch ? " · Batch API" : "");
+    $("perUser").textContent = money(c.total / s.users);
+    $("perReq").textContent = s.req ? money(c.total / s.req, c.total / s.req >= 0.01 ? 4 : 6) : "$0";
+    $("inCost").textContent = money(c.inC, 2);
+    $("outCost").textContent = money(c.outC, 2);
+    var saved = c.noCache - c.total;
+    $("savings").textContent = s.cache > 0 && saved > 0
+      ? "Prompt caching saves about " + money(saved, 2) + " per month (" + Math.round(saved / c.noCache * 100) + "%) versus no caching at this hit rate."
+      : "Tip: move the hit-rate slider to see how much prompt caching saves.";
+    var w = $("warn");
+    w.className = "warn" + (c.long ? " on" : "");
+    w.textContent = c.long ? "Prompts over 100,000 tokens on Haiku 5.5 are billed at the long-prompt rate ($0.50 input / $2.50 output / $0.05 cache read)." : "";
+    $("cmp").innerHTML = P.models.map(function (x) {
+      var r = cost(x, s);
+      return "<tr" + (x.id === m.id ? ' class="sel"' : "") + "><td>" + x.name + "</td><td class=\"n\">" + money(r.total, r.total >= 100 ? 0 : 2) + "</td><td class=\"n\">" + money(r.total / s.users) + "</td><td class=\"n\">" + (s.req ? money(r.total / s.req, 4) : "$0") + "</td></tr>";
+    }).join("");
+    var q = new URLSearchParams();
+    ids.forEach(function (k) { if (String(s[k]) !== String(DEF[k])) q.set(k, s[k]); });
+    var url = location.pathname + (q.toString() ? "?" + q.toString() : "");
+    history.replaceState(null, "", url);
+  }
+
+  function init() {
+    $("model").innerHTML = P.models.map(function (m) { return '<option value="' + m.id + '">' + m.name + " — $" + m.input + " in / $" + m.output + " out per MTok</option>"; }).join("");
+    $("updated").textContent = P.updated;
+    $("src").href = P.source;
+    $("priceTable").querySelector("tbody").innerHTML = P.models.map(function (m) {
+      return "<tr><td>" + m.name + "</td><td class=\"n\">$" + m.input + "</td><td class=\"n\">$" + m.output + "</td><td class=\"n\">$" + m.cacheRead + "</td><td class=\"n\">$" + m.cacheWrite5m + "</td><td class=\"n\">$" + m.input * P.batchDiscount + "</td><td class=\"n\">$" + m.output * P.batchDiscount + "</td></tr>";
+    }).join("");
+    var q = new URLSearchParams(location.search);
+    ids.forEach(function (k) {
+      var v = q.has(k) ? q.get(k) : DEF[k];
+      if (k === "batch") $("batch").checked = v === "1" || v === "true";
+      else if (k === "model") $("model").value = P.models.some(function (m) { return m.id === v; }) ? v : DEF.model;
+      else $(k).value = num(v);
+    });
+    ids.forEach(function (k) { $(k).addEventListener("input", render); $(k).addEventListener("change", render); });
+    $("reset").addEventListener("click", function () {
+      ids.forEach(function (k) { if (k === "batch") $(k).checked = false; else $(k).value = DEF[k]; });
+      render();
+    });
+    $("copy").addEventListener("click", function () {
+      var url = location.origin + location.pathname + location.search;
+      var done = function () { $("copied").textContent = "Link copied"; setTimeout(function () { $("copied").textContent = ""; }, 2000); };
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt("Copy this link", url); });
+      else prompt("Copy this link", url);
+    });
+    render();
+  }
+})();
+</script>
+</body>
+</html>
