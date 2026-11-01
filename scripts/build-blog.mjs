@@ -210,6 +210,15 @@ ${urls.map((u) => `<url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod><prior
 </urlset>
 `,
 );
+writeFileSync(
+  join(OUT, "404.html"),
+  page({
+    title: "Page not found — Agentwright",
+    description: "That page does not exist.",
+    url: `${SITE}/404`,
+    body: `<h1>Page not found</h1><p class="lede">That page does not exist. Try the <a href="/">home page</a> or the <a href="/blog/">blog</a>.</p>`,
+  }),
+);
 writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 
 console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}`);
