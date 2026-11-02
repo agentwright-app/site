@@ -14,6 +14,8 @@ const OUT = join(root, "dist");
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 copyFileSync(join(root, "index.html"), join(OUT, "index.html"));
+// Post-checkout page: Pages serves thanks.html at /thanks (noindex, not in sitemap).
+copyFileSync(join(root, "thanks.html"), join(OUT, "thanks.html"));
 // Static root assets (favicons, manifest, OG image) live in public/.
 cpSync(join(root, "public"), OUT, { recursive: true });
 
