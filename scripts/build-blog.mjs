@@ -52,9 +52,9 @@ const CSS = `
 :root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:15px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{max-width:720px;margin:0 auto;padding:24px 0 48px}
 h1{font-size:clamp(30px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 12px}
 .meta{color:var(--muted);font-size:15px;margin-bottom:32px}
@@ -80,6 +80,21 @@ blockquote{margin:0;padding-left:16px;border-left:3px solid var(--accent);color:
 .cta{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card);margin-top:40px}
 .cta p{margin:0 0 12px}
 .btn{display:inline-block;background:var(--primary);color:var(--bg);padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px}
+.comments{margin-top:48px;border-top:1px solid var(--line);padding-top:8px}
+.comments h2{font-size:22px;letter-spacing:-.02em;margin:24px 0 6px}
+.comments .hint{color:var(--muted);font-size:14px;margin:0 0 20px}
+.c-item{padding:14px 0;border-bottom:1px solid var(--line)}
+.c-item.reply{margin-left:22px;padding-left:14px;border-left:2px solid var(--accent);border-bottom:0}
+.c-head{font-size:14px;color:var(--muted);margin-bottom:6px}
+.c-head b{color:var(--ink)}
+.c-team{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin-left:6px}
+.c-body{white-space:pre-wrap;font-size:16px;margin:0}
+.c-form{display:grid;gap:10px;margin-top:20px}
+.c-form input,.c-form textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box}
+.c-form textarea{min-height:120px;resize:vertical}
+.c-form button{justify-self:start;border:0;cursor:pointer}
+.c-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.c-msg{font-size:14px;color:var(--muted);min-height:1em;margin:0}
 footer{padding:36px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
 footer a{color:inherit}
 `;
@@ -117,7 +132,7 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 <main>
 ${body}
 </main>
@@ -126,6 +141,65 @@ ${body}
 </body>
 </html>
 `;
+}
+
+function commentsBlock(slug) {
+  return `<section class="comments" id="comments" data-slug="${esc(slug)}">
+<h2>Comments</h2>
+<p class="hint">Questions and corrections welcome. Replies marked Agentwright are written with AI assistance and reviewed against the post. Comments with links are held for review.</p>
+<div id="c-list"><p class="c-msg">Loading comments…</p></div>
+<form class="c-form" id="c-form" novalidate>
+<input name="name" maxlength="60" placeholder="Your name" autocomplete="name" required>
+<textarea name="body" maxlength="2000" placeholder="Your comment" required></textarea>
+<div class="c-hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+<button class="btn" type="submit">Post comment</button>
+<p class="c-msg" id="c-msg" role="status"></p>
+</form>
+</section>
+<script>
+(() => {
+  const sec = document.getElementById("comments"), slug = sec.dataset.slug;
+  const list = document.getElementById("c-list"), form = document.getElementById("c-form"), msg = document.getElementById("c-msg");
+  const opened = Date.now();
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const fmt = (iso) => new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  function item(c, isReply) {
+    const d = el("div", "c-item" + (isReply ? " reply" : ""));
+    const h = el("div", "c-head"); h.append(el("b", null, c.name));
+    if (c.team) h.append(el("span", "c-team", "Agentwright"));
+    h.append(" · " + fmt(c.createdAt));
+    d.append(h, el("p", "c-body", c.body));
+    return d;
+  }
+  function render(cs) {
+    list.textContent = "";
+    const top = cs.filter((c) => !c.parent || !cs.some((p) => p.id === c.parent));
+    if (!top.length) { list.append(el("p", "c-msg", "No comments yet. Be the first to ask a question.")); return; }
+    for (const c of top) {
+      list.append(item(c, false));
+      for (const r of cs.filter((x) => x.parent === c.id)) list.append(item(r, true));
+    }
+  }
+  let current = [];
+  fetch("/api/comments?slug=" + encodeURIComponent(slug)).then((r) => r.json()).then((d) => { current = d.comments || []; render(current); })
+    .catch(() => { list.textContent = ""; list.append(el("p", "c-msg", "Comments could not be loaded.")); });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const payload = { slug, name: String(f.get("name") || ""), body: String(f.get("body") || ""), website: String(f.get("website") || ""), ts: opened };
+    if (!payload.name.trim() || payload.body.trim().length < 2) { msg.textContent = "Please add your name and a comment."; return; }
+    msg.textContent = "Posting…";
+    try {
+      const r = await fetch("/api/comments", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+      const d = await r.json();
+      if (!r.ok || !d.ok) { msg.textContent = d.error || "Something went wrong. Please try again."; return; }
+      form.reset();
+      if (d.comment) { current.push(d.comment); render(current); msg.textContent = "Thanks! Your comment is live."; }
+      else msg.textContent = "Thanks! Your comment will appear after a quick review.";
+    } catch { msg.textContent = "Network error. Please try again."; }
+  });
+})();
+</script>`;
 }
 
 const posts = readdirSync(POSTS_DIR)
@@ -157,7 +231,8 @@ for (const p of posts) {
 <p class="meta"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p>
 ${p.html}
 </article>
-<div class="cta"><p><strong>Agentwright Starter</strong> ships this metering layer, the agent loop, auth, Lemon Squeezy billing, MCP and evals as one Next.js codebase. Launching December 2026 at $99.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>`;
+<div class="cta"><p><strong>Agentwright Starter</strong> ships this metering layer, the agent loop, auth, Lemon Squeezy billing, MCP and evals as one Next.js codebase. Launching December 2026 at $99.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>
+${commentsBlock(p.slug)}`;
   const meta = `<meta property="article:published_time" content="${p.date}T00:00:00Z">
 ${(p.tags ?? []).map((t) => `<meta property="article:tag" content="${esc(t)}">`).join("\n")}
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
