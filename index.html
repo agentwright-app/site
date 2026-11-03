@@ -28,9 +28,9 @@
 :root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:15px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 .hero{padding:72px 0 48px;text-align:center}
 .hero h1{font-size:clamp(34px,6vw,58px);line-height:1.08;letter-spacing:-.03em;margin:0 0 20px;font-weight:700}
 .hero p{font-size:19px;color:var(--muted);max-width:640px;margin:0 auto 32px}
@@ -52,33 +52,33 @@ footer{padding:48px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="#features">What's inside</a><a href="#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 
 <section class="hero">
 <h1>Ship production AI agents<br>in a weekend.</h1>
 <p>A production-ready starter kit for Claude-powered SaaS. Auth, billing, usage metering, the agent loop, tools and MCP are already wired. You write the prompts.</p>
 <a class="btn" href="#pricing">Get the kit</a><a class="btn alt" href="#waitlist">Join the launch list</a>
-<div class="note">Launching December 2026 · Next.js 15 · Claude Agent SDK · Lemon Squeezy · Postgres</div>
-<pre><code>$ npx create-agentwright my-agent-saas
+<div class="note">Launching December 2026 · Next.js 15 · Anthropic TypeScript SDK · Lemon Squeezy · Postgres</div>
+<pre><code>$ unzip agentwright-starter.zip &amp;&amp; npm install
 ✔ Auth (magic link + GitHub)       ✔ Billing + webhooks (Lemon Squeezy)
 ✔ Per-user token metering + caps   ✔ Streaming agent loop w/ tool calls
 ✔ MCP server connector             ✔ Rate limiting, logging, evals
-$ pnpm dev   →  http://localhost:3000</code></pre>
+$ npm run dev   →  http://localhost:3000</code></pre>
 </section>
 
 <section id="features" class="grid">
-<div class="card"><h3>Agent loop that doesn't fall over</h3><p>Streaming, tool calls, retries, max-turn guards, prompt caching and structured outputs — the parts every wrapper gets wrong the first time.</p></div>
+<div class="card"><h3>Agent loop that doesn't fall over</h3><p>Streaming, tool calls, max-turn guards and prompt caching — the parts every wrapper gets wrong the first time.</p></div>
 <div class="card"><h3>Usage-based billing, done</h3><p>Token metering per user, plan caps, overage handling and Lemon Squeezy webhooks. Merchant of record, so you skip the tax paperwork.</p></div>
 <div class="card"><h3>MCP-native</h3><p>Plug any MCP server in as a tool source with one config entry. Ship integrations instead of writing glue code.</p></div>
 <div class="card"><h3>Evals before you ship</h3><p>A tiny eval harness with golden cases and a cost report, so a prompt change never silently doubles your bill.</p></div>
-<div class="card"><h3>Boring, proven stack</h3><p>Next.js 15, TypeScript, Drizzle + Postgres, Tailwind. Deploys to Vercel or Cloudflare on the free tier.</p></div>
+<div class="card"><h3>Boring, proven stack</h3><p>Next.js 15, TypeScript, Drizzle + Postgres, Tailwind. Includes a step-by-step deploy guide for Vercel + Neon free tiers.</p></div>
 <div class="card"><h3>Lifetime updates</h3><p>One purchase. Every update as models, SDKs and billing APIs change — maintained continuously.</p></div>
 </section>
 
 <section id="pricing" class="price">
 <div style="font-weight:600;color:var(--muted)">Launch price</div>
 <div class="n">$99 <s>$149</s></div>
-<ul><li>Full source code, license for one developer or one team</li><li>Unlimited projects</li><li>Lifetime updates</li><li>Private Discord + email support</li></ul>
+<ul><li>Full source code, license for one developer or one team</li><li>Unlimited projects</li><li>Lifetime updates</li><li>Email support</li></ul>
 <a class="btn" id="buy" href="https://agentwright.lemonsqueezy.com/checkout/custom/c1189682-b474-4ab5-b46c-daec9c4de3da?signature=254c6af655d06c612a745dae5f01228d02eec02141377b2d68cc73148f26020d" rel="noopener">Buy now — $99</a>
 <div class="note">Launch code <b>LAUNCH</b> is applied at checkout. Price goes to $149 after the first 50 licenses. Secure payment by Lemon Squeezy; instant download + private repo invite.</div>
 <div class="note"><b>14-day no-questions refund.</b> <a href="/legal/" style="color:inherit">Refund policy &amp; license terms</a></div>
@@ -117,7 +117,7 @@ f.addEventListener('submit',function(e){
 </script>
 </section>
 
-<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>

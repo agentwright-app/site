@@ -18,9 +18,9 @@
 :root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--ok:#4ADE80}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:15px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{max-width:640px;margin:0 auto;padding:40px 0 48px}
 h1{font-size:clamp(28px,5vw,38px);line-height:1.12;letter-spacing:-.03em;margin:0 0 10px}
 .lede{font-size:18px;color:var(--muted);margin:0 0 28px}
@@ -48,7 +48,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="mailto:hello@agentwright.app">Support</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 
 <main>
 <h1 id="title">Thanks for your purchase.</h1>
@@ -87,7 +87,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
       <li>Unzip, then <code class="inline">cd</code> into the folder and run <code class="inline">npm install</code>.</li>
       <li>Copy <code class="inline">.env.example</code> to <code class="inline">.env.local</code> and add your <code class="inline">ANTHROPIC_API_KEY</code>, a Postgres <code class="inline">DATABASE_URL</code> and an <code class="inline">AUTH_SECRET</code>.</li>
       <li>Run <code class="inline">npm run db:migrate</code>, then <code class="inline">npm run dev</code> and open <a href="http://localhost:3000">localhost:3000</a>.</li>
-      <li>Read <code class="inline">docs/setup.md</code> and <code class="inline">docs/deploy.md</code> in the zip for GitHub login, billing webhooks and deploying to Vercel or Cloudflare.</li>
+      <li>Read <code class="inline">docs/setup.md</code> and <code class="inline">docs/deploy.md</code> in the zip for GitHub login, billing webhooks and deploying to Vercel + Neon.</li>
     </ol>
     <p style="margin-top:14px">Questions, bugs, or a feature you need? Reply to your receipt or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> — a real person answers.</p>
     <p style="margin-top:10px">Not what you expected? You have a <b>14-day no-questions refund</b>. See the <a href="/legal/">refund policy &amp; license terms</a> (one developer or one team, no redistribution of the source).</p>
@@ -95,7 +95,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </div>
 </main>
 
-<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
 </div>
 <script>
 (function(){

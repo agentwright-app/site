@@ -33,9 +33,9 @@
 :root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:15px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{padding:16px 0 48px}
 h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
 .lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
@@ -82,7 +82,7 @@ footer a{color:inherit}
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 <main>
 <h1>Claude API Cost Calculator</h1>
 <p class="lede">Estimate what a Claude-powered feature costs per month, per request and per user. Uses the official Claude API prices for Opus 5.5, Sonnet 5.5 and Haiku 5.5, including prompt caching and the Batch API discount. Change any input and the link updates, so you can share the result.</p>
