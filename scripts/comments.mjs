@@ -7,6 +7,7 @@
 //   node scripts/comments.mjs approve <key>                                  publish a pending comment
 //   node scripts/comments.mjs hide <key>                                     hide a comment (kept, not deleted)
 //   node scripts/comments.mjs reply <key> "<text>"                           post an Agentwright reply under a comment
+//   node scripts/comments.mjs post <slug> "<text>"                           post a top-level Agentwright comment (e.g. answering a dev.to question)
 //
 // <key> is the KV key printed by list/pending, e.g. c:my-post:1762170000000-ab12cd34
 
@@ -93,7 +94,14 @@ if (cmd === "list") {
   const key = `c:${parent.slug}:${now.getTime()}-${id}`;
   await put(key, rec);
   console.log(`replied: ${key} (https://agentwright.app/blog/${parent.slug}/#comments)`);
+} else if (cmd === "post" && a1 && a2) {
+  const now = new Date();
+  const id = crypto.randomUUID().slice(0, 8);
+  const rec = { id, slug: a1, parent: null, name: "Agentwright", body: a2.trim(), team: true, status: "published", createdAt: now.toISOString() };
+  const key = `c:${a1}:${now.getTime()}-${id}`;
+  await put(key, rec);
+  console.log(`posted: ${key} (https://agentwright.app/blog/${a1}/#comments)`);
 } else {
-  console.log("usage: list [--since ISO] [--all] | pending | approve <key> | hide <key> | reply <key> \"text\"");
+  console.log("usage: list [--since ISO] [--all] | pending | approve <key> | hide <key> | reply <key> \"text\" | post <slug> \"text\"");
   process.exit(cmd ? 1 : 0);
 }
