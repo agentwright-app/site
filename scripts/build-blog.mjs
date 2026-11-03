@@ -121,7 +121,7 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 <main>
 ${body}
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>
@@ -249,6 +249,7 @@ const urls = [
   { loc: `${SITE}/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "1.0" },
   { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
   ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
+  { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
@@ -269,6 +270,20 @@ writeFileSync(
     body: `<h1>Page not found</h1><p class="lede">That page does not exist. Try the <a href="/">home page</a> or the <a href="/blog/">blog</a>.</p>`,
   }),
 );
+// /legal/: refund policy + license terms, from content/pages/legal.md.
+{
+  const dir = join(OUT, "legal");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "index.html"),
+    page({
+      title: "Refund policy & license terms — Agentwright",
+      description: "14-day no-questions refund, and what the Agentwright Starter license lets you do.",
+      url: `${SITE}/legal/`,
+      body: `<h1>Refund policy &amp; license terms</h1>\n<article>\n${marked.parse(readFileSync(join(root, "content/pages/legal.md"), "utf8"))}</article>`,
+    }),
+  );
+}
 writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 
 console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}; ${tools.length} tool(s): ${tools.map((t) => t.slug).join(", ")}`);
