@@ -38,11 +38,11 @@ You can't resell or republish the Starter's source as a starter kit, template or
 
 ### What is inside the Starter?
 
-One Next.js codebase (currently version 0.3.0) with these parts already wired together:
+One Next.js codebase (currently version 0.4.0) with these parts already wired together:
 
 - **Agent loop:** a streaming route with tool calls, max-turn guards and prompt caching, plus a chat UI.
 - **MCP tools:** connect any MCP server (stdio or HTTP) with one config entry; its tools become callable by the agent.
-- **Per-user metering:** every Claude call is recorded with tokens and cost, checked against plan caps, and shown on a `/usage` dashboard.
+- **Per-user metering:** every Claude call is recorded with tokens, cost and the exact price version used, checked against plan caps, and shown on a `/usage` dashboard. Prices are versioned, so past totals stay the same when model prices change.
 - **Billing:** Lemon Squeezy checkout links and webhooks for your own plans.
 - **Auth:** GitHub sign-in, plus optional email magic links through Resend.
 - **Rate limiting:** per-plan requests per minute, with proper `429` responses.
@@ -56,7 +56,7 @@ Next.js 15 (App Router), TypeScript, the official Anthropic TypeScript SDK, the 
 
 ### Which Claude models does it support?
 
-Any model on the Claude API. The default is Claude Sonnet 5.5, and the metering price table ships with Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5. Switching models is one environment variable.
+Any model on the Claude API. The default is Claude Sonnet 5.5, and the metering price table ships with Claude Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5 (including the Haiku long-context price). Switching models is one environment variable.
 
 ### What do I need to run it?
 

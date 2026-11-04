@@ -225,7 +225,7 @@ Thanks to the reader on DEV whose comment prompted this post.
 
 ---
 
-*Agentwright Starter currently stores tokens and a write-time cost on every usage row, as described in [the metering post](/blog/meter-claude-api-costs-per-user-nextjs/). Recording the price version per row, as above, is on the list for the next update. It is a Next.js 15 starter kit for Claude-powered SaaS with auth, Lemon Squeezy billing, MCP tools and evals already wired together, launching in December 2026 at $99. Details are at [agentwright.app](https://agentwright.app) and in the [FAQ](/faq/).*
+*Update, 2026-11-04: this now ships in Agentwright Starter 0.4.0. Every usage row stores tokens, the write-time cost and a `price_id` pointing at a versioned `model_prices` table (including the Haiku 5.5 long-context tier), and the `/usage` page lists the price versions behind each month's total. Agentwright Starter is a Next.js 15 starter kit for Claude-powered SaaS with auth, Lemon Squeezy billing, MCP tools and evals already wired together, launching in December 2026 at $99. Details are at [agentwright.app](https://agentwright.app) and in the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 
