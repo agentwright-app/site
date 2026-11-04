@@ -38,7 +38,7 @@ You can't resell or republish the Starter's source as a starter kit, template or
 
 ### What is inside the Starter?
 
-One Next.js codebase (currently version 0.4.0) with these parts already wired together:
+One Next.js codebase (currently version 0.4.1) with these parts already wired together:
 
 - **Agent loop:** a streaming route with tool calls, max-turn guards and prompt caching, plus a chat UI.
 - **MCP tools:** connect any MCP server (stdio or HTTP) with one config entry; its tools become callable by the agent.
