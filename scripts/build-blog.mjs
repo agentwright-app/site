@@ -304,7 +304,10 @@ for (const t of tools) {
   cpSync(t.src, dir, { recursive: true });
   let html = t.html;
   try {
-    const pricing = readFileSync(join(t.src, "pricing.json"), "utf8");
+    // Tools without their own pricing.json share the cost calculator's table.
+    let pricing;
+    try { pricing = readFileSync(join(t.src, "pricing.json"), "utf8"); }
+    catch { pricing = readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8"); }
     html = html.replace("__PRICING_JSON__", JSON.stringify(JSON.parse(pricing)));
   } catch {}
   writeFileSync(join(dir, "index.html"), html);
