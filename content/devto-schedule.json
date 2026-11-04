@@ -1,0 +1,10 @@
+[
+  { "slug": "claude-agent-sdk-vs-your-own-tool-loop", "date": "2026-11-06", "tags": ["ai", "typescript", "llm", "architecture"] },
+  { "slug": "snapshot-llm-prices-per-request", "date": "2026-11-10", "tags": ["ai", "postgres", "typescript", "saas"] },
+  { "slug": "prompt-caching-claude-agent-loop", "date": "2026-11-13", "tags": ["ai", "llm", "typescript", "performance"] },
+  { "slug": "stream-claude-agent-sse-nextjs", "date": "2026-11-17", "tags": ["nextjs", "ai", "typescript", "webdev"] },
+  { "slug": "evals-for-claude-agents-typescript", "date": "2026-11-20", "tags": ["ai", "testing", "typescript", "llm"] },
+  { "slug": "verify-lemon-squeezy-webhooks-nextjs", "date": "2026-11-24", "tags": ["nextjs", "webdev", "typescript", "security"] },
+  { "slug": "mcp-servers-as-tools-in-your-agent", "date": "2026-11-27", "tags": ["mcp", "ai", "typescript", "llm"] },
+  { "slug": "rate-limit-llm-endpoints-postgres", "date": "2026-12-01", "tags": ["postgres", "nextjs", "ai", "webdev"] }
+]

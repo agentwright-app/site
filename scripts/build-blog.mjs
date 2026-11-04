@@ -205,14 +205,24 @@ function commentsBlock(slug) {
 </script>`;
 }
 
-const posts = readdirSync(POSTS_DIR)
+// Scheduled publishing: a post goes live on its `date` (Korea time). Posts dated in the
+// future, or with `draft: true`, are left out of every page, the feed and the sitemap.
+// The daily deploy trigger rebuilds the site, so each queued post appears on its day.
+// BLOG_PREVIEW=1 builds everything (local preview only, never deploy with it).
+const TODAY = process.env.BLOG_TODAY ?? new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
+const PREVIEW = process.env.BLOG_PREVIEW === "1";
+const allPosts = readdirSync(POSTS_DIR)
   .filter((f) => f.endsWith(".md"))
   .map((f) => {
     const { meta, body } = parseFrontmatter(readFileSync(join(POSTS_DIR, f), "utf8"));
     const slug = meta.slug ?? f.replace(/\.md$/, "");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date ?? "")) throw new Error(`${f}: date must be YYYY-MM-DD`);
     return { ...meta, slug, body, url: `${SITE}/blog/${slug}/`, reading: readingTime(body), html: marked.parse(body) };
   })
   .sort((a, b) => (a.date < b.date ? 1 : -1));
+const isLive = (p) => PREVIEW || (p.draft !== "true" && p.date <= TODAY);
+const posts = allPosts.filter(isLive);
+const queued = allPosts.filter((p) => !isLive(p)).sort((a, b) => (a.date < b.date ? -1 : 1));
 
 for (const p of posts) {
   const dir = join(OUT, "blog", p.slug);
@@ -414,4 +424,5 @@ writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE
   walk(OUT);
 }
 
+console.log(`today ${TODAY}${PREVIEW ? " (PREVIEW: future posts included)" : ""}; queued: ${queued.map((p) => `${p.date} ${p.slug}`).join(", ") || "none"}`);
 console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}; ${tools.length} tool(s): ${tools.map((t) => t.slug).join(", ")}`);
