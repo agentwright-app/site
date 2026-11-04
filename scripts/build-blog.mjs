@@ -205,10 +205,14 @@ function commentsBlock(slug) {
 </script>`;
 }
 
-// Scheduled publishing: a post goes live on its `date` (Korea time). Posts dated in the
-// future, or with `draft: true`, are left out of every page, the feed and the sitemap.
-// The daily deploy trigger rebuilds the site, so each queued post appears on its day.
-// BLOG_PREVIEW=1 builds everything (local preview only, never deploy with it).
+// Scheduled publishing: a post goes live on its `date` (Korea time) WITHOUT a new deploy.
+// Every non-draft post page is built, and functions/_middleware.ts decides at request time:
+//  - /blog/<slug>/ of a post dated after today (Asia/Seoul) → 404;
+//  - /blog/, /feed.xml, /sitemap.xml → the snapshot in dist/_asof/<date>/ for today
+//    (one snapshot per future publish date, built here; dist/_schedule.json lists them).
+// The root /blog/, /feed.xml and /sitemap.xml are today's versions (fallback if the
+// middleware is missing). `draft: true` posts are never built.
+// BLOG_PREVIEW=1 treats every post as live (local preview only, never deploy with it).
 const TODAY = process.env.BLOG_TODAY ?? new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Seoul" });
 const PREVIEW = process.env.BLOG_PREVIEW === "1";
 const allPosts = readdirSync(POSTS_DIR)
@@ -220,11 +224,13 @@ const allPosts = readdirSync(POSTS_DIR)
     return { ...meta, slug, body, url: `${SITE}/blog/${slug}/`, reading: readingTime(body), html: marked.parse(body) };
   })
   .sort((a, b) => (a.date < b.date ? 1 : -1));
-const isLive = (p) => PREVIEW || (p.draft !== "true" && p.date <= TODAY);
-const posts = allPosts.filter(isLive);
-const queued = allPosts.filter((p) => !isLive(p)).sort((a, b) => (a.date < b.date ? -1 : 1));
+const built = allPosts.filter((p) => PREVIEW || p.draft !== "true");
+const liveOn = (day) => built.filter((p) => PREVIEW || p.date <= day);
+const posts = liveOn(TODAY);
+const queued = built.filter((p) => !posts.includes(p)).sort((a, b) => (a.date < b.date ? -1 : 1));
+const futureDates = [...new Set(queued.map((p) => p.date))].sort();
 
-for (const p of posts) {
+for (const p of built) {
   const dir = join(OUT, "blog", p.slug);
   mkdirSync(dir, { recursive: true });
   const jsonld = {
@@ -254,14 +260,15 @@ ${(p.tags ?? []).map((t) => `<meta property="article:tag" content="${esc(t)}">`)
 }
 
 // Blog index
-mkdirSync(join(OUT, "blog"), { recursive: true });
+function writeIndexAndFeed(base, posts) {
+mkdirSync(join(base, "blog"), { recursive: true });
 const list = posts
   .map(
     (p) => `<li><a class="t" href="/blog/${p.slug}/">${esc(p.title)}</a><p class="meta" style="margin:6px 0 0"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p><p>${esc(p.description)}</p></li>`,
   )
   .join("\n");
 writeFileSync(
-  join(OUT, "blog/index.html"),
+  join(base, "blog/index.html"),
   page({
     title: "Blog — Agentwright",
     description: "Practical notes on building Claude-powered SaaS: metering, billing, agent loops, MCP and evals. From the team behind Agentwright Starter.",
@@ -295,7 +302,14 @@ ${posts
 </channel>
 </rss>
 `;
-writeFileSync(join(OUT, "feed.xml"), rss);
+writeFileSync(join(base, "feed.xml"), rss);
+}
+writeIndexAndFeed(OUT, posts);
+for (const d of futureDates) writeIndexAndFeed(join(OUT, "_asof", d), liveOn(d));
+writeFileSync(
+  join(OUT, "_schedule.json"),
+  JSON.stringify({ builtOn: TODAY, posts: Object.fromEntries(built.map((p) => [p.slug, p.date])), asof: futureDates }),
+);
 
 // Tools: static pages under tools/<slug>/ are copied as-is; the cost calculator
 // gets its pricing.json inlined so the page renders without a second request.
@@ -335,7 +349,8 @@ writeFileSync(
   }),
 );
 
-// Sitemap
+// Sitemap (today + one snapshot per future publish date)
+function writeSitemap(base, posts) {
 const urls = [
   { loc: `${SITE}/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "1.0" },
   { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
@@ -346,13 +361,16 @@ const urls = [
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
 writeFileSync(
-  join(OUT, "sitemap.xml"),
+  join(base, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `<url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.priority}</priority></url>`).join("\n")}
 </urlset>
 `,
 );
+}
+writeSitemap(OUT, posts);
+for (const d of futureDates) writeSitemap(join(OUT, "_asof", d), liveOn(d));
 writeFileSync(
   join(OUT, "404.html"),
   page({

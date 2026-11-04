@@ -24,12 +24,15 @@ Posts are Markdown files in `content/posts/*.md` (frontmatter: title, descriptio
 (wrangler picks up `functions/` from the repo root). Drafts/outlines live in `content/drafts/` and are not built.
 
 ### Scheduled posts
-A post goes live on its frontmatter `date` (Korea time): future-dated posts and `draft: true` are left out of
-every page, the feed and the sitemap. A daily scheduled job runs `npm run deploy`, so queued posts appear on their day.
-`BLOG_PREVIEW=1 npm run build:blog` builds everything for a local preview (never deploy with it).
+A post goes live on its frontmatter `date` (Korea time) **without a new deploy**. The build renders every
+non-draft post, plus `dist/_schedule.json` and one snapshot of `/blog/`, `feed.xml` and `sitemap.xml` per
+future publish date under `dist/_asof/<date>/`. `functions/_middleware.ts` then returns 404 for posts dated
+after today and serves the snapshot for today. So queue posts by committing them with a future date and
+running `npm run deploy` once. `draft: true` posts are never built.
+`BLOG_PREVIEW=1 npm run build:blog` treats every post as live (local preview only, never deploy with it).
 
 ### dev.to cross-posts
-`content/devto-schedule.json` lists `{slug, date, tags}`. `node scripts/devto-crosspost.mjs` (run by the same daily job,
+`content/devto-schedule.json` lists `{slug, date, tags}`. `node scripts/devto-crosspost.mjs` (run by a daily scheduled job,
 needs `DEVTO_API_KEY`) publishes at most one due post per run with `canonical_url` set to our post, skipping anything
 already on dev.to. Text between `<!-- site-only -->` and `<!-- /site-only -->` is removed for dev.to (no self-promotion
 there), and the AI disclosure + "questions go to the original post's comments" closing is appended.
