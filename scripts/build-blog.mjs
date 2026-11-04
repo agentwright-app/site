@@ -97,6 +97,9 @@ blockquote{margin:0;padding-left:16px;border-left:3px solid var(--accent);color:
 .c-msg{font-size:14px;color:var(--muted);min-height:1em;margin:0}
 footer{padding:36px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
 footer a{color:inherit}
+.faq h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:48px 0 4px}
+.faq h3{font-size:19px;margin:28px 0 6px}
+.faq p{margin:0 0 10px}
 `;
 
 function page({ title, description, url, body, meta = "", type = "website" }) {
@@ -132,11 +135,11 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
 <main>
 ${body}
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>
@@ -324,6 +327,7 @@ const urls = [
   { loc: `${SITE}/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "1.0" },
   { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
   ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
+  { loc: `${SITE}/faq/`, lastmod: "2026-11-04", priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
@@ -356,6 +360,36 @@ writeFileSync(
       description: "14-day no-questions refund, and what the Agentwright Starter license lets you do.",
       url: `${SITE}/legal/`,
       body: `<h1>Refund policy &amp; license terms</h1>\n<article>\n${marked.parse(readFileSync(join(root, "content/pages/legal.md"), "utf8"))}</article>`,
+    }),
+  );
+}
+// /faq/: pre-launch FAQ from content/pages/faq.md ("## Group" / "### Question" + answer).
+// Emits FAQPage structured data built from the same Markdown.
+{
+  const md = readFileSync(join(root, "content/pages/faq.md"), "utf8");
+  const qa = md
+    .split(/^### /m)
+    .slice(1)
+    .map((chunk) => {
+      const [q, ...rest] = chunk.split("\n");
+      const answer = rest.join("\n").split(/^## /m)[0].trim();
+      return { q: q.trim(), a: marked.parse(answer) };
+    });
+  const jsonld = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: qa.map(({ q, a }) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.trim() } })),
+  };
+  const dir = join(OUT, "faq");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "index.html"),
+    page({
+      title: "FAQ — Agentwright Starter",
+      description: "Price, refunds, license, what's inside, tech stack and updates for Agentwright Starter, the Claude agent SaaS starter kit.",
+      url: `${SITE}/faq/`,
+      meta: `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>\n`,
+      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Launch price $99</strong> (list $149) for the first 50 licenses. Sales open in December 2026.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>`,
     }),
   );
 }
