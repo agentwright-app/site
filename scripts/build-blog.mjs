@@ -398,4 +398,20 @@ writeFileSync(
 }
 writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 
+// Cookieless visit counter (functions/api/hit.ts): add one beacon to every HTML page in dist/.
+{
+  const BEACON = `<script>try{navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer}))}catch(e){}</script>`;
+  const walk = (d) => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const f = join(d, e.name);
+      if (e.isDirectory()) walk(f);
+      else if (e.name.endsWith(".html")) {
+        const html = readFileSync(f, "utf8");
+        if (!html.includes("/api/hit") && html.includes("</body>")) writeFileSync(f, html.replace(/<\/body>(?![\s\S]*<\/body>)/, `${BEACON}\n</body>`));
+      }
+    }
+  };
+  walk(OUT);
+}
+
 console.log(`dist/ ready — ${posts.length} post(s): ${posts.map((p) => p.slug).join(", ")}; ${tools.length} tool(s): ${tools.map((t) => t.slug).join(", ")}`);
