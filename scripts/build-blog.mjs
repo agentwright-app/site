@@ -428,7 +428,8 @@ writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE
 
 // Cookieless visit counter (functions/api/hit.ts): add one beacon to every HTML page in dist/.
 {
-  const BEACON = `<script>try{navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer}))}catch(e){}</script>`;
+  // Owner opt-out: open any page once with ?notrack=1 (per browser/device) to stop counting your own visits; ?notrack=0 undoes it.
+  const BEACON = `<script>var n=0;try{var q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("aw_notrack","1");if(q==="0")localStorage.removeItem("aw_notrack");n=localStorage.getItem("aw_notrack")}catch(e){}try{if(!n)navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer}))}catch(e){}</script>`;
   const walk = (d) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       const f = join(d, e.name);
