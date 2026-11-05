@@ -31,6 +31,11 @@ export interface LicenseRecord {
   testMode: boolean;
   downloadUrl: string;
   emailSent: boolean;
+  /** Resend message id once the license email went out. */
+  emailId?: string;
+  emailSentAt?: string;
+  /** Last delivery error (kept so a retry or the inbox routine can spot it). */
+  emailError?: string;
   createdAt: string;
   revokedAt?: string;
 }
