@@ -7,11 +7,14 @@
  *   order_refunded                   → mark that order's license as revoked
  *   anything else                    → acknowledged and ignored
  *
- * Email delivery is not wired yet: each record carries `emailSent: false` so a later
- * job can send the key. Keys are readable via the KV REST API (`license:` prefix).
+ * After issuing, the key + download link are emailed to the buyer via Resend (lib/mail.ts)
+ * and the record's `emailSent` flips to true. If sending fails the webhook still answers 200
+ * (the license exists; /thanks shows it too) and a redelivered order_created retries the email.
+ * Keys are readable via the KV REST API (`license:` prefix).
  *
  * Config (Pages project → Settings → Bindings / Variables and Secrets):
- *   KV LICENSES, secret LEMONSQUEEZY_WEBHOOK_SECRET, var LICENSE_VARIANT_ID.
+ *   KV LICENSES, secret LEMONSQUEEZY_WEBHOOK_SECRET, var LICENSE_VARIANT_ID,
+ *   secret RESEND_API_KEY (+ optional var MAIL_FROM).
  */
 import {
   type LicenseEnv,
@@ -22,6 +25,22 @@ import {
   signDownloadToken,
   verifyLemonSqueezySignature,
 } from "../../../lib/license";
+import { type MailEnv, licenseMail, sendMail } from "../../../lib/mail";
+
+type Env = LicenseEnv & MailEnv;
+
+/** Emails the license to the buyer once; records the outcome on the KV record. */
+async function deliverLicense(env: Env, record: LicenseRecord): Promise<LicenseRecord> {
+  if (record.emailSent || !record.email) return record;
+  const sent = await sendMail(env, record.email, licenseMail(record), {
+    idempotencyKey: `license-email-${record.orderId}`,
+  });
+  const next: LicenseRecord = sent.ok
+    ? { ...record, emailSent: true, emailId: sent.id, emailSentAt: new Date().toISOString(), emailError: undefined }
+    : { ...record, emailError: sent.error };
+  await saveLicense(env.LICENSES!, next);
+  return next;
+}
 
 interface WebhookPayload {
   meta?: { event_name?: string; custom_data?: Record<string, unknown> };
@@ -45,7 +64,7 @@ const json = (status: number, body: Record<string, unknown>) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
-export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env }) => {
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const secret = env.LEMONSQUEEZY_WEBHOOK_SECRET;
   if (!secret) return json(503, { error: "Webhook secret not configured" });
   if (!env.LICENSES) return json(503, { error: "License storage not configured" });
@@ -74,7 +93,14 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
       return json(200, { ok: true, result: `ignored: variant ${variantId}` });
     }
     const existingKey = await env.LICENSES.get(`order:${orderId}`);
-    if (existingKey) return json(200, { ok: true, result: "already issued" });
+    if (existingKey) {
+      const existing = await getLicense(env.LICENSES, existingKey);
+      if (existing && existing.status === "active" && !existing.emailSent) {
+        const after = await deliverLicense(env, existing);
+        return json(200, { ok: true, result: "already issued", email: after.emailSent ? "sent" : "failed" });
+      }
+      return json(200, { ok: true, result: "already issued" });
+    }
 
     const key = generateLicenseKey();
     const origin = new URL(request.url).origin;
@@ -93,7 +119,8 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
       createdAt: new Date().toISOString(),
     };
     await saveLicense(env.LICENSES, record);
-    return json(200, { ok: true, result: "license issued" });
+    const after = await deliverLicense(env, record);
+    return json(200, { ok: true, result: "license issued", email: after.emailSent ? "sent" : "failed" });
   }
 
   if (event === "order_refunded") {
@@ -110,9 +137,10 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
 };
 
 /** Health check: GET → whether the secret and KV binding are present. */
-export const onRequestGet: PagesFunction<LicenseEnv> = async ({ env }) =>
+export const onRequestGet: PagesFunction<Env> = async ({ env }) =>
   json(200, {
     ok: true,
     secret: env.LEMONSQUEEZY_WEBHOOK_SECRET ? "configured" : "missing",
     storage: env.LICENSES ? "kv" : "missing",
+    email: env.RESEND_API_KEY ? "configured" : "missing",
   });
