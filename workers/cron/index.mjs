@@ -180,7 +180,7 @@ async function postToX(env, text, communityId) {
     body: JSON.stringify(payload),
   });
   const body = await res.text();
-  return { status: res.status, body: body.slice(0, 300) };
+  return { status: res.status, body }; // full body: a 201 response is longer than any preview cut
 }
 
 async function runX(env) {
@@ -210,12 +210,15 @@ async function runX(env) {
       community = null;
     }
     if (r.status === 201) {
-      const id = JSON.parse(r.body).data?.id;
+      let id = null;
+      try {
+        id = JSON.parse(r.body).data?.id ?? null;
+      } catch {}
       await env.STATE.put(`x:${p.id}`, JSON.stringify({ tweetId: id, community, at: new Date().toISOString() }));
       console.log(`X: posted ${p.id} → ${id}`);
     } else {
       await env.STATE.put(`x:${p.id}`, JSON.stringify({ failed: true, status: r.status, at: new Date().toISOString() }));
-      problems.push(`X 글 ${p.id} 게시 실패(${r.status}): ${r.body}`);
+      problems.push(`X 글 ${p.id} 게시 실패(${r.status}): ${r.body.slice(0, 300)}`);
     }
     break; // at most one post per run
   }
