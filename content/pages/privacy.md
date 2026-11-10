@@ -8,7 +8,7 @@ This policy explains what personal data agentwright.app (the "site") and purchas
 
 **Blog comments.** If you comment, we store the name you enter, your comment and your country, and publish the name and comment. To limit spam we keep a one-way hash of your IP address for 10 minutes.
 
-**Purchases.** Payment is handled by our merchant of record, Lemon Squeezy, which processes your payment details under its own [privacy policy](https://www.lemonsqueezy.com/privacy). We never see your card details. Lemon Squeezy shares your order number, email address and name with us so that we can issue your license key, email you the download link, and answer support requests.
+**Purchases.** Payment is handled by our merchant of record, Polar, which processes your payment details under its own [privacy policy](https://polar.sh/legal/privacy-policy). We never see your card details. Polar shares your order number, email address and name with us so that we can issue your license key, email you the download link, and answer support requests.
 
 **Emails you send us.** If you email us, we keep the conversation to answer you and to help with later questions.
 
@@ -19,7 +19,7 @@ Only to run the site, deliver and support the Starter, prevent abuse, and send y
 ## Who processes it for us
 
 - **Cloudflare** hosts the site and stores visit counts, the email list, comments and license records.
-- **Lemon Squeezy** processes payments and taxes as merchant of record.
+- **Polar** processes payments and taxes as merchant of record.
 - **Resend** sends our transactional emails, such as your license key.
 - **Google (Gmail)** hosts our support inbox.
 
