@@ -10,7 +10,7 @@ No. You pay once and keep the code. There is no monthly fee and no update plan t
 
 ### When can I buy it?
 
-Sales open in December 2026. Until then you can [join the launch list](/#waitlist) and we will send you one email on the day checkout opens.
+The Starter (version 0.4.1) is finished and checkout is opening shortly. [Leave your email](/#waitlist) and we will send you one email with the checkout link the moment it is live.
 
 ### Who handles the payment?
 
