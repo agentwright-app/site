@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Caching Savings Calculator — how much does Claude prompt caching save?</title>
+<meta name="description" content="Free calculator for Claude prompt caching. Enter your cached prefix, new tokens, output and how many calls reuse the cache to see monthly cost with and without caching, the savings, and the break-even number of calls. 5-minute and 1-hour cache.">
+<link rel="canonical" href="https://agentwright.app/tools/prompt-caching-savings-calculator/">
+<link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="/feed.xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0F172A">
+<meta property="og:site_name" content="Agentwright">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prompt Caching Savings Calculator">
+<meta property="og:description" content="See how much Claude prompt caching saves on your workload, and how many calls per cache window you need to break even.">
+<meta property="og:url" content="https://agentwright.app/tools/prompt-caching-savings-calculator/">
+<meta property="og:image" content="https://agentwright.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://agentwright.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prompt Caching Savings Calculator">
+<meta name="twitter:description" content="See how much Claude prompt caching saves on your workload, and how many calls per cache window you need to break even.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Prompt Caching Savings Calculator","url":"https://agentwright.app/tools/prompt-caching-savings-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Agentwright","url":"https://agentwright.app"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF9;--ink:#1C1917;--muted:#57534E;--primary:#0F172A;--accent:#F59E0B;--card:#FFFFFF;--line:#E7E5E4;--link:#B45309;--soft:#FFFBEB}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}}
+:root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
+main{padding:16px 0 48px}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
+.lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.01em}
+label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+label small{color:var(--muted);font-weight:400}
+input[type=number],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:var(--bg);color:var(--ink);font-family:inherit}
+input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.row{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15px}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.big{font-size:clamp(34px,6vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1;margin:4px 0 2px;font-family:"JetBrains Mono",ui-monospace,monospace}
+.sub{color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 6px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:20px;font-weight:600}
+.stat .k{font-size:13px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin:12px 0 0;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-family:"JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
+tr.sel td{background:var(--soft)}
+.btn{display:inline-block;background:var(--primary);color:var(--bg);padding:11px 18px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px;border:0;cursor:pointer;font-family:inherit}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.warn{display:none;background:var(--soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:14px}
+.warn.on{display:block}
+section.text{max-width:720px;margin:44px 0 0}
+section.text h2{font-size:22px;letter-spacing:-.02em;margin:32px 0 10px}
+section.text p,section.text li{font-size:16px;color:var(--ink)}
+section.text a{color:var(--link)}
+section.text table{display:block;overflow-x:auto}
+section.text th,section.text td{white-space:nowrap}
+.cta{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card);margin-top:40px;max-width:720px}
+.cta p{margin:0 0 12px}
+footer{padding:36px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<main>
+<h1>Prompt Caching Savings Calculator</h1>
+<p class="lede">How much does Claude prompt caching actually save on your workload? Enter the part of the prompt that repeats (system prompt, tool definitions, documents), what changes per call, and how many calls reuse the cache before it expires.</p>
+
+<div class="layout">
+<form class="panel" id="f" onsubmit="return false">
+<h2>Your workload</h2>
+<label for="model">Model</label>
+<select id="model"></select>
+<div class="row">
+<div><label for="pre">Cached prefix tokens <small>(repeats every call)</small></label><input type="number" id="pre" min="0" step="500" value="10000" inputmode="numeric"></div>
+<div><label for="fresh">New input tokens per call</label><input type="number" id="fresh" min="0" step="100" value="1000" inputmode="numeric"></div>
+</div>
+<div class="row">
+<div><label for="out">Output tokens per call</label><input type="number" id="out" min="0" step="50" value="500" inputmode="numeric"></div>
+<div><label for="n">Calls per cache window <small>(before it expires)</small></label><input type="number" id="n" min="1" step="1" value="20" inputmode="numeric"></div>
+</div>
+<label for="req">Calls per month</label>
+<input type="number" id="req" min="0" step="1000" value="100000" inputmode="numeric">
+<label for="ttl">Cache lifetime</label>
+<select id="ttl"><option value="5m">5 minutes (write = 1.25× input)</option><option value="1h">1 hour (write = 2× input)</option></select>
+</form>
+
+<div class="panel" aria-live="polite">
+<h2>Monthly cost</h2>
+<div class="sub">With caching</div>
+<div class="big" id="withC">–</div>
+<div class="sub" id="saveLine">–</div>
+<div class="stats">
+<div class="stat"><div class="v" id="noC">–</div><div class="k">Without caching</div></div>
+<div class="stat"><div class="v" id="saved">–</div><div class="k">Saved per month</div></div>
+<div class="stat"><div class="v" id="be">–</div><div class="k">Break-even calls per window</div></div>
+<div class="stat"><div class="v" id="perCall">–</div><div class="k">Average cost per call, cached</div></div>
+</div>
+<div class="warn" id="warn"></div>
+<p class="note" id="asof"></p>
+</div>
+</div>
+
+<section class="text">
+<h2>How the numbers are worked out</h2>
+<p>Within one cache window, the first call writes the prefix to the cache at the cache-write price and every later call reads it at the cache-read price. New input and output tokens are billed normally on every call. Without caching, every call pays the full input price for the prefix as well.</p>
+<p><strong>Break-even</strong> is the number of calls per window at which caching starts to cost less than not caching. Because a cache write costs more than normal input, a prefix that is used only once costs a little more with caching. From the second call in the window it is almost always cheaper.</p>
+<h2>Getting a high hit rate</h2>
+<ul>
+<li><strong>Put stable content first.</strong> System prompt, tool definitions, then long documents, then the conversation, then the new question. The cache matches the prompt from the start, so anything that changes early breaks it for everything after.</li>
+<li><strong>Keep tool order stable.</strong> Reordering or renaming tools between calls changes the prefix and turns every call into a cache write.</li>
+<li><strong>Pick the lifetime for your traffic.</strong> If a user sends a message every few minutes, the 5-minute cache is enough. For prefixes shared across many users with gaps between calls, the 1-hour cache costs more to write but expires less often.</li>
+<li><strong>Check the minimum length.</strong> Very short prefixes are not cached at all; see the official prompt caching docs for the current minimum per model.</li>
+</ul>
+<p>More detail with code: <a href="/blog/prompt-caching-claude-agent-loop/">Prompt caching in a Claude agent loop</a>. Prices for every model: <a href="/pricing/claude/">Claude API pricing</a>.</p>
+</section>
+
+<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS that records cache writes and reads per user, so you see real caching savings instead of estimates. Streaming agent loop with tool calls, MCP, evals, auth and plan caps included. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
+</main>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+</div>
+<script id="pricing-data" type="application/json">__PRICING_JSON__</script>
+<script>
+const P = JSON.parse(document.getElementById("pricing-data").textContent);
+const $ = (id) => document.getElementById(id);
+const sel = $("model");
+for (const m of P.models) { const o = document.createElement("option"); o.value = m.id; o.textContent = m.name; sel.appendChild(o); }
+sel.value = (P.models.find((m) => m.id.includes("sonnet")) || P.models[0]).id;
+const usd = (n) => n >= 100 ? "$" + Math.round(n).toLocaleString("en-US") : n >= 1 ? "$" + n.toFixed(2) : "$" + n.toFixed(4);
+const v = (id) => Math.max(0, Number($(id).value) || 0);
+const params = new URLSearchParams(location.search);
+for (const k of ["model", "pre", "fresh", "out", "n", "req", "ttl"]) if (params.has(k)) $(k).value = params.get(k);
+function calc() {
+  const m = P.models.find((x) => x.id === sel.value) || P.models[0];
+  const pre = v("pre"), fresh = v("fresh"), out = v("out"), n = Math.max(1, Math.round(v("n"))), req = v("req");
+  const long = m.longPrompt && pre + fresh > m.longPrompt.thresholdTokens;
+  const r = long ? m.longPrompt : m;
+  const write = $("ttl").value === "1h" ? r.cacheWrite1h : r.cacheWrite5m;
+  const M = 1e6;
+  const noWin = n * ((pre + fresh) * r.input + out * r.output) / M;
+  const withWin = (pre * write + (n - 1) * pre * r.cacheRead + n * (fresh * r.input + out * r.output)) / M;
+  const windows = req / n;
+  const no = noWin * windows, wi = withWin * windows;
+  $("noC").textContent = usd(no);
+  $("withC").textContent = usd(wi);
+  $("saved").textContent = usd(Math.max(0, no - wi));
+  const pct = no > 0 ? Math.round((1 - wi / no) * 100) : 0;
+  $("saveLine").textContent = pct >= 0 ? pct + "% less than without caching" : -pct + "% more than without caching (too few calls per window)";
+  const be = Math.floor((write - r.cacheRead) / (r.input - r.cacheRead)) + 1;
+  $("be").textContent = pre > 0 ? be + (be === 1 ? " call" : " calls") : "–";
+  $("perCall").textContent = req > 0 ? usd(wi / req) : "–";
+  const w = $("warn");
+  w.textContent = long ? `${m.name}: this prompt is over ${m.longPrompt.thresholdTokens.toLocaleString("en-US")} tokens, so long-prompt prices are used.` : "";
+  w.classList.toggle("on", !!long);
+  $("asof").textContent = `Prices: USD per million tokens, checked ${P.updated}.`;
+  const q = new URLSearchParams({ model: sel.value, pre, fresh, out, n, req, ttl: $("ttl").value });
+  history.replaceState(null, "", "?" + q);
+}
+$("f").addEventListener("input", calc);
+calc();
+</script>
+</body>
+</html>
