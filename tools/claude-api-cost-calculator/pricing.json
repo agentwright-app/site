@@ -1,10 +1,19 @@
 {
-  "updated": "2026-11-01",
+  "updated": "2026-11-10",
   "source": "https://platform.claude.com/docs/en/about-claude/pricing",
   "currency": "USD",
   "unit": "per million tokens",
   "batchDiscount": 0.5,
   "models": [
+    {
+      "id": "claude-fable-5-2",
+      "name": "Claude Fable 5.2",
+      "input": 8,
+      "output": 40,
+      "cacheWrite5m": 10,
+      "cacheWrite1h": 16,
+      "cacheRead": 0.2
+    },
     {
       "id": "claude-opus-5-5",
       "name": "Claude Opus 5.5",
