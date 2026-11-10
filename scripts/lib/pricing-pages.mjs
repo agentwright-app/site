@@ -4,6 +4,7 @@
 // Every number comes from pricing.json, so updating that file + deploy updates these pages too.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { buildCostPages } from "./cost-pages.mjs";
 
 const fmt = (n) => (n >= 1 ? `$${n.toFixed(2)}` : n >= 0.01 ? `$${n.toFixed(3)}` : `$${n.toPrecision(2)}`);
 const per = (tokens, rate) => (tokens * rate) / 1e6;
@@ -46,6 +47,8 @@ export function buildPricingPages({ page, esc, SITE, OUT, pricing }) {
     `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) })}</script>`;
   const faqHtml = (faq) => faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("");
 
+  const extra = buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, footerLinks, src });
+
   mkdirSync(join(OUT, "pricing/claude"), { recursive: true });
   writeFileSync(
     join(OUT, "pricing/claude/index.html"),
@@ -62,6 +65,7 @@ ${longNotes ? `<ul>${longNotes}</ul>` : ""}
 <h2>What a single request costs</h2>
 <p>Without caching or batching:</p>
 <table><thead><tr><th>Request</th>${models.map((m) => `<th>${esc(m.name.replace("Claude ", ""))}</th>`).join("")}</tr></thead><tbody>${exRows}</tbody></table>
+${extra.hubHtml}
 <h2>Questions</h2>${faqHtml(hubFaq)}
 </article>${footerLinks}`,
     }),
@@ -116,12 +120,14 @@ ${m.longPrompt ? `<tr><td>Prompts over ${m.longPrompt.thresholdTokens.toLocaleSt
 <p>An agent sends the same 10,000-token system prompt and tool list on every call, plus 1,000 new tokens, and gets 500 tokens back. Over 20 calls inside a 5-minute cache window:</p>
 <ul><li>Without caching: <strong>${fmt(noCache)}</strong></li><li>With caching (one cache write, then 19 cache reads): <strong>${fmt(withCache)}</strong>, about ${saving}% less</li></ul>
 <h2>Compared with other Claude models</h2><ul>${compare}</ul>
+<p>Side-by-side pages with worked examples:</p><ul>${extra.compareLinks(m)}</ul>
 <p>Input + output price per million tokens, compared as a simple sum. Your real ratio depends on how many input versus output tokens your workload uses; the <a href="/tools/claude-api-cost-calculator/">calculator</a> compares models on your own numbers.</p>
+<p>What a typical app costs on ${esc(m.name)}: ${extra.costLinks}.</p>
 <h2>Questions</h2>${faqHtml(faq)}
 </article>${footerLinks}`,
       }),
     );
     urls.push(`${SITE}/pricing/claude/${m.id}/`);
   }
-  return urls;
+  return [...urls, ...extra.urls];
 }
