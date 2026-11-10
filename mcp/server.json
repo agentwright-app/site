@@ -1,0 +1,10 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "app.agentwright/claude-pricing",
+  "title": "Claude API Pricing",
+  "description": "Current Claude API prices and cost estimates with prompt caching and Batch API pricing.",
+  "version": "1.0.0",
+  "websiteUrl": "https://agentwright.app/tools/claude-pricing-mcp/",
+  "repository": { "url": "https://github.com/agentwright-app/site", "source": "github", "subfolder": "functions" },
+  "remotes": [{ "type": "streamable-http", "url": "https://agentwright.app/mcp" }]
+}

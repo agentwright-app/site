@@ -10,10 +10,12 @@
       "@cloudflare/workers-types"
     ],
     "strict": true,
-    "noEmit": true
+    "noEmit": true,
+    "resolveJsonModule": true
   },
   "include": [
     "./**/*.ts",
-    "../lib/**/*.ts"
+    "../lib/**/*.ts",
+    "../tools/**/*.json"
   ]
 }

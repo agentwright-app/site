@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Pricing MCP Server — free Claude API prices and cost estimates inside your AI assistant</title>
+<meta name="description" content="Free remote MCP server that gives Claude, Cursor or any MCP client the current Claude API prices and cost estimates: per request, per month, with prompt caching and Batch API pricing. No sign-up, no API key.">
+<link rel="canonical" href="https://agentwright.app/tools/claude-pricing-mcp/">
+<link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="/feed.xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0F172A">
+<meta property="og:site_name" content="Agentwright">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claude Pricing MCP Server">
+<meta property="og:description" content="Free remote MCP server: current Claude API prices and cost estimates inside Claude, Cursor or any MCP client.">
+<meta property="og:url" content="https://agentwright.app/tools/claude-pricing-mcp/">
+<meta property="og:image" content="https://agentwright.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://agentwright.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Pricing MCP Server">
+<meta name="twitter:description" content="Free remote MCP server: current Claude API prices and cost estimates inside Claude, Cursor or any MCP client.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Claude Pricing MCP Server","url":"https://agentwright.app/tools/claude-pricing-mcp/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Agentwright","url":"https://agentwright.app"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF9;--ink:#1C1917;--muted:#57534E;--primary:#0F172A;--accent:#F59E0B;--card:#FFFFFF;--line:#E7E5E4;--link:#B45309;--soft:#FFFBEB}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}}
+:root[data-theme="dark"]{--bg:#0C0A09;--ink:#FAFAF9;--muted:#A8A29E;--primary:#F5F5F4;--card:#1C1917;--line:#292524;--link:#FBBF24;--soft:#292524}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
+main{padding:16px 0 48px}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
+.lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.panel h2{font-size:17px;margin:0 0 14px;letter-spacing:-.01em}
+label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+label small{color:var(--muted);font-weight:400}
+input[type=number],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:var(--bg);color:var(--ink);font-family:inherit}
+input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.row{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15px}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.big{font-size:clamp(34px,6vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1;margin:4px 0 2px;font-family:"JetBrains Mono",ui-monospace,monospace}
+.sub{color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 6px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:20px;font-weight:600}
+.stat .k{font-size:13px;color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin:12px 0 0;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-family:"JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
+tr.sel td{background:var(--soft)}
+.btn{display:inline-block;background:var(--primary);color:var(--bg);padding:11px 18px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px;border:0;cursor:pointer;font-family:inherit}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.warn{display:none;background:var(--soft);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:14px}
+.warn.on{display:block}
+section.text{max-width:720px;margin:44px 0 0}
+section.text h2{font-size:22px;letter-spacing:-.02em;margin:32px 0 10px}
+section.text p,section.text li{font-size:16px;color:var(--ink)}
+section.text a{color:var(--link)}
+section.text table{display:block;overflow-x:auto}
+section.text th,section.text td{white-space:nowrap}
+.cta{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card);margin-top:40px;max-width:720px}
+.cta p{margin:0 0 12px}
+footer{padding:36px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer a{color:inherit}
+pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13.5px;line-height:1.5}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.92em}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<main>
+<h1>Claude Pricing MCP Server</h1>
+<p class="lede">A free, remote MCP server that lets your AI assistant answer "what will this cost on Claude?" with current prices instead of guesses. It knows every current Claude model, prompt caching and the Batch API discount. No sign-up, no API key, nothing to install.</p>
+
+<div class="panel">
+<h2>Server URL</h2>
+<pre>https://agentwright.app/mcp</pre>
+<p class="note">Transport: Streamable HTTP. Read-only, stateless, no authentication. We do not log or store your requests.</p>
+</div>
+
+<section class="text">
+<h2>Add it to your client</h2>
+<p><strong>Claude Code</strong></p>
+<pre>claude mcp add --transport http claude-pricing https://agentwright.app/mcp</pre>
+<p><strong>Claude desktop app and claude.ai</strong>: Settings → Connectors → Add custom connector, then paste <code>https://agentwright.app/mcp</code> as the URL.</p>
+<p><strong>Cursor</strong> (<code>~/.cursor/mcp.json</code>)</p>
+<pre>{
+  "mcpServers": {
+    "claude-pricing": { "url": "https://agentwright.app/mcp" }
+  }
+}</pre>
+<p><strong>VS Code</strong> (<code>.vscode/mcp.json</code>)</p>
+<pre>{
+  "servers": {
+    "claude-pricing": { "type": "http", "url": "https://agentwright.app/mcp" }
+  }
+}</pre>
+
+<h2>Tools</h2>
+<table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody>
+<tr><td><code>list_claude_models</code></td><td>Current models and prices per million tokens: input, output, cache writes, cache reads</td></tr>
+<tr><td><code>estimate_claude_cost</code></td><td>Cost of a request or a whole workload from token counts, with caching, Batch API and long-prompt pricing</td></tr>
+<tr><td><code>compare_claude_models</code></td><td>The same workload on every Claude model, cheapest first</td></tr>
+</tbody></table>
+
+<h2>Things to ask</h2>
+<ul>
+<li>"Our chat feature sends 3,000 input and 500 output tokens per message, 40 messages per user per day. What does one user cost per month on Sonnet 5.5, and on Haiku?"</li>
+<li>"If 80% of the prompt is a cached system prompt, how much do we save?"</li>
+<li>"Is it worth moving our nightly summaries to the Batch API?"</li>
+</ul>
+
+<h2>Where the prices come from</h2>
+<p>The server reads the same price table as our <a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a>, checked against the official Claude pricing page. Every answer states the date of the table it used. If you spot a wrong price, tell us at <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>.</p>
+<p>The source code is public: <a href="https://github.com/agentwright-app/site/blob/main/functions/mcp.ts">functions/mcp.ts</a>. It is a small, dependency-free implementation of the MCP Streamable HTTP transport on Cloudflare Pages Functions, so it also works as an example of a remote MCP server.</p>
+</section>
+
+<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS that turns these estimates into real numbers: per-user token tracking in Postgres, plan caps and rate limits, a streaming agent loop with tool calls, an MCP client, evals and auth. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
+</main>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+</div>
+</body>
+</html>
