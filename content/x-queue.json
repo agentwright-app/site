@@ -45,6 +45,11 @@
       "community_id": "1493446837214187523"
     },
     {
+      "id": "mcp-pricing-1",
+      "at": "2026-11-14T01:30:00+09:00",
+      "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key. Source is public."
+    },
+    {
       "id": "d4-2",
       "at": "2026-11-15T01:00:00+09:00",
       "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour, all within 24.",
