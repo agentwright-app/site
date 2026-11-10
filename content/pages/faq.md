@@ -10,7 +10,7 @@ No. You pay once and keep the code. There is no monthly fee and no update plan t
 
 ### When can I buy it?
 
-The Starter (version 0.4.1) is finished and checkout is opening shortly. [Leave your email](/#waitlist) and we will send you one email with the checkout link the moment it is live.
+Now. The Starter (version 0.4.1) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link arrive by email within a minute of payment.
 
 ### Who handles the payment?
 
@@ -61,6 +61,10 @@ Any model on the Claude API. The default is Claude Sonnet 5.5, and the metering 
 ### What do I need to run it?
 
 An Anthropic API key, a Postgres database (the free tiers of Neon or Supabase work) and a GitHub OAuth app for sign-in. A Lemon Squeezy account is only needed when you start charging your own users. Your API and hosting costs are your own.
+
+### Can I use Stripe, Polar or Paddle instead of Lemon Squeezy?
+
+Yes, but you do that part yourself. Lemon Squeezy is the provider that comes wired in. The provider-specific code sits in a few files: the webhook route (`app/api/webhooks/lemonsqueezy/route.ts`), the checkout helpers in `lib/billing/`, and the mapping from product variants to plans. Metering, plan caps and the rest of the app read your own database, not the provider, so they stay the same. Swapping providers means rewriting those billing files for the new provider's checkout and webhooks. The Starter does not ship a ready-made adapter for other providers yet.
 
 ### How is it delivered?
 
