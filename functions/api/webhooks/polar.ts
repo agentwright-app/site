@@ -17,7 +17,7 @@
  *
  * Config (Pages project → Settings → Variables and Secrets):
  *   var POLAR_ENABLED ("true" to turn on), secret POLAR_WEBHOOK_SECRET,
- *   var POLAR_PRODUCT_ID (orders for other products are ignored),
+ *   optional var POLAR_PRODUCT_ID (defaults to the Starter product below; other products are ignored),
  *   plus the existing KV LICENSES, LEMONSQUEEZY_WEBHOOK_SECRET (download-link signing) and RESEND_API_KEY.
  */
 import {
@@ -56,6 +56,9 @@ interface PolarEvent {
   type?: string;
   data?: PolarOrder;
 }
+
+/** Polar product "Agentwright Starter" ($149 one-time), created 2026-11-10. */
+const STARTER_PRODUCT_ID = "fe9c15bd-32a4-4ba9-978c-5a38417a62c6";
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -101,7 +104,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const orderId = `polar:${order.id}`;
 
   if (type === "order.paid") {
-    if (env.POLAR_PRODUCT_ID && order.product_id !== env.POLAR_PRODUCT_ID) {
+    if (order.product_id !== (env.POLAR_PRODUCT_ID || STARTER_PRODUCT_ID)) {
       return json(200, { ok: true, result: `ignored: product ${order.product_id}` });
     }
     const existingKey = await env.LICENSES.get(`order:${orderId}`);
@@ -161,7 +164,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) =>
     ok: true,
     enabled: env.POLAR_ENABLED === "true",
     secret: env.POLAR_WEBHOOK_SECRET ? "configured" : "missing",
-    product: env.POLAR_PRODUCT_ID ? "configured" : "missing",
     storage: env.LICENSES ? "kv" : "missing",
     email: env.RESEND_API_KEY ? "configured" : "missing",
   });
