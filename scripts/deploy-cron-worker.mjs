@@ -1,10 +1,10 @@
 // Deploys workers/cron (Cloudflare Worker "agentwright-cron") through the Cloudflare API, then sets its
-// daily Cron Trigger. Run from an INTERACTIVE session (unattended routines are not allowed to deploy):
+// Cron Triggers (daily 07:00 KST + hourly X posting). Run from an INTERACTIVE session (unattended routines are not allowed to deploy):
 //
 //   node scripts/deploy-cron-worker.mjs
 //
-// Needs env CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DEVTO_API_KEY, RESEND_API_KEY.
-// The two API keys are uploaded as worker secrets; no value is ever printed.
+// Needs env CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DEVTO_API_KEY, RESEND_API_KEY and the four X_* keys.
+// The API keys are uploaded as worker secrets; no value is ever printed.
 // The mail template is taken from the project's shared mail folder (render-mail.mjs) with its CLI part
 // stripped, so alert mails look the same as every other "[Agentwright 알림]" mail.
 import { readFileSync } from "node:fs";
@@ -13,10 +13,15 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const NAME = "agentwright-cron";
-const CRON = "0 22 * * *"; // 22:00 UTC = 07:00 KST, before the 07:17 KST Claude check reads the results
+const CRONS = [
+  "0 22 * * *", // 22:00 UTC = 07:00 KST daily blog + dev.to (must match X_DAILY in workers/cron/index.mjs)
+  "7 * * * *", // hourly at :07, X posts from content/x-queue.json
+];
+const STATE_KV = "be212341e70a4670889b4f2a93acebd4"; // KV namespace agentwright-cron-state
 const MAIL = process.env.MAIL_TEMPLATE ?? "/mnt/project-files/agentwright/mail/render-mail.mjs";
 
-for (const v of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "DEVTO_API_KEY", "RESEND_API_KEY"]) {
+const SECRETS = ["DEVTO_API_KEY", "RESEND_API_KEY", "X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"];
+for (const v of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", ...SECRETS]) {
   if (!process.env[v]) throw new Error(`${v} is not set`);
 }
 const api = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/workers/scripts/${NAME}`;
@@ -36,8 +41,8 @@ const metadata = {
   main_module: "index.mjs",
   compatibility_date: "2026-11-01",
   bindings: [
-    { type: "secret_text", name: "DEVTO_API_KEY", text: process.env.DEVTO_API_KEY },
-    { type: "secret_text", name: "RESEND_API_KEY", text: process.env.RESEND_API_KEY },
+    ...SECRETS.map((name) => ({ type: "secret_text", name, text: process.env[name] })),
+    { type: "kv_namespace", name: "STATE", namespace_id: STATE_KV },
   ],
 };
 const form = new FormData();
@@ -53,5 +58,5 @@ async function call(url, init) {
 
 await call(api, { method: "PUT", body: form });
 console.log(`uploaded ${NAME} (${Object.keys(modules).join(", ")})`);
-const sched = await call(`${api}/schedules`, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify([{ cron: CRON }]) });
+const sched = await call(`${api}/schedules`, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(CRONS.map((cron) => ({ cron }))) });
 console.log(`cron set: ${JSON.stringify(sched.schedules ?? sched)}`);
