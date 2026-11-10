@@ -3,7 +3,8 @@
  *
  * KV namespace `LICENSES` keys:
  *   license:<key>        JSON LicenseRecord
- *   order:<orderId>      the license key issued for a Lemon Squeezy order (idempotency)
+ *   order:<orderId>      the license key issued for an order (idempotency). Lemon Squeezy orders
+ *                        use the numeric LS id; Polar orders use `polar:<order uuid>`
  *   asset:starter.zip    the downloadable source archive (uploaded via the KV REST API)
  *
  * Download links are `/api/download?token=<key>.<hmac>` where the HMAC is derived from
@@ -38,6 +39,8 @@ export interface LicenseRecord {
   emailError?: string;
   createdAt: string;
   revokedAt?: string;
+  /** Which seller sold it. Missing on records created before Polar existed (= Lemon Squeezy). */
+  source?: "lemonsqueezy" | "polar";
 }
 
 const enc = new TextEncoder();
@@ -71,6 +74,53 @@ export async function verifyLemonSqueezySignature(rawBody: string, signature: st
   if (!signature) return false;
   const expected = toHex(await hmac(secret, rawBody));
   return constantTimeEqual(expected, signature.trim().toLowerCase());
+}
+
+/**
+ * Polar signs deliveries with Standard Webhooks: `webhook-signature: v1,<base64 HMAC-SHA256>` over
+ * `${webhook-id}.${webhook-timestamp}.${rawBody}`. Mirrors @polar-sh/sdk validateWebhook: the HMAC
+ * key is the UTF-8 bytes of the full secret, or its base64-decoded form (after an optional
+ * `whsec_` prefix). Timestamps more than 5 minutes off are rejected (replay protection).
+ */
+export async function verifyStandardWebhookSignature(
+  rawBody: string,
+  headers: Headers,
+  secret: string,
+  nowSeconds = Date.now() / 1000,
+): Promise<boolean> {
+  const id = headers.get("webhook-id");
+  const ts = headers.get("webhook-timestamp");
+  const sigHeader = headers.get("webhook-signature");
+  if (!secret || !id || !ts || !sigHeader) return false;
+  const timestamp = Number(ts);
+  if (!Number.isFinite(timestamp) || Math.abs(nowSeconds - timestamp) > 300) return false;
+
+  const keys: Uint8Array[] = [enc.encode(secret)];
+  const decoded = decodeBase64(secret.startsWith("whsec_") ? secret.slice(6) : secret);
+  if (decoded && decoded.byteLength > 0 && toHex(decoded) !== toHex(keys[0])) keys.push(decoded);
+
+  const signed = `${id}.${Math.floor(timestamp)}.${rawBody}`;
+  const expected = await Promise.all(
+    keys.map(async (k) => {
+      const ck = await crypto.subtle.importKey("raw", k, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+      return btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.sign("HMAC", ck, enc.encode(signed)))));
+    }),
+  );
+  for (const part of sigHeader.split(" ")) {
+    const [version, sig] = part.split(",", 2);
+    if (version !== "v1" || !sig) continue;
+    if (expected.some((e) => constantTimeEqual(e, sig))) return true;
+  }
+  return false;
+}
+
+function decodeBase64(value: string): Uint8Array | null {
+  try {
+    const s = atob(value);
+    return Uint8Array.from(s, (c) => c.charCodeAt(0));
+  } catch {
+    return null;
+  }
 }
 
 /** Keys look like AW-7K3M-Q9XD-2HBN-W4PC (no 0/O/1/I to avoid support emails). */

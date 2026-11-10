@@ -105,6 +105,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
   var states=['loading','pending','error','ready'];
   function show(s){states.forEach(function(x){$('state-'+x).hidden=(x!==s)});}
   function fail(title,msg){show('error');$('error-title').textContent=title;if(msg)$('error-msg').innerHTML=msg;$('lede').textContent='';}
+  if(q.get('polar_checkout')){show('error');$('lede').innerHTML='<span class="ok">Payment received.</span> Thank you!';$('error-title').textContent='Your license key is on its way by email.';$('error-msg').innerHTML='We email your license key and download link to the address you used at checkout, usually within a minute. Nothing there after 10 minutes (check spam too)? Email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we\'ll send it by hand.';return;}
   if(!orderId||!ident){fail('This page needs an order link.','Open the "Get your license" button in your Lemon Squeezy receipt email, or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>.');return;}
   var attempts=0, delays=[2000,3000,5000,8000,8000,10000,10000,15000,15000,15000,20000,20000];
   function poll(){
