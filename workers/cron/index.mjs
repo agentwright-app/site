@@ -144,12 +144,15 @@ async function oauthHeader(env, method, url) {
   return "OAuth " + Object.keys(o).sort().map((k) => `${pct(k)}="${pct(o[k])}"`).join(", ");
 }
 
-async function postToX(env, text) {
+// communityId (optional): post into an X Community the account has joined; share_with_followers
+// keeps it in the followers' timeline too.
+async function postToX(env, text, communityId) {
   const url = "https://api.x.com/2/tweets";
+  const payload = communityId ? { text, community_id: String(communityId), share_with_followers: true } : { text };
   const res = await fetch(url, {
     method: "POST",
     headers: { authorization: await oauthHeader(env, "POST", url), "content-type": "application/json", "user-agent": UA },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify(payload),
   });
   const body = await res.text();
   return { status: res.status, body: body.slice(0, 300) };
@@ -160,7 +163,9 @@ async function runX(env) {
   const q = await get(`${RAW}/content/x-queue.json`);
   if (!q.ok) return alertX(env, [`x-queue.json 응답 ${q.status}`]);
   const now = Date.now();
-  const posts = JSON.parse(q.text).posts ?? [];
+  const queue = JSON.parse(q.text);
+  if (queue.paused) return console.log("X: queue paused");
+  const posts = queue.posts ?? [];
   const problems = [];
   for (const p of posts.sort((a, b) => Date.parse(a.at) - Date.parse(b.at))) {
     const at = Date.parse(p.at);
@@ -171,10 +176,17 @@ async function runX(env) {
       problems.push(`X 글 ${p.id}(${p.at})는 예정 시각을 3시간 넘겨 건너뛰었습니다.`);
       continue;
     }
-    const r = await postToX(env, p.text);
+    let r = await postToX(env, p.text, p.community_id);
+    let community = p.community_id ?? null;
+    if (r.status !== 201 && p.community_id) {
+      // Community post refused (left the community, removed, policy change): post to the timeline instead.
+      problems.push(`X 글 ${p.id}를 커뮤니티 ${p.community_id}에 올리지 못해(${r.status}) 일반 글로 올렸습니다: ${r.body}`);
+      r = await postToX(env, p.text);
+      community = null;
+    }
     if (r.status === 201) {
       const id = JSON.parse(r.body).data?.id;
-      await env.STATE.put(`x:${p.id}`, JSON.stringify({ tweetId: id, at: new Date().toISOString() }));
+      await env.STATE.put(`x:${p.id}`, JSON.stringify({ tweetId: id, community, at: new Date().toISOString() }));
       console.log(`X: posted ${p.id} → ${id}`);
     } else {
       await env.STATE.put(`x:${p.id}`, JSON.stringify({ failed: true, status: r.status, at: new Date().toISOString() }));
