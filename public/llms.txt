@@ -1,0 +1,19 @@
+# Agentwright
+
+> Agentwright is a starter kit for developers building SaaS products on Claude AI agents: Next.js + Postgres, streaming agent API, per-user cost metering, auth, billing webhooks, evals and an admin page. One-time purchase with lifetime updates.
+
+## Product
+- [Agentwright Starter](https://agentwright.app/): what is inside, pricing and how delivery works
+- [FAQ](https://agentwright.app/faq/): price, refunds, license, stack, delivery
+
+## Free tools
+- [Claude API cost calculator](https://agentwright.app/tools/claude-api-cost-calculator/): estimate Claude API cost per request, per user and per month for every current model
+- [AI SaaS margin calculator](https://agentwright.app/tools/ai-saas-margin-calculator/): check plan prices against model costs to see gross margin per user
+
+## Blog
+- [Blog index](https://agentwright.app/blog/): practical guides on building and running Claude agent SaaS (cost metering, tool loops, MCP, evals, rate limits, billing)
+- [RSS feed](https://agentwright.app/feed.xml)
+
+## Legal
+- [Terms](https://agentwright.app/terms/)
+- [Privacy](https://agentwright.app/privacy/)
