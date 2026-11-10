@@ -57,8 +57,8 @@ footer{padding:48px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 <section class="hero">
 <h1>Ship production AI agents<br>in a weekend.</h1>
 <p>A production-ready starter kit for Claude-powered SaaS. Auth, billing, usage metering, the agent loop, tools and MCP are already wired. You write the prompts.</p>
-<a class="btn" href="#pricing">Get the kit</a><a class="btn alt" href="#waitlist">Join the launch list</a>
-<div class="note">Launching December 2026 · Next.js 15 · Anthropic TypeScript SDK · Lemon Squeezy · Postgres</div>
+<a class="btn" href="#pricing">Get the kit</a><a class="btn alt" href="#waitlist">Get the checkout link</a>
+<div class="note">Version 0.4.1 · Next.js 15 · Anthropic TypeScript SDK · Lemon Squeezy · Postgres</div>
 <pre><code>$ unzip agentwright-starter.zip &amp;&amp; npm install
 ✔ Auth (magic link + GitHub)       ✔ Billing + webhooks (Lemon Squeezy)
 ✔ Per-user token metering + caps   ✔ Streaming agent loop w/ tool calls
@@ -82,14 +82,14 @@ $ npm run dev   →  http://localhost:3000</code></pre>
 <ul><li>Full source code, license for one developer or one team</li><li>Unlimited projects</li><li>Lifetime updates</li><li>Email support</li></ul>
 <!-- Checkout is in Lemon Squeezy test mode until store approval. At the live switch, point #buy at the live checkout URL and restore the text "Buy now — $99". -->
 <a class="btn" id="buy" href="#waitlist">Get launch access — $99</a>
-<div class="note">Launch code <b>LAUNCH</b> is applied at checkout. Price goes to $149 after the first 50 licenses. Sales open in December. Join the launch list and we'll email you the day checkout opens. Secure payment by Lemon Squeezy; instant download.</div>
+<div class="note">Launch code <b>LAUNCH</b> is applied at checkout. Price goes to $149 after the first 50 licenses. Checkout is opening shortly: leave your email below and we'll send you the link the moment it's live. Secure payment through our merchant of record; instant download.</div>
 <div id="proof-buyers" class="note" style="display:none"></div>
 <div class="note"><b>14-day no-questions refund.</b> <a href="/legal/" style="color:inherit">Refund policy &amp; license terms</a> · <a href="/faq/" style="color:inherit">FAQ</a></div>
 </section>
 
 <section id="waitlist" style="text-align:center;padding:24px 0">
-<h2 style="letter-spacing:-.02em">Get notified at launch</h2>
-<p style="color:var(--muted)">No spam. One email when it ships, plus the free token-cost calculator.</p>
+<h2 style="letter-spacing:-.02em">Get the checkout link</h2>
+<p style="color:var(--muted)">No spam. One email with the checkout link when it opens, plus the free token-cost calculator.</p>
 <form id="waitlist-form" action="/api/subscribe" method="post" novalidate>
 <input type="email" name="email" placeholder="you@company.com" required autocomplete="email">
 <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
@@ -121,7 +121,7 @@ f.addEventListener('submit',function(e){
 </script>
 </section>
 
-<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/faq/" style="color:inherit">FAQ</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/faq/" style="color:inherit">FAQ</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="/terms/" style="color:inherit">Terms</a> · <a href="/privacy/" style="color:inherit">Privacy</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
 </div>
 <script>
 // Real numbers only (functions/api/proof.ts); each line stays hidden until its threshold is met.

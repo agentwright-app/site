@@ -139,7 +139,7 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 <main>
 ${body}
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 </body>
 </html>
@@ -250,7 +250,7 @@ for (const p of built) {
 <p class="meta"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p>
 ${p.html}
 </article>
-<div class="cta"><p><strong>Agentwright Starter</strong> ships this metering layer, the agent loop, auth, Lemon Squeezy billing, MCP and evals as one Next.js codebase. Launching December 2026 at $99.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>
+<div class="cta"><p><strong>Agentwright Starter</strong> ships this metering layer, the agent loop, auth, Lemon Squeezy billing, MCP and evals as one Next.js codebase. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
 ${commentsBlock(p.slug)}`;
   const meta = `<meta property="article:published_time" content="${p.date}T00:00:00Z">
 ${(p.tags ?? []).map((t) => `<meta property="article:tag" content="${esc(t)}">`).join("\n")}
@@ -357,6 +357,8 @@ const urls = [
   ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
   { loc: `${SITE}/faq/`, lastmod: "2026-11-04", priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
+  { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },
+  { loc: `${SITE}/privacy/`, lastmod: "2026-11-10", priority: "0.3" },
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
@@ -394,7 +396,24 @@ writeFileSync(
     }),
   );
 }
-// /faq/: pre-launch FAQ from content/pages/faq.md ("## Group" / "### Question" + answer).
+// /terms/ and /privacy/: from content/pages/{terms,privacy}.md.
+for (const [slug, title, description] of [
+  ["terms", "Terms of Service", "The terms for buying and using Agentwright Starter and agentwright.app."],
+  ["privacy", "Privacy Policy", "What personal data agentwright.app and Agentwright Starter purchases involve, and how we handle it."],
+]) {
+  const dir = join(OUT, slug);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "index.html"),
+    page({
+      title: `${title} — Agentwright`,
+      description,
+      url: `${SITE}/${slug}/`,
+      body: `<h1>${title}</h1>\n<article>\n${marked.parse(readFileSync(join(root, `content/pages/${slug}.md`), "utf8"))}</article>`,
+    }),
+  );
+}
+// /faq/: product FAQ from content/pages/faq.md ("## Group" / "### Question" + answer).
 // Emits FAQPage structured data built from the same Markdown.
 {
   const md = readFileSync(join(root, "content/pages/faq.md"), "utf8");
@@ -420,7 +439,7 @@ writeFileSync(
       description: "Price, refunds, license, what's inside, tech stack and updates for Agentwright Starter, the Claude agent SaaS starter kit.",
       url: `${SITE}/faq/`,
       meta: `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>\n`,
-      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Launch price $99</strong> (list $149) for the first 50 licenses. Sales open in December 2026.</p><a class="btn" href="/#waitlist">Join the launch list</a></div>`,
+      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Launch price $99</strong> (list $149) for the first 50 licenses.</p><a class="btn" href="/#pricing">See pricing</a></div>`,
     }),
   );
 }

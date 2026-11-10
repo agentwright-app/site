@@ -37,4 +37,4 @@ We may update these terms for future purchases. The terms in place on the day yo
 
 ## Privacy
 
-We count visits to this site without cookies. Each page sends a small anonymous ping (the page path and the site you came from). To count unique visitors per day we keep a one-way hash of your IP address and browser name for at most two days, then it is deleted. We never store your raw IP address and we do not use ad trackers. If you join the launch list, we store your email address only to tell you about Agentwright, and you can ask us to delete it at hello@agentwright.app.
+We count visits to this site without cookies. Each page sends a small anonymous ping (the page path and the site you came from). To count unique visitors per day we keep a one-way hash of your IP address and browser name for at most two days, then it is deleted. We never store your raw IP address and we do not use ad trackers. If you join the launch list, we store your email address only to tell you about Agentwright, and you can ask us to delete it at hello@agentwright.app. The full [privacy policy](/privacy/) and [terms of service](/terms/) have the details.
