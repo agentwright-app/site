@@ -162,7 +162,7 @@ Log each sign-in request (hashed address, IP, whether the rate limit applied) an
 
 <!-- site-only -->
 
-*Agentwright Starter includes Auth.js v5 with GitHub sign-in, database sessions and an optional Resend magic link with a 15-minute lifetime, switched on by one environment variable. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter includes Auth.js v5 with GitHub sign-in, database sessions and an optional Resend magic link with a 15-minute lifetime, switched on by one environment variable. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

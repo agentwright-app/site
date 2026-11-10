@@ -171,7 +171,7 @@ If you would rather not build this, Anthropic's Managed Agents service has permi
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop already returns tool failures to the model as error results and stores each conversation per user in Postgres, which is the foundation an approval step builds on. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop already returns tool failures to the model as error results and stores each conversation per user in Postgres, which is the foundation an approval step builds on. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

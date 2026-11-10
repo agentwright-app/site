@@ -229,7 +229,7 @@ Aborting the client's `fetch` closes the connection, which aborts `req.signal` o
 
 <!-- site-only -->
 
-*Agentwright Starter ships this route, the loop and a minimal chat UI that renders tool calls, together with auth, metering and Lemon Squeezy billing. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter ships this route, the loop and a minimal chat UI that renders tool calls, together with auth, metering and Lemon Squeezy billing. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

@@ -165,7 +165,7 @@ Move the limiter to Redis (or a managed service like Upstash) when one of these 
 
 <!-- site-only -->
 
-*This limiter and the monthly cap ship in Agentwright Starter, wired into its streaming agent endpoint with plan limits seeded for free, pro and team. It launches in December 2026; see the [FAQ](/faq/).*
+*This limiter and the monthly cap ship in Agentwright Starter, wired into its streaming agent endpoint with plan limits seeded for free, pro and team. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

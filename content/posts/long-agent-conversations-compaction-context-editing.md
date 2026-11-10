@@ -118,7 +118,7 @@ Compaction also resets the cache: the summary is new content, so the turn after 
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop keeps each assistant turn as the API's full content blocks (not flattened text) and records usage per response with price snapshots, so either feature can be switched on without changing how conversations are stored. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop keeps each assistant turn as the API's full content blocks (not flattened text) and records usage per response with price snapshots, so either feature can be switched on without changing how conversations are stored. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

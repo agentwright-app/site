@@ -208,7 +208,7 @@ Save results with the model name and date (a `--json out.json` flag is a few mor
 
 <!-- site-only -->
 
-*This eval runner ships in Agentwright Starter with three starter cases, a `--json` report and cost per case. It launches in December 2026; see the [FAQ](/faq/).*
+*This eval runner ships in Agentwright Starter with three starter cases, a `--json` report and cost per case. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

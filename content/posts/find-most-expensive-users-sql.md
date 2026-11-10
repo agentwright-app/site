@@ -175,7 +175,7 @@ Fill it once a day with `INSERT ... SELECT ... GROUP BY` for yesterday, and poin
 
 <!-- site-only -->
 
-*Agentwright Starter records exactly this `usage_events` table (plus a `price_id` for the rate used), and its `/usage` page shows each user their own month. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter records exactly this `usage_events` table (plus a `price_id` for the rate used), and its `/usage` page shows each user their own month. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

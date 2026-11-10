@@ -114,7 +114,7 @@ It is tempting to show users "this will cost 1,234 tokens". Do not. Users do not
 
 <!-- site-only -->
 
-*Agentwright Starter checks each user's rate limit before every agent request and records exact usage with price snapshots after it. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter checks each user's rate limit before every agent request and records exact usage with price snapshots after it. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

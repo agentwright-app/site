@@ -143,7 +143,7 @@ Extraction is usually a short input and a short output, which is where Claude Ha
 
 <!-- site-only -->
 
-*Agentwright Starter defines tools with Zod schemas and validates every tool input against them before running the tool, and its eval runner is where we would check an extraction route like this one. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter defines tools with Zod schemas and validates every tool input against them before running the tool, and its eval runner is where we would check an extraction route like this one. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

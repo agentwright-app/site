@@ -167,7 +167,7 @@ In Lemon Squeezy test mode, run through these before launch and check the stored
 
 <!-- site-only -->
 
-*Agentwright Starter ships a verified Lemon Squeezy webhook with an event log, maps variants to plans and keeps access for cancelled subscriptions until the period ends. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter ships a verified Lemon Squeezy webhook with an event log, maps variants to plans and keeps access for cancelled subscriptions until the period ends. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

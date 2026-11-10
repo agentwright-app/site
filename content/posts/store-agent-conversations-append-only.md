@@ -115,7 +115,7 @@ A conversation table is personal data. Decide early:
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop returns the full message history with every content block, and its `conversations` table stores it as JSON for the chat UI to continue. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop returns the full message history with every content block, and its `conversations` table stores it as JSON for the chat UI to continue. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

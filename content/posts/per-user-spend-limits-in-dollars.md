@@ -137,7 +137,7 @@ Per-user budgets protect your margin. They do not protect you from a bug in the 
 
 <!-- site-only -->
 
-*Agentwright Starter stores a micro-dollar cost on every usage row and checks the plan cap before every agent turn. Its built-in cap counts tokens; this post is the change we recommend if your plans mix models. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter stores a micro-dollar cost on every usage row and checks the plan cap before every agent turn. Its built-in cap counts tokens; this post is the change we recommend if your plans mix models. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 
