@@ -170,7 +170,7 @@ Ask the agent "What does note.txt say?" and you should see a call to an `fs__` t
 
 <!-- site-only -->
 
-*Agentwright Starter includes this MCP layer (stdio and HTTP, allowlists, sorted tool names, a status helper) wired into its streaming agent loop and usage metering. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter includes this MCP layer (stdio and HTTP, allowlists, sorted tool names, a status helper) wired into its streaming agent loop and usage metering. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

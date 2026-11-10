@@ -143,7 +143,7 @@ Each breakpoint looks back a limited number of content blocks (20) for an earlie
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop caches the system prompt and keeps MCP tool names sorted for exactly these reasons, and its usage table records cache reads and writes per call. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop caches the system prompt and keeps MCP tool names sorted for exactly these reasons, and its usage table records cache reads and writes per call. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

@@ -132,7 +132,7 @@ Tool definitions are prompts, so test them like prompts. For each tool, write a 
 
 <!-- site-only -->
 
-*Agentwright Starter's tool registry keeps tool definitions sorted and stable for caching, returns tool failures to the model as error results instead of ending the turn, and includes an eval runner you can point at cases like these. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's tool registry keeps tool definitions sorted and stable for caching, returns tool failures to the model as error results instead of ending the turn, and includes an eval runner you can point at cases like these. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

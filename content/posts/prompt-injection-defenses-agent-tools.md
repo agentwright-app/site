@@ -101,7 +101,7 @@ Log every tool call with its arguments and the source of the content the run had
 
 <!-- site-only -->
 
-*Agentwright Starter scopes conversations and usage to the signed-in user from the session, keeps API keys in environment variables rather than prompts, and lets you restrict each MCP server to an allowlist of tools. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter scopes conversations and usage to the signed-in user from the session, keeps API keys in environment variables rather than prompts, and lets you restrict each MCP server to an allowlist of tools. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

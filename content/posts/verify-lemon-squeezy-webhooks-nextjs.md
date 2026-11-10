@@ -195,7 +195,7 @@ Then change one character of the body without re-signing and confirm you get a 4
 
 <!-- site-only -->
 
-*This is the webhook handler that ships in Agentwright Starter, a Next.js starter kit for Claude-powered SaaS with auth, Lemon Squeezy billing, metering and an agent loop already wired together. It launches in December 2026; the [FAQ](/faq/) has the details.*
+*This is the webhook handler that ships in Agentwright Starter, a Next.js starter kit for Claude-powered SaaS with auth, Lemon Squeezy billing, metering and an agent loop already wired together. Launch price $99; the [FAQ](/faq/) has the details.*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

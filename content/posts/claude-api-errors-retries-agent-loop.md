@@ -120,7 +120,7 @@ If 529s cluster on one model, the API is telling you that model is busy, not tha
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop appends to history only after a turn completes, returns tool failures as `is_error` results instead of throwing, and records usage only from completed responses. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop appends to history only after a turn completes, returns tool failures as `is_error` results instead of throwing, and records usage only from completed responses. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

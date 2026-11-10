@@ -167,7 +167,7 @@ The Batch API does not run your tools between turns, so it suits single-shot req
 
 <!-- site-only -->
 
-*Agentwright Starter does not include a job queue; its agent loop already returns the full history and reports each turn through a callback, which is what a worker like this one builds on. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter does not include a job queue; its agent loop already returns the full history and reports each turn through a callback, which is what a worker like this one builds on. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

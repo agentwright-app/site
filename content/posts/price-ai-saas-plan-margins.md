@@ -113,7 +113,7 @@ A common pattern is routing: Haiku for simple, high-volume steps (classification
 
 <!-- site-only -->
 
-*Agentwright Starter ships per-plan token caps, per-user cost metering and a usage page, so these limits are configuration rather than a project. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter ships per-plan token caps, per-user cost metering and a usage page, so these limits are configuration rather than a project. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

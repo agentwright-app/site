@@ -248,4 +248,4 @@ Rate limiting (requests per minute per plan) is a separate concern and lives in 
 
 ---
 
-*Agentwright Starter is a Next.js 15 starter kit for Claude-powered SaaS: GitHub and magic-link auth, the streaming agent loop above with tool calls and MCP, per-user metering and plan caps, Lemon Squeezy billing, an eval runner and a usage dashboard, already wired together. It launches in December 2026 at $99. Details and a launch-list signup are at [agentwright.app](https://agentwright.app).*
+*Agentwright Starter is a Next.js 15 starter kit for Claude-powered SaaS: GitHub and magic-link auth, the streaming agent loop above with tool calls and MCP, per-user metering and plan caps, Lemon Squeezy billing, an eval runner and a usage dashboard, already wired together. Launch price $99. Details are at [agentwright.app](https://agentwright.app).*

@@ -132,7 +132,7 @@ fetch('/api/proof').then(function(r){return r.ok?r.json():null}).then(function(d
   if(d.launchLeft!=null)show('proof-launch',d.launchLeft>0?(d.launchLeft+' of 50 licenses left at this price'):'Launch price sold out — thank you!');
   if(d.buyersMonth!=null)show('proof-buyers',d.buyersMonth+' developers bought the kit this month'+(d.buyersTotal!=null?' · '+d.buyersTotal+' in total':''));
   else if(d.buyersTotal!=null)show('proof-buyers',d.buyersTotal+' developers have bought the kit');
-  if(d.waiting!=null)show('proof-waiting',d.waiting+' developers are on the launch list');
+  if(d.waiting!=null)show('proof-waiting',d.waiting+' developers are waiting for the checkout link');
 }).catch(function(){});
 })();
 </script>

@@ -148,7 +148,7 @@ Map each outcome to one clear state:
 
 <!-- site-only -->
 
-*Agentwright Starter's agent loop records usage on every response before it looks at the stop reason, raises a typed `AgentRefusedError` with the `stop_details` on a refusal, and stops at a fixed turn limit. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter's agent loop records usage on every response before it looks at the stop reason, raises a typed `AgentRefusedError` with the `stop_details` on a refusal, and stops at a fixed turn limit. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

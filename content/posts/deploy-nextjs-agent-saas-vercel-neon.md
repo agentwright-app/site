@@ -115,7 +115,7 @@ Run this once on the production URL before you announce anything:
 
 <!-- site-only -->
 
-*Agentwright Starter includes a Vercel + Neon deployment guide with the full environment variable list, a 300-second agent route and a post-deploy checklist. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter includes a Vercel + Neon deployment guide with the full environment variable list, a 300-second agent route and a post-deploy checklist. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

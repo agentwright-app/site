@@ -199,7 +199,7 @@ Be honest with yourself about what revocation can do: a customer who already dow
 
 <!-- site-only -->
 
-*This is the delivery we run for Agentwright Starter on agentwright.app. The Starter itself has a Postgres version of the same flow (keys, signed downloads, an admin page to resend or revoke) for products you build with it. It launches in December 2026; see the [FAQ](/faq/).*
+*This is the delivery we run for Agentwright Starter on agentwright.app. The Starter itself has a Postgres version of the same flow (keys, signed downloads, an admin page to resend or revoke) for products you build with it. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

@@ -113,7 +113,7 @@ If you do want an escalation path, make it explicit and rare: a "think harder" b
 
 <!-- site-only -->
 
-*Agentwright Starter takes the model per request (default set by `AGENT_MODEL`), prices every usage row with the rate for that exact model, and runs its evals against any model you pass. It launches in December 2026; see the [FAQ](/faq/).*
+*Agentwright Starter takes the model per request (default set by `AGENT_MODEL`), prices every usage row with the rate for that exact model, and runs its evals against any model you pass. Launch price $99; see the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 
