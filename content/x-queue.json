@@ -1,0 +1,55 @@
+{
+  "note": "X posts for the agentwright-cron worker. Each item is posted once at or after `at` (within 3 hours; later than that it is skipped and reported). No links unless the item is a click-now item (max 1 link post/day). Edit on main; no redeploy needed.",
+  "posts": [
+    {
+      "id": "d1-2",
+      "at": "2026-11-10T23:00:00+09:00",
+      "text": "In a typical Claude Sonnet 5.5 request (4,000 tokens in, 600 out, 60% cached), output is 13% of the tokens and 64% of the cost.\n\nIf you want to cut your bill, look at max_tokens and answer length before you look at the prompt."
+    },
+    {
+      "id": "d2-2",
+      "at": "2026-11-11T04:00:00+09:00",
+      "text": "Same request on Claude Sonnet 5.5, 4,000 tokens in and 600 out:\n\n0% cache hits: $0.0140\n60% cache hits: $0.0094\n\nOne cache_control line on the system prompt. It is the first thing to check before any pricing change."
+    },
+    {
+      "id": "d1-1",
+      "at": "2026-11-11T23:00:00+09:00",
+      "text": "A $20/month AI plan on Claude Sonnet 5.5, 300 requests per user: 76% margin.\n\nThe same user at 10x usage: -52%. Break-even is about 1,900 requests a month.\n\nRun your own numbers in our free margin calculator (link in profile, under Tools)."
+    },
+    {
+      "id": "d2-1",
+      "at": "2026-11-12T04:00:00+09:00",
+      "text": "If you recompute last month's LLM costs with today's price table, your totals move.\n\nStore the rate used on every usage row, version the price table, and keep raw token counts so a re-price is a deliberate step.\n\nFull write-up with code on our blog, link in profile."
+    },
+    {
+      "id": "d3-2",
+      "at": "2026-11-12T23:00:00+09:00",
+      "text": "The last line of defence most AI apps forget: a monthly spend limit on the API provider's side.\n\nIt is the only limit that still works when your own metering code has a bug."
+    },
+    {
+      "id": "d4-1",
+      "at": "2026-11-13T04:00:00+09:00",
+      "text": "Connecting MCP servers to your own Claude agent loop: one env variable for all servers, stdio and HTTP, namespaced tool names, an allowlist.\n\nPlus the detail that costs money: keep tool order stable or your prompt cache misses.\n\nOn our blog, link in profile."
+    },
+    {
+      "id": "d2-3",
+      "at": "2026-11-13T23:00:00+09:00",
+      "text": "How our blog publishes every day without a daily deploy: each post is uploaded ahead of time, and a small Cloudflare Pages middleware returns 404 until the post's date arrives in Asia/Seoul time.\n\nOne deploy per batch of eight posts, nothing to run each morning."
+    },
+    {
+      "id": "d4-2",
+      "at": "2026-11-15T01:00:00+09:00",
+      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour, all within 24."
+    },
+    {
+      "id": "d3-1",
+      "at": "2026-11-15T23:00:00+09:00",
+      "text": "A 2M-token monthly cap can cost you $0.20 (all cache reads on Sonnet) or $40 (all output on Opus).\n\nCap each user's spend in dollars, not tokens, and reserve the worst case before the request so two parallel calls can't slip past.\n\nCode on our blog, link in profile."
+    },
+    {
+      "id": "sale-soft-1",
+      "at": "2026-11-17T04:00:00+09:00",
+      "text": "We opened sales for Agentwright Starter this week: the Next.js codebase behind the posts on this account, with metering, billing, auth and the agent loop already wired.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing. Link in profile."
+    }
+  ]
+}
