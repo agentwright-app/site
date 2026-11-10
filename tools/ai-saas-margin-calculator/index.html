@@ -152,7 +152,7 @@ footer a{color:inherit}
 <section class="text">
 <h2>How the numbers are worked out</h2>
 <p><strong>API cost per user</strong> = requests × (uncached input tokens × input price + cached input tokens × cache-read price + output tokens × output price), with the official per-million-token prices for the model you pick. Haiku 5.5 requests with a prompt over 100,000 tokens use its long-prompt rates.</p>
-<p><strong>Gross margin</strong> = (price − payment fees − other cost per user − API cost) ÷ price. Payment fees default to 5% + $0.50, which is the standard Lemon Squeezy rate; Stripe alone is usually lower, but you then handle sales tax yourself. Change both fields to match your provider.</p>
+<p><strong>Gross margin</strong> = (price − payment fees − other cost per user − API cost) ÷ price. Payment fees default to 5% + $0.50, which is the standard rate at merchants of record such as Polar and Lemon Squeezy; Stripe alone is usually lower, but you then handle sales tax yourself. Change both fields to match your provider.</p>
 <p><strong>Usage cap</strong> is the API spend that leaves exactly your target margin: price × (1 − target) − fees − other costs. Dividing it by the cost of one request gives the request cap, and multiplying that by tokens per request gives a token cap you can enforce in code.</p>
 <h2>Why a flat price needs a cap</h2>
 <p>Usage in AI products is lopsided. Most users make a few requests; a small share makes ten or twenty times more. With a flat price and no cap, those heavy users can cost more than they pay, and they are also the users most likely to stay. The table above shows what happens at 3× and 10× a typical user's usage.</p>
@@ -161,7 +161,7 @@ footer a{color:inherit}
 <ul>
 <li>Cache-write surcharges (paid once per cache window), extended thinking tokens (add them to output) and tool-result tokens (add them to input).</li>
 <li>Free-plan users, who cost tokens but pay nothing. Spread their cost over paying users if your free tier is large.</li>
-<li>Refunds, chargebacks and taxes. With a merchant of record such as Lemon Squeezy, sales tax is handled for you; otherwise budget for it.</li>
+<li>Refunds, chargebacks and taxes. With a merchant of record such as Polar or Lemon Squeezy, sales tax is handled for you; otherwise budget for it.</li>
 </ul>
 <p>For the raw cost of a workload without a plan price, use the <a href="/tools/claude-api-cost-calculator/">Claude API Cost Calculator</a>.</p>
 </section>

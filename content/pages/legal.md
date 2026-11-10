@@ -1,10 +1,10 @@
-Agentwright Starter is sold by Lemon Squeezy, our merchant of record. They handle payment, tax and invoices; we handle the product, your license and support. Questions about anything on this page: [hello@agentwright.app](mailto:hello@agentwright.app).
+Agentwright Starter is sold through Polar, our merchant of record. They handle payment, tax and invoices; we handle the product, your license and support. Questions about anything on this page: [hello@agentwright.app](mailto:hello@agentwright.app).
 
 ## Refund policy
 
-**14 days, no questions asked.** If the Starter isn't right for you, email [hello@agentwright.app](mailto:hello@agentwright.app) within 14 days of purchase with your order number (it's on your Lemon Squeezy receipt). You'll get a full refund to your original payment method. You don't need to give a reason.
+**14 days, no questions asked.** If the Starter isn't right for you, email [hello@agentwright.app](mailto:hello@agentwright.app) within 14 days of purchase with your order number (it's on your Polar receipt). You'll get a full refund to your original payment method. You don't need to give a reason.
 
-- Refunds are issued through Lemon Squeezy, usually within 2 business days. Your bank may take a few more days to show it.
+- Refunds are issued through Polar, usually within a few business days. Your bank may take a few more days to show it.
 - When an order is refunded, its license key is deactivated and the download link stops working. Please delete any copies of the source you downloaded.
 - After 14 days, sales are final, except where your local consumer law gives you more rights.
 
@@ -33,7 +33,7 @@ Your end product (the app your customers use) is yours. The restriction only app
 
 We may update these terms for future purchases. The terms in place on the day you bought apply to your license.
 
-*Last updated: November 3, 2026.*
+*Last updated: November 10, 2026.*
 
 ## Privacy
 

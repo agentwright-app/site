@@ -14,11 +14,11 @@ The Starter (version 0.4.1) is finished and checkout is opening shortly. [Leave 
 
 ### Who handles the payment?
 
-[Lemon Squeezy](https://www.lemonsqueezy.com) is our merchant of record. They take the payment, charge the right sales tax or VAT for your country, and send the invoice. You can pay by card or the other methods Lemon Squeezy shows at checkout.
+[Polar](https://polar.sh) is our merchant of record. They take the payment, charge the right sales tax or VAT for your country, and send the invoice. You can pay by card or the other methods Polar shows at checkout.
 
 ### Can I get an invoice for my company?
 
-Yes. Lemon Squeezy emails a receipt with every order, and you can add your company name and tax ID at checkout so they appear on the invoice.
+Yes. Polar emails a receipt with every order. At checkout you can mark the purchase as a business purchase and add your company name and tax ID so they appear on the invoice.
 
 ## Refunds and license
 

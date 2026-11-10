@@ -8,7 +8,7 @@ The Starter is a developer tool. It does not promise any revenue, number of cust
 
 ## 2. Payment and our merchant of record
 
-Orders are processed by our reseller and merchant of record, Lemon Squeezy. Lemon Squeezy is the seller of record for your order: it handles checkout, payment, sales tax or VAT, and your receipt or invoice, under its own [buyer terms](https://www.lemonsqueezy.com/buyer-terms). We are responsible for the product itself, your license and support.
+Orders are processed by our reseller and merchant of record, Polar (polar.sh). Polar is the seller of record for your order: it handles checkout, payment, sales tax or VAT, and your receipt or invoice, under its own [checkout buyer terms](https://polar.sh/legal/checkout-buyer-terms). We are responsible for the product itself, your license and support.
 
 Prices are shown in US dollars on the pricing section of the site. A launch discount, when available, is applied at checkout and shown before you pay.
 
