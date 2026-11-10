@@ -113,9 +113,9 @@ function page({ title, description, url, body, meta = "", type = "website" }) {
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${url}">
 <link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="${SITE}/feed.xml">
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#0F172A">
 <meta property="og:site_name" content="Agentwright">
@@ -123,10 +123,10 @@ function page({ title, description, url, body, meta = "", type = "website" }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="https://agentwright.app/og.png">
+<meta property="og:image" content="https://agentwright.app/og.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://agentwright.app/og.png">
+<meta name="twitter:image" content="https://agentwright.app/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
