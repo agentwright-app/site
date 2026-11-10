@@ -57,7 +57,7 @@ footer{padding:48px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 <section class="hero">
 <h1>Ship production AI agents<br>in a weekend.</h1>
 <p>A production-ready starter kit for Claude-powered SaaS. Auth, billing, usage metering, the agent loop, tools and MCP are already wired. You write the prompts.</p>
-<a class="btn" href="#pricing">Get the kit</a><a class="btn alt" href="#waitlist">Get the checkout link</a>
+<a class="btn" href="#pricing">Get the kit</a><a class="btn alt" href="#features">See what's inside</a>
 <div class="note">Version 0.4.1 · Next.js 15 · Anthropic TypeScript SDK · Lemon Squeezy · Postgres</div>
 <pre><code>$ unzip agentwright-starter.zip &amp;&amp; npm install
 ✔ Auth (magic link + GitHub)       ✔ Billing + webhooks (Lemon Squeezy)
@@ -80,22 +80,21 @@ $ npm run dev   →  http://localhost:3000</code></pre>
 <div class="n">$99 <s>$149</s></div>
 <div id="proof-launch" class="note" style="display:none;font-weight:600;color:#B45309"></div>
 <ul><li>Full source code, license for one developer or one team</li><li>Unlimited projects</li><li>Lifetime updates</li><li>Email support</li></ul>
-<!-- Seller: Polar. At the sales-open switch, point #buy at the Polar checkout link and restore the text "Buy now — $99". -->
-<a class="btn" id="buy" href="#waitlist">Get launch access — $99</a>
-<div class="note">Launch code <b>LAUNCH</b> is applied at checkout. Price goes to $149 after the first 50 licenses. Checkout is opening shortly: leave your email below and we'll send you the link the moment it's live. Secure payment through our merchant of record; instant download.</div>
+<a class="btn" id="buy" href="https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n">Buy now — $99</a>
+<div class="note">Launch code <b>LAUNCH</b> is applied automatically at checkout. Price goes to $149 after the first 50 licenses. Secure payment through our merchant of record, Polar. Your license key and download link arrive by email within a minute.</div>
 <div id="proof-buyers" class="note" style="display:none"></div>
 <div class="note"><b>14-day no-questions refund.</b> <a href="/legal/" style="color:inherit">Refund policy &amp; license terms</a> · <a href="/faq/" style="color:inherit">FAQ</a></div>
 </section>
 
 <section id="waitlist" style="text-align:center;padding:24px 0">
-<h2 style="letter-spacing:-.02em">Get the checkout link</h2>
-<p style="color:var(--muted)">No spam. One email with the checkout link when it opens, plus the free token-cost calculator.</p>
+<h2 style="letter-spacing:-.02em">Not ready yet? Get updates</h2>
+<p style="color:var(--muted)">No spam. An occasional email when we ship a new release, post or free tool.</p>
 <form id="waitlist-form" action="/api/subscribe" method="post" novalidate>
 <input type="email" name="email" placeholder="you@company.com" required autocomplete="email">
 <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 <input type="hidden" name="ts" value="">
 <input type="hidden" name="source" value="landing">
-<button class="btn" type="submit">Notify me</button>
+<button class="btn" type="submit">Subscribe</button>
 </form>
 <p id="proof-waiting" class="note" style="display:none"></p>
 <p id="waitlist-msg" class="note" role="status" aria-live="polite"></p>
@@ -111,7 +110,7 @@ f.addEventListener('submit',function(e){
   fetch(f.action,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:email,website:f.website.value,ts:Number(f.ts.value),source:f.source.value})})
   .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
   .then(function(res){
-    if(res.body&&res.body.ok){m.textContent=res.body.already?'You\u2019re already on the list \u2014 see you at launch.':'You\u2019re on the list. We\u2019ll email you once, at launch.';f.email.value='';}
+    if(res.body&&res.body.ok){m.textContent=res.body.already?'You\u2019re already subscribed.':'You\u2019re subscribed. Thanks!';f.email.value='';}
     else{m.innerHTML=(res.body&&res.body.error?res.body.error:'Something went wrong.')+' You can also write to <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.';}
   })
   .catch(function(){m.innerHTML='Network error. Please email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.';})
@@ -132,7 +131,7 @@ fetch('/api/proof').then(function(r){return r.ok?r.json():null}).then(function(d
   if(d.launchLeft!=null)show('proof-launch',d.launchLeft>0?(d.launchLeft+' of 50 licenses left at this price'):'Launch price sold out — thank you!');
   if(d.buyersMonth!=null)show('proof-buyers',d.buyersMonth+' developers bought the kit this month'+(d.buyersTotal!=null?' · '+d.buyersTotal+' in total':''));
   else if(d.buyersTotal!=null)show('proof-buyers',d.buyersTotal+' developers have bought the kit');
-  if(d.waiting!=null)show('proof-waiting',d.waiting+' developers are waiting for the checkout link');
+  if(d.waiting!=null)show('proof-waiting',d.waiting+' developers follow our updates');
 }).catch(function(){});
 })();
 </script>
