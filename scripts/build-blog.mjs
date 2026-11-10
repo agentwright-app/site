@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSy
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
+import { buildPricingPages } from "./lib/pricing-pages.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
@@ -349,12 +350,20 @@ writeFileSync(
   }),
 );
 
+// Claude API pricing landing pages (/pricing/claude/...), from the calculator's pricing.json.
+const pricingUrls = buildPricingPages({
+  page, esc, SITE, OUT,
+  pricing: JSON.parse(readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8")),
+});
+const pricingUpdated = JSON.parse(readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8")).updated;
+
 // Sitemap (today + one snapshot per future publish date)
 function writeSitemap(base, posts) {
 const urls = [
   { loc: `${SITE}/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "1.0" },
   { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
   ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
+  ...pricingUrls.map((loc) => ({ loc, lastmod: pricingUpdated, priority: "0.8" })),
   { loc: `${SITE}/faq/`, lastmod: "2026-11-04", priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },

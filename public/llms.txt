@@ -8,6 +8,7 @@
 
 ## Free tools
 - [Claude API cost calculator](https://agentwright.app/tools/claude-api-cost-calculator/): estimate Claude API cost per request, per user and per month for every current model
+- [Claude API pricing](https://agentwright.app/pricing/claude/): current price per million tokens for every Claude model, with caching, Batch API and worked examples (one page per model)
 - [Claude Pricing MCP server](https://agentwright.app/tools/claude-pricing-mcp/): free remote MCP server (https://agentwright.app/mcp) with current Claude API prices and cost estimates for Claude, Cursor or any MCP client
 - [AI SaaS margin calculator](https://agentwright.app/tools/ai-saas-margin-calculator/): check plan prices against model costs to see gross margin per user
 
