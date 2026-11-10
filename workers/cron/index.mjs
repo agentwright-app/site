@@ -6,7 +6,8 @@
 // The parts that publish or send mail now run here, with no Claude session in the loop:
 //   1. blog check: today's post (KST) is the newest feed item, opens with 200 and is listed on /blog/;
 //   2. dev.to: publish at most ONE due post from content/devto-schedule.json (same rules as the script);
-//   3. any problem → one "[Agentwright 알림]" mail to 형 via Resend (branded template).
+//   3. IndexNow: tell Bing/Naver/Yandex about today's post + /blog/ (key file public/<key>.txt);
+//   4. any problem → one "[Agentwright 알림]" mail to 형 via Resend (branded template).
 // The 07:17 KST Claude routine only reads public pages/APIs afterwards and reports in the project.
 //
 // Content is read from the public GitHub repo (main branch), so merged schedule/post changes apply
@@ -104,6 +105,25 @@ async function sendAlert(env, title, intro, problems) {
   if (!res.ok) console.log(`Resend ${res.status}`);
 }
 
+// IndexNow key is public by design (served at /<key>.txt); not a secret.
+const INDEXNOW_KEY = "fc619d2ce783e98da465042107280c3c";
+async function indexNow(today) {
+  const feed = await get(`${SITE}/feed.xml`);
+  const item = feed.text.match(/<item>[\s\S]*?<link>([^<]+)<\/link>[\s\S]*?<pubDate>([^<]+)<\/pubDate>/);
+  if (!item || new Date(item[2]).toISOString().slice(0, 10) !== today) return "IndexNow: no post today";
+  const res = await fetch("https://api.indexnow.org/indexnow", {
+    method: "POST",
+    headers: { "content-type": "application/json; charset=utf-8", "user-agent": UA },
+    body: JSON.stringify({
+      host: new URL(SITE).host,
+      key: INDEXNOW_KEY,
+      keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`,
+      urlList: [item[1], `${SITE}/blog/`],
+    }),
+  });
+  return `IndexNow: ${res.status}`;
+}
+
 async function run(env) {
   const today = todayKST();
   const problems = [];
@@ -111,6 +131,11 @@ async function run(env) {
     problems.push(...(await checkBlog(today)));
   } catch (e) {
     problems.push(`블로그 점검 오류: ${e.message}`);
+  }
+  try {
+    console.log(await indexNow(today)); // best-effort; failures only logged, no alert mail
+  } catch (e) {
+    console.log(`IndexNow error: ${e.message}`);
   }
   try {
     console.log(await crosspost(env, today));
