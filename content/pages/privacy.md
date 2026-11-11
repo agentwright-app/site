@@ -37,4 +37,4 @@ You can ask us to access, correct or delete your data at [hello@agentwright.app]
 
 We will post any changes on this page and update the date below.
 
-*Last updated: November 10, 2026.*
+*Last updated: November 11, 2026.*
