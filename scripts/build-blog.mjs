@@ -3,10 +3,11 @@
 // and robots.txt. `npm run deploy` runs this and uploads dist/ (functions/ is
 // picked up from the repo root by wrangler).
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync, cpSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
 import { buildPricingPages } from "./lib/pricing-pages.mjs";
+import { priceAlertBox, wantsPriceAlert, PRICE_ALERT_MARK } from "./lib/price-alert.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
@@ -453,6 +454,24 @@ for (const [slug, title, description] of [
   );
 }
 writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+
+// Price change alert signup (scripts/lib/price-alert.mjs) on pricing pages, tools and blog posts.
+{
+  const walk = (d) => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const f = join(d, e.name);
+      if (e.isDirectory()) walk(f);
+      else if (e.name === "index.html") {
+        const urlPath = "/" + relative(OUT, d).split(sep).join("/") + "/";
+        if (!wantsPriceAlert(urlPath)) continue;
+        const html = readFileSync(f, "utf8");
+        if (html.includes(PRICE_ALERT_MARK) || !html.includes("<footer")) continue;
+        writeFileSync(f, html.replace(/<footer(?![\s\S]*<footer)/, `${priceAlertBox(urlPath)}<footer`));
+      }
+    }
+  };
+  walk(OUT);
+}
 
 // Cookieless visit counter (functions/api/hit.ts): add one beacon to every HTML page in dist/.
 {

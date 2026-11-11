@@ -4,7 +4,7 @@ This policy explains what personal data agentwright.app (the "site") and purchas
 
 **Visits.** We count visits without cookies and without ad trackers. Each page sends a small anonymous ping with the page path and the site you came from. To count unique visitors per day we keep a one-way hash of your IP address and browser name for at most two days, then it is deleted. We never store your raw IP address.
 
-**Email list.** If you leave your email address on the site, we store it with the page you signed up from, the referring page and your country (from your connection). We use it only to email you about Agentwright, such as new releases. You can unsubscribe at any time by replying to any email or writing to us.
+**Email list.** If you leave your email address on the site, we store it with the page you signed up from, the referring page and your country (from your connection). We use it only to send the emails you signed up for: Agentwright updates such as new releases, or Claude API price change alerts. You can unsubscribe at any time by replying to any email or writing to us.
 
 **Blog comments.** If you comment, we store the name you enter, your comment and your country, and publish the name and comment. To limit spam we keep a one-way hash of your IP address for 10 minutes.
 
@@ -37,4 +37,4 @@ You can ask us to access, correct or delete your data at [hello@agentwright.app]
 
 We will post any changes on this page and update the date below.
 
-*Last updated: November 10, 2026.*
+*Last updated: November 11, 2026.*

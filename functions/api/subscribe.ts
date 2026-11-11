@@ -8,6 +8,8 @@
  *   - at most 5 signups per IP per hour (KV key `ip:<hash>`, 1h TTL)
  *   - RFC-ish email validation, lowercased, duplicates are idempotent
  *
+ * Topics: source "price-alerts:<path>" → topic "price-alerts"; anything else → "updates".
+ *
  * Binding: Pages project → Settings → Bindings → KV namespace `WAITLIST`.
  * Without the binding the endpoint answers 503 and the page shows an email fallback.
  */
@@ -77,6 +79,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
   await env.WAITLIST.put(ipKey, String(hits + 1), { expirationTtl: 60 * 60 });
 
+  // Topics: "price-alerts" (only Claude price change emails) or "updates" (landing list).
+  const topic = source.startsWith("price-alerts") ? "price-alerts" : "updates";
   const key = `email:${email}`;
   const existing = await env.WAITLIST.get(key);
   if (!existing) {
@@ -85,14 +89,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       JSON.stringify({
         email,
         source: source.slice(0, 64) || "landing",
+        topics: [topic],
         country: request.headers.get("cf-ipcountry") ?? null,
         referer: request.headers.get("referer") ?? null,
         createdAt: new Date().toISOString(),
       }),
     );
+    return json(200, { ok: true, already: false });
   }
 
-  return json(200, { ok: true, already: Boolean(existing) });
+  // Existing address: add the new topic if it is not there yet.
+  // Entries from before topics existed came from the landing list → "updates".
+  let rec: Record<string, unknown>;
+  try { rec = JSON.parse(existing); } catch { rec = { email }; }
+  const topics = Array.isArray(rec.topics) ? (rec.topics as string[]) : ["updates"];
+  if (topics.includes(topic)) return json(200, { ok: true, already: true });
+  rec.topics = [...topics, topic];
+  await env.WAITLIST.put(key, JSON.stringify(rec));
+  return json(200, { ok: true, already: false });
 };
 
 /** Health check: GET /api/subscribe → whether the KV binding is present. */
