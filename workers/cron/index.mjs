@@ -1,5 +1,6 @@
 // agentwright-cron — Cloudflare Worker with two Cron Triggers: daily 07:00 KST (blog + dev.to) and
-// hourly at :07 (X posts from content/x-queue.json, added 2026-11-10).
+// hourly at :07 (X posts from content/x-queue.json, added 2026-11-10; Bluesky posts from
+// content/bsky-queue.json, added 2026-11-11, see bsky.mjs).
 //
 // Why this exists: on 2026-11-10 the unattended Claude routine was refused permission to run
 // scripts/devto-crosspost.mjs (and its alert mail), so the Tuesday dev.to cross-post was missed.
@@ -13,10 +14,11 @@
 // Content is read from the public GitHub repo (main branch), so merged schedule/post changes apply
 // without redeploying this worker. Deploy/redeploy: node scripts/deploy-cron-worker.mjs (interactive).
 // Secrets (worker secrets, never in code): DEVTO_API_KEY, RESEND_API_KEY, X_API_KEY, X_API_SECRET,
-// X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET. KV binding STATE (agentwright-cron-state) remembers posted X ids.
+// X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET, optional BLUESKY_HANDLE + BLUESKY_APP_PASSWORD. KV binding STATE (agentwright-cron-state) remembers posted X ids.
 // No fetch handler: not reachable over HTTP.
 import { SITE, parse, toDevto } from "./devto-format.mjs";
 import { render } from "./render-mail.mjs";
+import { runBsky } from "./bsky.mjs";
 
 const RAW = "https://raw.githubusercontent.com/agentwright-app/site/main";
 const UA = "agentwright-cron/1.0 (+https://agentwright.app)";
@@ -231,12 +233,24 @@ async function runX(env) {
   if (problems.length) await alertX(env, problems);
 }
 
+async function hourly(env) {
+  try {
+    await runX(env);
+  } catch (e) {
+    console.log(`X error: ${e.message}`);
+  }
+  const problems = await runBsky(env, { get, raw: RAW, ua: UA, today: todayKST() });
+  if (problems.length) {
+    await sendAlert(env, `${todayKST()} Bluesky 자동 게시 알림`, "매시간 도는 Bluesky 자동 게시 작업이 아래 내용을 알려 드립니다. Claude가 프로젝트에서 확인하겠습니다.", problems);
+  }
+}
+
 async function alertX(env, problems) {
   await sendAlert(env, `${todayKST()} X 자동 게시 알림`, "매시간 도는 X 자동 게시 작업이 아래 내용을 알려 드립니다. Claude가 프로젝트에서 확인하겠습니다.", problems);
 }
 
 export default {
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(event.cron === X_DAILY ? run(env) : runX(env));
+    ctx.waitUntil(event.cron === X_DAILY ? run(env) : hourly(env));
   },
 };

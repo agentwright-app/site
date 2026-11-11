@@ -1,0 +1,103 @@
+{
+  "note": "Bluesky posts for the agentwright-cron worker (workers/cron/bsky.mjs). Each item is posted once at or after `at` (within 3 hours; later it is skipped and reported). Max 300 graphemes. Optional `link`: shown as a link card. First week: 1-2 posts/day, at most 1 link post/day. No automated follows, likes, reposts, replies or DMs. Questions are steered to our blog comments. Edit on main; no redeploy needed. Top-level \"paused\": true stops all posting.",
+  "paused": false,
+  "posts": [
+    {
+      "id": "b-intro",
+      "at": "2026-11-12T23:00:00+09:00",
+      "text": "Hi Bluesky. This is Agentwright: we write about building SaaS products on the Claude API (metering, pricing, caching, agent loops, MCP) and sell a Next.js starter kit for it.\n\nPosts here are scheduled by a bot. Every number we post comes from current list prices."
+    },
+    {
+      "id": "b-output-cost",
+      "at": "2026-11-13T01:30:00+09:00",
+      "text": "In a typical Claude Sonnet 5.5 request (4,000 tokens in, 600 out, 60% cached), output is 13% of the tokens and 64% of the cost.\n\nIf you want a smaller bill, look at max_tokens and answer length before you trim the prompt."
+    },
+    {
+      "id": "b-margins",
+      "at": "2026-11-13T23:00:00+09:00",
+      "text": "A $20/month AI plan on Claude Sonnet 5.5, 300 requests per user: 76% margin.\n\nThe same user at 10x usage: -52%. Break-even is about 1,900 requests a month.\n\nWorked numbers and a free calculator for your own inputs. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/price-ai-saas-plan-margins/"
+    },
+    {
+      "id": "b-cache",
+      "at": "2026-11-14T01:30:00+09:00",
+      "text": "Same request on Claude Sonnet 5.5, 4,000 tokens in and 600 out:\n\n0% cache hits: $0.0140\n60% cache hits: $0.0094\n\nOne cache_control line on the system prompt. Check it before you touch your pricing."
+    },
+    {
+      "id": "b-mcp",
+      "at": "2026-11-14T23:00:00+09:00",
+      "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key.",
+      "link": "https://agentwright.app/tools/claude-pricing-mcp/"
+    },
+    {
+      "id": "b-model-route",
+      "at": "2026-11-15T23:00:00+09:00",
+      "text": "Haiku, Sonnet or Opus? Pick the model per route (chat, summaries, background jobs), not per message.\n\nCost per request at current prices, sensible effort defaults, and the API differences that bite when you switch. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/choose-claude-model-per-route/"
+    },
+    {
+      "id": "b-provider-cap",
+      "at": "2026-11-16T01:30:00+09:00",
+      "text": "The last line of defence most AI apps forget: a monthly spend limit on the API provider's side.\n\nIt is the only limit that still works when your own metering code has a bug."
+    },
+    {
+      "id": "b-spend-limits",
+      "at": "2026-11-16T23:00:00+09:00",
+      "text": "A 2M-token monthly cap can cost you $0.20 (all cache reads on Sonnet) or $40 (all output on Opus).\n\nCap each user's spend in dollars, and reserve the worst case before the request so two parallel calls can't slip past. Code on our blog.",
+      "link": "https://agentwright.app/blog/per-user-spend-limits-in-dollars/"
+    },
+    {
+      "id": "b-structured",
+      "at": "2026-11-17T23:00:00+09:00",
+      "text": "Schema-valid JSON from Claude in TypeScript: output_config.format with messages.parse(), when strict tools fit better, which JSON Schema features are supported, and the three cases where you still have to check the result. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/structured-outputs-claude-typescript/"
+    },
+    {
+      "id": "b-batches",
+      "at": "2026-11-18T01:30:00+09:00",
+      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour, all within 24."
+    },
+    {
+      "id": "b-sale-soft",
+      "at": "2026-11-18T23:00:00+09:00",
+      "text": "We opened sales for Agentwright Starter: the Next.js codebase behind these posts, with metering, billing, auth and the agent loop already wired.\n\nIf you build on the Claude API, tell us what a kit like this is still missing. Comments on our blog are the best place.",
+      "link": "https://agentwright.app/"
+    },
+    {
+      "id": "b-expensive-users",
+      "at": "2026-11-19T23:00:00+09:00",
+      "text": "Six SQL queries over a per-request usage table: who costs the most, who costs more than they pay, which model drives the bill, whether caching works, and whether today looks abnormal. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/find-most-expensive-users-sql/"
+    },
+    {
+      "id": "b-stop-reasons",
+      "at": "2026-11-20T23:00:00+09:00",
+      "text": "A 200 from the Claude API is not always a finished answer.\n\nend_turn, tool_use, max_tokens, stop_sequence, pause_turn, refusal: what a production agent loop should do with each, including truncated tool calls. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/handle-claude-stop-reasons-agent/"
+    },
+    {
+      "id": "b-append-only",
+      "at": "2026-11-21T23:00:00+09:00",
+      "text": "Storing Claude agent conversations: keep every content block (tool calls, tool results, thinking) and append only.\n\nEditing earlier turns breaks prompt caching and can return 400s on current models. What to do instead when history gets long:",
+      "link": "https://agentwright.app/blog/store-agent-conversations-append-only/"
+    },
+    {
+      "id": "b-retries",
+      "at": "2026-11-22T23:00:00+09:00",
+      "text": "Retrying a Claude call inside an agent loop is easy. Not re-running the tool that already charged a card is the hard part.\n\n429, 500, 529, dropped streams: what the TypeScript SDK retries for you and what you must handle yourself.",
+      "link": "https://agentwright.app/blog/claude-api-errors-retries-agent-loop/"
+    },
+    {
+      "id": "b-count-tokens",
+      "at": "2026-11-23T23:00:00+09:00",
+      "text": "Claude's token counting endpoint is free and takes the same input as a real request.\n\nWorth the extra round trip for uploads, budgets and routing. For a chat turn, the previous response's usage is often the better estimate. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/count-tokens-before-sending-claude/"
+    },
+    {
+      "id": "b-compaction",
+      "at": "2026-11-25T23:00:00+09:00",
+      "text": "Long-running Claude agent conversations: clear old tool results with context editing, or let the server compact at a token threshold.\n\nHow each interacts with prompt caching and billing, and the one mistake that silently turns compaction off.",
+      "link": "https://agentwright.app/blog/long-agent-conversations-compaction-context-editing/"
+    }
+  ]
+}
