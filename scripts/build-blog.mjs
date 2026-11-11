@@ -66,7 +66,7 @@ const CSS = `
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}@media (max-width:420px){nav{gap:6px 14px}}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{max-width:720px;margin:0 auto;padding:24px 0 48px}
 h1{font-size:clamp(30px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 12px}
 .meta{color:var(--muted);font-size:15px;margin-bottom:32px}
@@ -96,6 +96,9 @@ blockquote{margin:0;padding-left:16px;border-left:3px solid var(--accent);color:
 .btn{display:inline-block;background:var(--primary);color:var(--bg);padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px}
 .btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line);margin-left:6px}
 .files td{white-space:normal;vertical-align:top}.files td:first-child{white-space:nowrap}.files code{font-size:13px}
+/* On a phone the file map stacks (path, then note); the line-count list stays a table and wraps long paths. */
+@media (max-width:600px){.files:not(.counts) thead{display:none}.files:not(.counts) tr{display:block;padding:9px 0;border-bottom:1px solid var(--line)}.files:not(.counts) td{display:block;border:0;padding:2px 0}.files td:first-child{white-space:normal}.files code{overflow-wrap:anywhere;white-space:normal}}
+.meta a{color:var(--link)}
 details{margin:14px 0}summary{cursor:pointer;font-weight:600;color:var(--ink)}details[open] summary{margin-bottom:8px}
 pre.file{max-height:640px}
 .comments{margin-top:48px;border-top:1px solid var(--line);padding-top:8px}
@@ -147,10 +150,10 @@ function page({ title, description, url, body, meta = "", type = "website" }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="https://agentwright.app/og.png?v=2">
+<meta property="og:image" content="https://agentwright.app/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://agentwright.app/og.png?v=2">
+<meta name="twitter:image" content="https://agentwright.app/og.png?v=3">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">

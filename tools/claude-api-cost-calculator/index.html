@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claude API Cost Calculator — monthly and per-user cost for Opus, Sonnet and Haiku 5.5</title>
-<meta name="description" content="Free Claude API pricing calculator. Enter requests per month, input/output tokens and prompt-cache hit rate to get monthly cost, cost per request and cost per user for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5. Shareable results.">
+<meta name="description" content="Free Claude API pricing calculator. Enter requests per month, input/output tokens and prompt-cache hit rate to get monthly cost, cost per request and cost per user for Claude Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5. Shareable results.">
 <link rel="canonical" href="https://agentwright.app/tools/claude-api-cost-calculator/">
 <link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="/feed.xml">
 <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
@@ -15,15 +15,15 @@
 <meta property="og:site_name" content="Agentwright">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Claude API Cost Calculator">
-<meta property="og:description" content="Monthly, per-request and per-user cost for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API. Official prices, shareable link.">
+<meta property="og:description" content="Monthly, per-request and per-user cost for Claude Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API. Official prices, shareable link.">
 <meta property="og:url" content="https://agentwright.app/tools/claude-api-cost-calculator/">
-<meta property="og:image" content="https://agentwright.app/og.png?v=2">
+<meta property="og:image" content="https://agentwright.app/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://agentwright.app/og.png?v=2">
+<meta name="twitter:image" content="https://agentwright.app/og.png?v=3">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Claude API Cost Calculator">
-<meta name="twitter:description" content="Monthly, per-request and per-user cost for Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API.">
+<meta name="twitter:description" content="Monthly, per-request and per-user cost for Claude Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5, with prompt caching and Batch API.">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Claude API Cost Calculator","url":"https://agentwright.app/tools/claude-api-cost-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Agentwright","url":"https://agentwright.app"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}@media (max-width:420px){nav{gap:6px 14px}}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{padding:16px 0 48px}
 h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
 .lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
@@ -85,7 +85,7 @@ footer a{color:inherit}
 <header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
 <main>
 <h1>Claude API Cost Calculator</h1>
-<p class="lede">Estimate what a Claude-powered feature costs per month, per request and per user. Uses the official Claude API prices for Opus 5.5, Sonnet 5.5 and Haiku 5.5, including prompt caching and the Batch API discount. Change any input and the link updates, so you can share the result.</p>
+<p class="lede">Estimate what a Claude-powered feature costs per month, per request and per user. Uses the official Claude API prices for Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5, including prompt caching and the Batch API discount. Change any input and the link updates, so you can share the result.</p>
 
 <div class="layout">
 <form class="panel" id="f" onsubmit="return false">
@@ -123,7 +123,7 @@ footer a{color:inherit}
 <div class="panel" style="margin-top:20px">
 <h2>Same workload on each model</h2>
 <table><thead><tr><th>Model</th><th class="n">Monthly</th><th class="n">Per user</th><th class="n">Per request</th></tr></thead><tbody id="cmp"></tbody></table>
-<p class="note">Prices updated <strong id="updated"></strong> from the <a id="src" href="#" style="color:var(--link)">official pricing page</a>. Cache reads are billed at $0.20 (Opus 5.5), $0.10 (Sonnet 5.5) and $0.01 (Haiku 5.5) per million tokens. Haiku 5.5 requests with a prompt over 100,000 tokens use the higher long-prompt tier automatically.</p>
+<p class="note">Prices updated <strong id="updated"></strong> from the <a id="src" href="#" style="color:var(--link)">official pricing page</a>. Cache reads are billed at $0.20 (Fable 5.2 and Opus 5.5), $0.10 (Sonnet 5.5) and $0.01 (Haiku 5.5) per million tokens. Haiku 5.5 requests with a prompt over 100,000 tokens use the higher long-prompt tier automatically.</p>
 </div>
 </div>
 </div>

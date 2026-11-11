@@ -147,7 +147,7 @@ ${figs}
         description:
           "Next.js 15 + TypeScript starter kit (source code) for Claude-powered agent SaaS: streaming agent loop with tools, MCP connectors, per-user token metering with price snapshots, plan caps, rate limiting, sign-in, Lemon Squeezy billing and an eval runner.",
         url: `${SITE}/`,
-        image: `${SITE}/og.png?v=2`,
+        image: `${SITE}/og.png?v=3`,
         brand: { "@type": "Brand", name: "Agentwright" },
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Any (Node.js)",
@@ -206,7 +206,7 @@ export function buildKitPages({ page, esc, SITE, OUT, root }) {
     }
   }
   const fileRows = layout
-    .map((f) => `<tr><td><code>${esc(f.path)}</code></td><td>${esc(f.note)}</td></tr>`)
+    .map((f) => `<tr><td><code>${esc(f.path)}</code></td><td>${esc(f.note).replace(/`([^`]+)`/g, "<code>$1</code>")}</td></tr>`)
     .join("\n");
   // The table above is the README's file map (folders grouped). This is the literal list: every tracked file.
   const allFiles = meta.files
@@ -249,7 +249,7 @@ export function buildKitPages({ page, esc, SITE, OUT, root }) {
 ${fileRows}
 </tbody></table>
 <details><summary>All ${meta.files.length} files with line counts</summary>
-<table class="files"><thead><tr><th>File</th><th>Lines</th></tr></thead><tbody>
+<table class="files counts"><thead><tr><th>File</th><th>Lines</th></tr></thead><tbody>
 ${allFiles}
 </tbody></table>
 <p class="meta">Left out of this list: <code>package-lock.json</code> and the generated migration snapshots in <code>drizzle/meta/</code>.</p>

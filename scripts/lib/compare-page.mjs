@@ -20,7 +20,7 @@ const STYLE = `<style>
 .cmp-wrap thead th{position:sticky;top:0;background:var(--bg)}
 .cmp-wrap th[scope=row]{position:sticky;left:0;z-index:1;background:var(--bg);min-width:120px;color:var(--ink);border-right:1px solid var(--line)}
 .cmp-wrap thead th:first-child{left:0;z-index:2}
-@media (max-width:720px){.cmp-wrap th[scope=row],.cmp-wrap thead th:first-child{min-width:96px;max-width:108px}}
+@media (max-width:720px){.cmp-wrap th[scope=row],.cmp-wrap thead th:first-child{min-width:128px;max-width:140px;font-size:13px;overflow-wrap:anywhere}}
 .cmp-wrap a{color:var(--link)}
 .cmp-wrap .ours{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .cmp-hint{color:var(--muted);font-size:14px;margin:0 0 20px}
