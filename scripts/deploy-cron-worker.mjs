@@ -30,13 +30,10 @@ const OPTIONAL = ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD"];
 const BSKY_DID = "did:plc:pvgxmysqaezcfmornmfrkjod"; // brand account, created 2026-11-11
 if (OPTIONAL.every((v) => process.env[v])) {
   SECRETS.push(...OPTIONAL);
-  // The env var may still hold the signup handle (agentwright.bsky.social); after the switch to
-  // @agentwright.app that name no longer logs in, so upload the account's CURRENT handle instead.
-  const prof = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${BSKY_DID}`).then((r) => r.json()).catch(() => ({}));
-  if (prof.handle && prof.handle !== "handle.invalid" && prof.handle !== process.env.BLUESKY_HANDLE) {
-    console.log(`Bluesky: using current handle @${prof.handle} instead of BLUESKY_HANDLE`);
-    process.env.BLUESKY_HANDLE = prof.handle;
-  }
+  // Log in by DID, not by handle: the env var still holds the signup handle (agentwright.bsky.social),
+  // which stopped working when the handle moved to @agentwright.app (2026-11-11). The DID never changes.
+  process.env.BLUESKY_HANDLE = BSKY_DID;
+  console.log("Bluesky: worker logs in with the account DID");
 }
 else console.log("Bluesky secrets not set: deploying without Bluesky posting");
 const api = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/workers/scripts/${NAME}`;

@@ -6,7 +6,7 @@
 //   page's og: tags). URLs written inside `text` are made clickable with link facets.
 // - Bluesky limit: 300 graphemes per post; longer items are refused and reported, never cut.
 // Rules followed (atproto bot guide + Bluesky developer guidelines): scheduled posts only; no automated
-// follows, likes, reposts, replies or DMs. The profile carries the "bot" self-label (scripts/bsky-profile.mjs).
+// follows, likes, reposts, replies or DMs. The profile carries the "bot" self-label (scripts/bsky-setup.mjs profile).
 //
 // Secrets: BLUESKY_HANDLE, BLUESKY_APP_PASSWORD (an App Password, never the account password).
 // KV STATE keys: bsky:<id> (posted/skipped/failed record), bskylow:<date> (low-queue alert once a day).

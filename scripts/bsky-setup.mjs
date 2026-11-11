@@ -4,7 +4,7 @@
 //   node scripts/bsky-setup.mjs handle    # add TXT _atproto.agentwright.app = did=<DID> at Porkbun, then switch handle
 //   node scripts/bsky-setup.mjs profile   # name, bio, avatar, banner, "bot" self-label
 //
-// Env: BLUESKY_HANDLE, BLUESKY_APP_PASSWORD; for `handle` also PORKBUN_API_KEY, PORKBUN_SECRET_KEY.
+// Env: BLUESKY_APP_PASSWORD (BLUESKY_HANDLE is not used for login: we log in by DID); for `handle` also PORKBUN_API_KEY, PORKBUN_SECRET_KEY.
 // Never prints secrets. The `handle` step only ADDS a record (it never deletes or edits other DNS records;
 // _polar-challenge, google-site-verification and v=MCPv1 TXT records must stay).
 import { readFileSync } from "node:fs";
@@ -20,7 +20,8 @@ const PROFILE = {
   displayName: "Agentwright",
   description:
     "Starter kit for shipping Claude-powered agent SaaS: Next.js, auth, billing, metering, MCP and evals, done for you.\n\nPosts here are scheduled automatically. Questions: comments on our blog, agentwright.app/blog",
-  avatar: join(root, "public/icon-512.png"),
+  // Bluesky crops avatars to a circle: use the full-bleed square mark, not the rounded app icon.
+  avatar: process.env.BSKY_AVATAR ?? "/mnt/project-files/agentwright/brand/avatar-circle-800.png",
   banner: process.env.BSKY_BANNER ?? "/mnt/project-files/agentwright/brand/x/header-1500x500.png",
 };
 
@@ -61,7 +62,8 @@ async function upload(s, file, type = "image/png") {
 }
 
 const cmd = process.argv[2];
-const s = await login(process.env);
+// Log in by DID: the signup handle in BLUESKY_HANDLE no longer works after the switch to @agentwright.app.
+const s = await login({ ...process.env, BLUESKY_HANDLE: "did:plc:pvgxmysqaezcfmornmfrkjod" });
 const me = await xrpc("GET", "com.atproto.server.getSession", { token: s.token });
 console.log(`logged in: did ${s.did}, handle @${me.handle}`);
 
@@ -85,7 +87,7 @@ if (cmd === "check") {
     await new Promise((r) => setTimeout(r, 20000));
   }
   await xrpc("POST", "com.atproto.identity.updateHandle", { token: s.token, body: { handle: DOMAIN } });
-  console.log(`handle switched to @${DOMAIN} (update env BLUESKY_HANDLE to ${DOMAIN}, or keep using the DID)`);
+  console.log(`handle switched to @${DOMAIN}`);
 } else if (cmd === "profile") {
   const n = graphemes(PROFILE.description);
   if (n > 256) throw new Error(`bio is ${n} graphemes (max 256)`);
