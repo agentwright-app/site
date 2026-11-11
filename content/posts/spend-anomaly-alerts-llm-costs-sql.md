@@ -121,7 +121,7 @@ Your alerts depend on your own metering being right. Set a monthly spend limit i
 
 <!-- site-only -->
 
-*Agentwright Starter records one usage row per model call with a price snapshot and has an admin page and `/usage` view on top of it, so these queries run on data you already have. Details and launch status are in the [FAQ](/faq/).*
+*Agentwright Starter records one usage row per model call with a price snapshot and has a `/usage` view on top of it, so these queries run on data you already have. Details and launch status are in the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

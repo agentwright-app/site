@@ -1,0 +1,39 @@
+app/page.tsx                        landing stub → /login or /chat
+app/login/page.tsx                  GitHub sign-in (+ magic link when AUTH_RESEND_KEY is set)
+app/chat/page.tsx + components/chat.tsx   minimal streaming chat UI (SSE client)
+app/usage/page.tsx                  usage dashboard: tokens, cost, plan cap, per-model, 30 days
+app/pricing/page.tsx                pricing cards → Lemon Squeezy checkout links
+app/api/agent/route.ts              streaming agent endpoint (SSE) + conversation persistence
+app/api/auth/[...nextauth]/route.ts Auth.js handlers
+app/api/webhooks/lemonsqueezy/      signature-verified webhooks → plan changes / license keys (+ event log)
+app/api/download/route.ts           signed download link for license buyers
+app/admin/licenses/                 admin: licenses, delivery status, resend / revoke
+app/api/admin/licenses/route.ts     admin actions (issue / resend / revoke)
+lib/auth/index.ts                   Auth.js config (Drizzle adapter, session.user.id/plan)
+lib/agent/loop.ts                   agent loop: tools, parallel tool calls, max-turn guard, caching
+lib/agent/tools.ts                  tool registry (zod schemas or raw JSON Schema → Claude tool defs)
+lib/agent/mcp.ts                    MCP servers (stdio / HTTP) → tools, configured via MCP_SERVERS
+lib/agent/system-prompt.ts          stable, cacheable system prompt
+lib/billing/pricing.ts              versioned price catalog, price selection, cost in micro-USD (pure)
+lib/billing/metering.ts             per-user metering with a price snapshot (price_id) per row, plan caps
+lib/billing/usage.ts                usage_events aggregation for /usage
+lib/billing/checkout.ts             Lemon Squeezy checkout URLs with user id as custom data
+lib/billing/lemonsqueezy.ts         webhook verify + event → plan mapping / license orders
+lib/licensing/index.ts              license keys, delivery (GitHub invite + email), signed download tokens
+lib/ratelimit/index.ts              DB-backed sliding-window rate limit, per-plan requests/minute
+lib/email/index.ts                  Resend sender with logging fallback
+lib/auth/admin.ts                   ADMIN_EMAILS gate
+lib/db/client.ts                    Drizzle + postgres.js client (pooled, serverless-friendly)
+lib/db/schema.ts                    users, plans, model_prices, usage_events, conversations, webhook_events, rate_limit_hits, licenses, Auth.js tables
+drizzle/                            generated SQL migrations
+evals/                              eval runner + golden cases
+scripts/                            seed (plans + prices), smoke test
+tests/                              unit tests + DB integration test (`npm test`)
+docs/setup.md                       first-time setup: Postgres, Anthropic, GitHub OAuth, Lemon Squeezy, MCP, evals
+docs/customizing.md                 tools, system prompt, MCP servers, eval cases, plans and caps, model
+docs/deploy.md                      Vercel + Neon, other hosts
+docs/pricing.md                     price table, price snapshots, changing a price
+docs/licensing.md                   selling license keys for a one-time product
+docs/next16.md                      Next.js 16 upgrade evaluation
+docs/ROADMAP.md                     what is planned and what is not in this kit
+AGENTS.md, CLAUDE.md                notes for coding agents: commands and the rules that keep metering correct

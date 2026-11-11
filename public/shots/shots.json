@@ -1,0 +1,28 @@
+{
+  "version": "0.4.2",
+  "items": [
+    {
+      "file": "usage.webp",
+      "link": "usage-full.webp",
+      "width": 1600,
+      "height": 1000,
+      "wide": true,
+      "alt": "The usage page of Agentwright Starter: cost this month, requests, tokens, the plan cap, a 30-day chart, cost by model and recent calls",
+      "caption": "The /usage page each signed-in user sees: cost, tokens, the plan cap and cost by model. The numbers in this screenshot are demo data, recorded through the kit's own metering code."
+    },
+    {
+      "video": "demo.mp4",
+      "poster": "demo-poster.webp",
+      "width": 1280,
+      "height": 800,
+      "caption": "18 seconds, no sound: a question, a tool call, the streamed answer, then the usage page. A real response from Claude Sonnet 5.5, the kit's default model."
+    },
+    {
+      "file": "licenses.webp",
+      "width": 1600,
+      "height": 500,
+      "alt": "The license admin page of Agentwright Starter with three demo licenses: key, buyer, delivery status, downloads, and Resend and Revoke buttons",
+      "caption": "/admin/licenses, for products you sell yourself: issue, resend or revoke a license key. Three demo licenses in a local run; the amber notes show which optional settings are off."
+    }
+  ]
+}

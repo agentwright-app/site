@@ -1,0 +1,204 @@
+{
+  "slug": "compare/ai-saas-boilerplates",
+  "title": "Next.js SaaS starter kits compared for Claude agent products (November 2026)",
+  "metaTitle": "Next.js SaaS starter kits compared for Claude agent products (November 2026)",
+  "description": "A vendor's comparison of ShipFast, MakerKit, supastarter, AnotherWrapper, TurboStarter, StartKit.AI, AgentShip, Open SaaS and Agentwright Starter: price, refund, LLM support, usage metering, billing and teams, each fact linked to the kit's own page.",
+  "checked": "2026-11-11",
+  "published": "2026-11-11",
+  "kitVersion": "0.4.2",
+  "recheckEvery": "month",
+  "howChecked": "Each page was downloaded with curl on the check date and read as text. Only what the page says is used. 'Not mentioned on their page' means we did not find it on the linked pages, not that the kit lacks it.",
+  "columns": [
+    { "key": "price", "label": "Price and what it buys" },
+    { "key": "refund", "label": "Refund policy" },
+    { "key": "llm", "label": "Built-in Claude / LLM agent support" },
+    { "key": "metering", "label": "Per-user usage metering" },
+    { "key": "billing", "label": "Billing providers" },
+    { "key": "teams", "label": "Teams / organizations" },
+    { "key": "bestFor", "label": "Good fit for" }
+  ],
+  "kits": [
+    {
+      "id": "agentwright",
+      "name": "Agentwright Starter",
+      "url": "/",
+      "ours": true,
+      "sources": [
+        { "url": "/inside/", "what": "the kit's file list and three files in full" },
+        { "url": "/legal/", "what": "refund and license terms" }
+      ],
+      "cells": {
+        "price": { "text": "$99 at the launch price for the first 50 licenses (code LAUNCH is applied at checkout), then $149. One-time payment. Source code for one person or one team, unlimited projects, every future version included.", "source": "https://agentwright.app/#pricing; LICENSE section 5 (every future version)" },
+        "refund": { "text": "14 days, no reason needed.", "source": "https://agentwright.app/legal/" },
+        "llm": { "text": "Claude only, through the Anthropic TypeScript SDK. Its own streaming tool loop with parallel tool calls, a 12-turn limit and prompt caching. MCP servers can be connected as tools.", "source": "lib/agent/loop.ts, lib/agent/mcp.ts" },
+        "metering": { "text": "Yes. One usage row per model turn with input, output, cache read and cache write tokens, the cost and the id of the price row used. A monthly token cap per plan, checked before each model turn. A plan with overage_allowed set (the seeded Team plan has it) keeps running past the cap; that usage is recorded, and the kit does not bill for it.", "source": "lib/billing/metering.ts, lib/billing/pricing.ts" },
+        "billing": { "text": "Lemon Squeezy only (plan subscriptions and one-time license orders through signed webhooks).", "source": "lib/billing/lemonsqueezy.ts" },
+        "teams": { "text": "No. Each user has one plan.", "source": "docs/ROADMAP.md" },
+        "bestFor": { "text": "A Claude agent product billed per user, built by one developer or a small team who will make their own UI.", "source": "" }
+      }
+    },
+    {
+      "id": "shipfast",
+      "name": "ShipFast",
+      "url": "https://shipfa.st",
+      "sources": [{ "url": "https://shipfa.st", "what": "home page with pricing and FAQ" }],
+      "cells": {
+        "price": { "text": "One-time. Starter $199 (list $299), All-in $249 (list $349), bundle with the CodeFast course $299 (list $648). Unlimited projects, lifetime updates.", "source": "https://shipfa.st" },
+        "refund": { "text": "No refund once you have access to the repo (FAQ).", "source": "https://shipfa.st" },
+        "llm": { "text": "No in-app LLM integration listed. The FAQ says the codebase gives AI code editors such as Cursor and Copilot context to build features.", "source": "https://shipfa.st" },
+        "metering": { "text": "Not mentioned on their page.", "source": "https://shipfa.st" },
+        "billing": { "text": "Stripe or Lemon Squeezy.", "source": "https://shipfa.st" },
+        "teams": { "text": "Not mentioned on their page.", "source": "https://shipfa.st" },
+        "bestFor": { "text": "A general SaaS or web app: login, payments, emails, SEO and blog, UI components, MongoDB or Supabase.", "source": "https://shipfa.st" }
+      }
+    },
+    {
+      "id": "makerkit",
+      "name": "MakerKit",
+      "url": "https://makerkit.dev",
+      "sources": [
+        { "url": "https://makerkit.dev", "what": "home page" },
+        { "url": "https://makerkit.dev/pricing", "what": "pricing page and pricing FAQ" }
+      ],
+      "cells": {
+        "price": { "text": "One-time lifetime license for one stack (Supabase, Drizzle or Prisma). Pro $299 shown (list $349), 1 developer. Teams $599 shown (list $649), up to 5 collaborators. The pricing FAQ quotes $349 and $649.", "source": "https://makerkit.dev/pricing" },
+        "refund": { "text": "Generally no refund once access is redeemed (pricing FAQ). The free, MIT-licensed MakerKit Lite repo shows the architecture before you buy.", "source": "https://makerkit.dev/pricing" },
+        "llm": { "text": "No in-app LLM integration mentioned. Its AI features are for coding agents: AGENTS.md rules, an MCP server for Claude Code, Cursor, Codex and Gemini, and agent skills.", "source": "https://makerkit.dev" },
+        "metering": { "text": "Per-user AI token metering not mentioned on their page. Flat, per-seat and metered subscriptions through Stripe are listed as billing options.", "source": "https://makerkit.dev" },
+        "billing": { "text": "Stripe and Polar, behind a gateway that switches providers by configuration.", "source": "https://makerkit.dev" },
+        "teams": { "text": "Yes: personal and team accounts, invitations, roles and permissions.", "source": "https://makerkit.dev/pricing" },
+        "bestFor": { "text": "Their page says \"Best for\": B2B SaaS that needs teams, roles and per-seat billing in the first release; founders directing an AI coding agent; agencies starting several SaaS projects (Team license); developers who want agent tokens spent on features.", "source": "https://makerkit.dev" }
+      }
+    },
+    {
+      "id": "supastarter",
+      "name": "supastarter",
+      "url": "https://supastarter.dev",
+      "sources": [
+        { "url": "https://supastarter.dev", "what": "home page with pricing" },
+        { "url": "https://supastarter.dev/nextjs-ai-saas-template", "what": "Next.js AI SaaS template page" }
+      ],
+      "cells": {
+        "price": { "text": "One-time. Solo $349 (1 developer seat), Startup $799 (up to 5 seats, 60-minute consulting call), Agency $1,499 (up to 10 seats). Lifetime updates.", "source": "https://supastarter.dev" },
+        "refund": { "text": "Not mentioned on their page.", "source": "https://supastarter.dev" },
+        "llm": { "text": "A chatbot example on the Vercel AI SDK with streaming, saved conversations and configurable system prompts. Providers through the AI SDK: OpenAI, Anthropic, Google, Mistral and more.", "source": "https://supastarter.dev/nextjs-ai-saas-template" },
+        "metering": { "text": "Yes per their AI page: \"monitor AI token consumption per user/organization\", and AI features gated by plan. Usage-based and seat-based billing are listed under payments.", "source": "https://supastarter.dev/nextjs-ai-saas-template" },
+        "billing": { "text": "Lemon Squeezy, Stripe, Polar, Creem, Dodo Payments.", "source": "https://supastarter.dev" },
+        "teams": { "text": "Yes: organizations, invites, member roles, seat-based billing.", "source": "https://supastarter.dev" },
+        "bestFor": { "text": "A B2B SaaS with organizations and a choice of billing providers, with AI features on several model providers. Versions for Next.js, Nuxt and TanStack Start.", "source": "https://supastarter.dev" }
+      }
+    },
+    {
+      "id": "anotherwrapper",
+      "name": "AnotherWrapper",
+      "url": "https://anotherwrapper.com",
+      "sources": [{ "url": "https://anotherwrapper.com", "what": "home page with pricing" }],
+      "cells": {
+        "price": { "text": "One-time. Solo $249 (list $349), Startup $549 (list $799, up to 5 developer seats), Agency $999 (list $1,499, up to 10 seats). The page says the Solo price goes up to $299 after the current batch.", "source": "https://anotherwrapper.com" },
+        "refund": { "text": "30-day money-back guarantee.", "source": "https://anotherwrapper.com" },
+        "llm": { "text": "Vercel AI SDK with streaming, tool calling, structured output and generative UI. Providers: OpenAI, Anthropic, Google, Groq, xAI, DeepSeek. 8 demo apps, including RAG with PDF citations, web search and voice.", "source": "https://anotherwrapper.com" },
+        "metering": { "text": "\"Credit-based consumption\" is listed under payments. Per-user token metering is not mentioned on their page.", "source": "https://anotherwrapper.com" },
+        "billing": { "text": "Stripe, Lemon Squeezy, Polar.", "source": "https://anotherwrapper.com" },
+        "teams": { "text": "Teams inside the app are not mentioned on their page (the seats are developer licenses).", "source": "https://anotherwrapper.com" },
+        "bestFor": { "text": "Several kinds of AI app (chat, RAG, image, voice) on many model providers, with demo apps to try first.", "source": "https://anotherwrapper.com" }
+      }
+    },
+    {
+      "id": "turbostarter",
+      "name": "TurboStarter",
+      "url": "https://www.turbostarter.dev",
+      "sources": [{ "url": "https://www.turbostarter.dev", "what": "home page with pricing and FAQ" }],
+      "cells": {
+        "price": { "text": "Lifetime license. Core Kit $249 (list $349). Bundle with the AI Kit and Edge Kit $549 (list $649).", "source": "https://www.turbostarter.dev" },
+        "refund": { "text": "Generally no refund once access is redeemed. The FAQ asks you to get in touch with questions, \"including potential refund\".", "source": "https://www.turbostarter.dev" },
+        "llm": { "text": "In the AI Kit (included in the $549 bundle; listed as a $249 value): 10+ AI templates for web and mobile, multiple AI providers and models, tool calling, memory, rate limiting, credit-based access.", "source": "https://www.turbostarter.dev" },
+        "metering": { "text": "Credit-based access (AI Kit) and metered usage billing are listed. Per-user token metering is not mentioned on their page.", "source": "https://www.turbostarter.dev" },
+        "billing": { "text": "Stripe, Lemon Squeezy, Polar, Dodo Payments, RevenueCat, Superwall.", "source": "https://www.turbostarter.dev" },
+        "teams": { "text": "Yes: organizations/teams with roles or permissions.", "source": "https://www.turbostarter.dev" },
+        "bestFor": { "text": "One codebase for a web app (Next.js), a mobile app (Expo) and a browser extension.", "source": "https://www.turbostarter.dev" }
+      }
+    },
+    {
+      "id": "startkit",
+      "name": "StartKit.AI",
+      "url": "https://startkit.ai",
+      "sources": [{ "url": "https://startkit.ai", "what": "home page with pricing and FAQ" }],
+      "cells": {
+        "price": { "text": "One-time. Starter $149, Growth $249, each with a perpetual fallback license and 1 year of updates. Concierge (they build the app) from $7,995.", "source": "https://startkit.ai" },
+        "refund": { "text": "No refunds (\"the software is non-returnable\"). Code samples on request before you buy.", "source": "https://startkit.ai" },
+        "llm": { "text": "A Node.js and JavaScript backend with React demo apps (the page does not mention Next.js). The top of the page names OpenAI, Anthropic, Groq or Llama; the FAQ says only OpenAI models are supported at the moment. Retries and fallbacks, RAG over uploaded documents.", "source": "https://startkit.ai" },
+        "metering": { "text": "\"Usage limits and monitoring\" and \"API limits and usage monitoring\" are listed. Per-user token cost is not mentioned on their page.", "source": "https://startkit.ai" },
+        "billing": { "text": "Stripe or Lemon Squeezy.", "source": "https://startkit.ai" },
+        "teams": { "text": "Not mentioned on their page.", "source": "https://startkit.ai" },
+        "bestFor": { "text": "A JavaScript AI API backend with document upload and RAG, plus demo apps.", "source": "https://startkit.ai" }
+      }
+    },
+    {
+      "id": "agentship",
+      "name": "AgentShip",
+      "url": "https://mt211211.github.io/agentship-site/",
+      "sources": [{ "url": "https://mt211211.github.io/agentship-site/", "what": "home page with pricing and FAQ" }],
+      "cells": {
+        "price": { "text": "£99 one-time (v1.0). Private GitHub repo, lifetime updates, unlimited commercial projects, one license per developer.", "source": "https://mt211211.github.io/agentship-site/" },
+        "refund": { "text": "Full refund within 14 days by replying to the receipt.", "source": "https://mt211211.github.io/agentship-site/" },
+        "llm": { "text": "Claude API with the official TypeScript SDK: SSE streaming chat, adaptive thinking, typed Zod tool handlers, prompt caching. The app is also exposed as an MCP server at /api/mcp.", "source": "https://mt211211.github.io/agentship-site/" },
+        "metering": { "text": "Yes per their page: tracks each user's token spend, weights input and output cost, gates by plan quota.", "source": "https://mt211211.github.io/agentship-site/" },
+        "billing": { "text": "Stripe subscriptions.", "source": "https://mt211211.github.io/agentship-site/" },
+        "teams": { "text": "Not mentioned on their page.", "source": "https://mt211211.github.io/agentship-site/" },
+        "bestFor": { "text": "A Claude product on Stripe whose actions other AI agents can call through an MCP server.", "source": "https://mt211211.github.io/agentship-site/" }
+      }
+    },
+    {
+      "id": "opensaas",
+      "name": "Open SaaS",
+      "url": "https://opensaas.sh",
+      "sources": [{ "url": "https://opensaas.sh", "what": "home page" }],
+      "cells": {
+        "price": { "text": "Free and open source.", "source": "https://opensaas.sh" },
+        "refund": { "text": "Not applicable (free).", "source": "https://opensaas.sh" },
+        "llm": { "text": "An OpenAI demo app is included (per their page description). \"AI Ready\" on the page also means agent rules, skills and tools for AI coding tools.", "source": "https://opensaas.sh" },
+        "metering": { "text": "Not mentioned on their page.", "source": "https://opensaas.sh" },
+        "billing": { "text": "Stripe, Polar.sh, Lemon Squeezy.", "source": "https://opensaas.sh" },
+        "teams": { "text": "Not mentioned on their page.", "source": "https://opensaas.sh" },
+        "bestFor": { "text": "A free React, Node.js and Prisma SaaS on the Wasp framework (not Next.js), with Playwright end-to-end tests and a GitHub Actions CI pipeline.", "source": "https://opensaas.sh" }
+      }
+    }
+  ],
+  "pickIf": [
+    { "id": "agentwright", "text": "Pick Agentwright Starter if your product is a Claude agent, you charge per plan and need to know what each user's Claude calls cost, and you are fine with Lemon Squeezy, no organizations and a plain UI. /inside/ lists every file in the kit and shows three of them in full before you pay." },
+    { "id": "shipfast", "text": "Pick ShipFast if you are building a general SaaS without AI at its core, want a landing page, blog, SEO and emails ready, and like MongoDB or Supabase. It includes a landing page, blog, SEO tags and UI components. Its page cites 8,447 makers using it and a Discord community. You would add the LLM calls and any metering yourself." },
+    { "id": "makerkit", "text": "Pick MakerKit if you sell B2B with teams, roles, invitations and per-seat billing, want Stripe or Polar, and want a super admin, i18n and a marketing site. It has a demo, public docs and a free Lite repo to read first. You would add the in-app LLM and token metering yourself." },
+    { "id": "supastarter", "text": "Pick supastarter if you need organizations and seats, a wide choice of billing providers (Stripe included), and AI features on several model providers through the Vercel AI SDK. It has a demo and versions for Nuxt and TanStack Start. Check its refund terms before you buy; we did not find them on the pages we read." },
+    { "id": "anotherwrapper", "text": "Pick AnotherWrapper if you want many AI app types (chat, RAG, image, voice) and many model providers in one repo, with demo apps to try and a 30-day guarantee, which is longer than ours." },
+    { "id": "turbostarter", "text": "Pick TurboStarter if you need web, mobile and a browser extension from one codebase, with organizations and many billing providers. The AI templates are in the AI Kit (included in the $549 bundle; listed as a $249 value)." },
+    { "id": "startkit", "text": "Pick StartKit.AI if you want a JavaScript (Node.js) AI backend with RAG over uploaded files, and do not need Next.js. Ask them which model providers work today, because the page says two different things." },
+    { "id": "agentship", "text": "Pick AgentShip if you want a Claude kit on Stripe, and you want other agents to call your app through an MCP server. It is the closest kit to ours here; compare the code before you choose." },
+    { "id": "opensaas", "text": "Pick Open SaaS if you want to pay nothing, want the code to be open source, and are happy with the Wasp framework instead of Next.js. It has tests and CI. Beyond the OpenAI demo app, you would add LLM metering and the agent parts yourself." }
+  ],
+  "weaker": [
+    "It is new. The first release was on 2026-11-01 and the current version is 0.4.2. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
+    "Claude only. The agent loop, metering and evals are built on the Anthropic SDK. If you need OpenAI or Gemini too, another kit here fits better.",
+    "Lemon Squeezy only for your app's billing. There is no Stripe code. The roadmap lists a second billing adapter (Polar or Stripe) with no date. (You buy the kit itself through Polar; that is our store, not code in the kit.)",
+    "No teams, organizations or seats. Each user has one plan; \"team\" is only a plan name.",
+    "Minimal UI: sign-in, chat, usage, pricing and an admin page for licenses. The home page is a stub. There is no marketing site, blog or component library.",
+    "No live demo. Instead, /inside/ lists every file and shows three of them in full.",
+    "Next.js 15, not 16. The upgrade is on the roadmap.",
+    "No RAG or search, no file uploads, no job queue. The plan cap is a monthly token count, and the kit does not charge for usage past it (on a plan with overage_allowed set, such as the seeded Team plan, usage simply continues)."
+  ],
+  "different": [
+    { "title": "A price snapshot on every usage row", "files": ["lib/billing/metering.ts", "lib/billing/pricing.ts"], "text": "Each model turn writes a row with input, output, cache read and cache write tokens, the cost in micro-USD and the id of the price row it was charged with. Prices are versioned rows with an effective date, so a price change never rewrites past totals. The catalog has rows for Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5 (with a separate long-prompt price for Haiku 5.5). When a model has no price row, a metered request fails before the API is called, so no call is made that the kit could not price." },
+    { "title": "An eval runner", "files": ["evals/run.ts", "evals/cases.ts"], "text": "npm run eval sends golden cases through the real agent loop without a database, checks tool calls, text and turn count, prints the cost of each case, and exits non-zero when a case fails, so it can run in CI." },
+    { "title": "MCP servers as tools for your agent", "files": ["lib/agent/mcp.ts"], "text": "Set MCP_SERVERS to connect stdio or Streamable HTTP MCP servers. Their tools are registered as server__tool and the agent calls them like local tools. You can allow only some tools per server, and a server that fails to connect does not stop the agent." },
+    { "title": "A plan cap checked before every agent turn", "files": ["lib/agent/loop.ts", "lib/billing/metering.ts"], "text": "Before each model turn, the loop checks the user's input and output tokens this month against the plan's monthly token cap. A turn that starts under the cap runs to the end, so one turn can go past it; the next turn is refused, unless the plan has overage_allowed set (the seeded Team plan does), in which case usage continues past the cap and is recorded but not billed. Cache tokens are charged but not counted toward the cap. A per-plan rate limit answers 429 with Retry-After (lib/ratelimit/index.ts)." },
+    { "title": "License key delivery", "files": ["lib/licensing/index.ts", "app/admin/licenses/"], "text": "If your product is a one-time download, a Lemon Squeezy order creates a license key, invites the buyer's GitHub login to a repo when configured, and emails the key with a signed download link. A refund revokes the key. /admin/licenses lists keys and lets you resend or revoke them." },
+    { "title": "A 14-day refund", "files": [], "link": "/legal/", "text": "Email us within 14 days of purchase and you get a full refund. You don't need to give a reason." }
+  ],
+  "checks": [
+    { "title": "Does metering count cache tokens?", "text": "Find the code that saves usage after each model call. It should store cache read and cache write tokens and price them at their own rates. If it only stores input and output tokens, costs will be wrong once prompt caching is on." },
+    { "title": "Is there a turn limit on the tool loop?", "text": "Find the loop that calls the model again after a tool result. It needs a maximum number of turns, or one confused request can call tools and spend tokens until it times out." },
+    { "title": "Is the billing webhook signature checked against the raw body?", "text": "Open the webhook route. It should read the body as text, verify the signature on those exact bytes, and only then parse the JSON. Parsing first and re-serializing breaks the check, or tempts someone to skip it." },
+    { "title": "Are there tests and CI?", "text": "Look for a test folder and a CI workflow file. See what they cover: billing and metering are where mistakes cost money." },
+    { "title": "Can you read code before you pay?", "text": "Look for a public code preview, a free version, docs or code samples on request. Read one real file, not only feature lists." },
+    { "title": "What is the refund policy?", "text": "Find it in writing before you buy. Several kits here give no refund once you have access to the code; others give 14 or 30 days." }
+  ]
+}

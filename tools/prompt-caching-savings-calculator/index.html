@@ -17,10 +17,10 @@
 <meta property="og:title" content="Prompt Caching Savings Calculator">
 <meta property="og:description" content="See how much Claude prompt caching saves on your workload, and how many calls per cache window you need to break even.">
 <meta property="og:url" content="https://agentwright.app/tools/prompt-caching-savings-calculator/">
-<meta property="og:image" content="https://agentwright.app/og.png?v=2">
+<meta property="og:image" content="https://agentwright.app/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://agentwright.app/og.png?v=2">
+<meta name="twitter:image" content="https://agentwright.app/og.png?v=3">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Prompt Caching Savings Calculator">
 <meta name="twitter:description" content="See how much Claude prompt caching saves on your workload, and how many calls per cache window you need to break even.">
@@ -35,7 +35,7 @@
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;flex-wrap:wrap;gap:10px 20px}
 .logo{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);border-bottom:3px solid var(--accent);line-height:1}
-nav{display:flex;flex-wrap:wrap;gap:6px 20px}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}@media (max-width:420px){nav{gap:6px 14px}}nav a{color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap}
 main{padding:16px 0 48px}
 h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 10px}
 .lede{font-size:18px;color:var(--muted);max-width:720px;margin:0 0 28px}
@@ -82,7 +82,7 @@ footer a{color:inherit}
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
 <main>
 <h1>Prompt Caching Savings Calculator</h1>
 <p class="lede">How much does Claude prompt caching actually save on your workload? Enter the part of the prompt that repeats (system prompt, tool definitions, documents), what changes per call, and how many calls reuse the cache before it expires.</p>
@@ -136,9 +136,9 @@ footer a{color:inherit}
 <p>More detail with code: <a href="/blog/prompt-caching-claude-agent-loop/">Prompt caching in a Claude agent loop</a>. Prices for every model: <a href="/pricing/claude/">Claude API pricing</a>.</p>
 </section>
 
-<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS that records cache writes and reads per user, so you see real caching savings instead of estimates. Streaming agent loop with tool calls, MCP, evals, auth and plan caps included. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
+<div class="cta"><p><strong>Agentwright Starter</strong> caches the system prompt and tool list and records cache reads and writes on every usage row, so you can compare this estimate with what you actually get. <a href="/faq/" style="color:var(--link)">FAQ</a></p><a class="btn" href="/inside/">Read the code</a></div>
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 <script id="pricing-data" type="application/json">__PRICING_JSON__</script>
 <script>

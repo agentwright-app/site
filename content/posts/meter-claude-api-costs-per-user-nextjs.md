@@ -244,7 +244,7 @@ Postgres returns `sum()` as a string for bigint columns, so wrap results in `Num
 
 ## What this does not cover
 
-Rate limiting (requests per minute per plan) is a separate concern and lives in its own table. Neither does this post cover overage billing: `overageAllowed` lets a plan continue past the cap, and a monthly job can sum `cost_micro_usd` and create a usage-based charge with your payment provider. Both are in the starter.
+Rate limiting (requests per minute per plan) is a separate concern and lives in its own table. Neither does this post cover overage billing: `overageAllowed` lets a plan continue past the cap, and a monthly job can sum `cost_micro_usd` and create a usage-based charge with your payment provider. The starter has the rate limiting and the `overageAllowed` flag; it does not charge for overage.
 
 ---
 
