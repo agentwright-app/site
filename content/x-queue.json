@@ -1,5 +1,5 @@
 {
-  "note": "X posts for the agentwright-cron worker. Each item is posted once at or after `at` (within 3 hours; later than that it is skipped and reported). The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at` (`at` 02:30 goes out at 03:07). No post may really go out between 03:00 and 07:00 KST, so never set `at` between 02:08 and 06:07 KST; night slots are 23:00, 01:00 and 02:00 KST, one item per slot (two items due in the same hour go out an hour apart). No links unless the item is a click-now item (max 1 link post/day). Edit on main; no redeploy needed. Optional per item: community_id (numeric X Community id the account has joined; posted with share_with_followers, falls back to a normal post + alert if refused; max 1 community post/day, never the same text in two communities). Top-level \"paused\": true stops all posting (emergency stop for policy changes).",
+  "note": "X posts for the agentwright-cron worker. Each item is posted once at or after `at` (within 3 hours; later than that it is skipped and reported). The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at` (`at` 02:30 goes out at 03:07). No post may really go out between 03:00 and 07:00 KST, so never set `at` between 02:08 and 06:07 KST; night slots are 23:00, 01:00 and 02:00 KST, one item per slot (two items due in the same hour go out an hour apart). No links unless the item is a click-now item (max 1 link post/day). Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Optional per item: community_id (numeric X Community id the account has joined; posted with share_with_followers, falls back to a normal post + alert if refused; max 1 community post/day, never the same text in two communities). Top-level \"paused\": true stops all posting (emergency stop for policy changes).",
   "posts": [
     {
       "id": "d1-2",
@@ -57,7 +57,7 @@
     {
       "id": "d4-2",
       "at": "2026-11-15T01:00:00+09:00",
-      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour, all within 24.",
+      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour; requests not done in 24 hours expire.",
       "community_id": "1838763245567369450"
     },
     {
