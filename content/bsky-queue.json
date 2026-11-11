@@ -24,10 +24,10 @@
       "text": "Same request on Claude Sonnet 5.5, 4,000 tokens in and 600 out:\n\n0% cache hits: $0.0140\n60% cache hits: $0.0094\n\nOne cache_control line on the system prompt. Check it before you touch your pricing."
     },
     {
-      "id": "b-mcp",
+      "id": "b-inside",
       "at": "2026-11-14T23:00:00+09:00",
-      "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key.",
-      "link": "https://agentwright.app/tools/claude-pricing-mcp/"
+      "text": "We published three files from our Claude agent starter kit in full, including the whole agent loop (104 lines): streaming, parallel tool calls, a 12-turn limit and a plan-cap check before every model turn.\n\nRead them before you write your own.",
+      "link": "https://agentwright.app/inside/"
     },
     {
       "id": "b-model-route",
@@ -92,6 +92,12 @@
       "at": "2026-11-23T23:00:00+09:00",
       "text": "Claude's token counting endpoint is free and takes the same input as a real request.\n\nWorth the extra round trip for uploads, budgets and routing. For a chat turn, the previous response's usage is often the better estimate. Questions go in the comments on the post; we answer there.",
       "link": "https://agentwright.app/blog/count-tokens-before-sending-claude/"
+    },
+    {
+      "id": "b-mcp",
+      "at": "2026-11-24T23:00:00+09:00",
+      "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key.",
+      "link": "https://agentwright.app/tools/claude-pricing-mcp/"
     },
     {
       "id": "b-compaction",
