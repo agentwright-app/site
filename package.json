@@ -5,7 +5,8 @@
     "typecheck": "tsc -p functions/tsconfig.json",
     "dev": "npm run build:blog && wrangler pages dev dist --kv WAITLIST",
     "deploy": "npm run build:blog && wrangler pages deploy dist --project-name agentwright --branch main --commit-dirty=true",
-    "build:blog": "node scripts/build-blog.mjs"
+    "build:blog": "node scripts/build-blog.mjs",
+    "check:queues": "node scripts/check-queues.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261101.1",

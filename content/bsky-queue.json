@@ -1,5 +1,5 @@
 {
-  "note": "Bluesky posts for the agentwright-cron worker (workers/cron/bsky.mjs). Each item is posted once at or after `at` (within 3 hours; later it is skipped and reported). Max 300 graphemes. Optional `link`: shown as a link card. First week: 1-2 posts/day, at most 1 link post/day. No automated follows, likes, reposts, replies or DMs. Questions are steered to our blog comments. Edit on main; no redeploy needed. Top-level \"paused\": true stops all posting.",
+  "note": "Bluesky posts for the agentwright-cron worker (workers/cron/bsky.mjs). Each item is posted once at or after `at` (within 3 hours; later it is skipped and reported). Max 300 graphemes. Optional `link`: shown as a link card. First week: 1-2 posts/day, at most 1 link post/day. No automated follows, likes, reposts, replies or DMs. Questions are steered to our blog comments. The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at`. A linked blog post must already be open (its date, KST) when the item goes out, or the link is a 404 with an empty card. Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Top-level \"paused\": true stops all posting.",
   "paused": false,
   "posts": [
     {
@@ -55,7 +55,7 @@
     {
       "id": "b-batches",
       "at": "2026-11-18T01:30:00+09:00",
-      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour, all within 24."
+      "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour; requests not done in 24 hours expire."
     },
     {
       "id": "b-sale-soft",
@@ -88,16 +88,16 @@
       "link": "https://agentwright.app/blog/claude-api-errors-retries-agent-loop/"
     },
     {
-      "id": "b-count-tokens",
-      "at": "2026-11-23T23:00:00+09:00",
-      "text": "Claude's token counting endpoint is free and takes the same input as a real request.\n\nWorth the extra round trip for uploads, budgets and routing. For a chat turn, the previous response's usage is often the better estimate. Questions go in the comments on the post; we answer there.",
-      "link": "https://agentwright.app/blog/count-tokens-before-sending-claude/"
-    },
-    {
       "id": "b-mcp",
-      "at": "2026-11-24T23:00:00+09:00",
+      "at": "2026-11-23T23:00:00+09:00",
       "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key.",
       "link": "https://agentwright.app/tools/claude-pricing-mcp/"
+    },
+    {
+      "id": "b-count-tokens",
+      "at": "2026-11-24T23:00:00+09:00",
+      "text": "Claude's token counting endpoint is free and takes the same input as a real request.\n\nWorth the extra round trip for uploads, budgets and routing. For a chat turn, the previous response's usage is often the better estimate. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/count-tokens-before-sending-claude/"
     },
     {
       "id": "b-compaction",
