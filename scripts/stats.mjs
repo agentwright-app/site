@@ -32,9 +32,16 @@ async function sum(prefix, group) {
 const uv = await sum("uv:", (k) => k.split(":")[1]);
 const pv = await sum("pv:", (k) => k.split(":").slice(2).join(":"));
 const ref = await sum("ref:", (k) => k.split(":").slice(2).join(":"));
+const utm = await sum("utm:", (k) => k.split(":").slice(2).join(":"));
+// ev:<day>:<event>:<path> → "<event>  <path>"
+const ev = await sum("ev:", (k) => { const [, , e, ...p] = k.split(":"); return `${e}  ${p.join(":")}`; });
 const total = (o) => Object.values(o).reduce((a, b) => a + b, 0);
 const sorted = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]);
 console.log(`Since ${since}: ${total(uv)} visitors (unique per day), ${total(pv)} page views`);
 console.log("\nVisitors by day:"); for (const [d, n] of Object.entries(uv).sort()) console.log(`  ${d}  ${n}`);
 console.log("\nTop pages:"); for (const [p, n] of sorted(pv).slice(0, 15)) console.log(`  ${String(n).padStart(5)}  ${p}`);
 console.log("\nWhere new visitors came from:"); for (const [h, n] of sorted(ref).slice(0, 15)) console.log(`  ${String(n).padStart(5)}  ${h}`);
+if (Object.keys(utm).length) { console.log("\nNew visitors by utm_source:"); for (const [h, n] of sorted(utm).slice(0, 15)) console.log(`  ${String(n).padStart(5)}  ${h}`); }
+console.log("\nClicks (buy_click = opened the checkout, preview_click = opened the code preview):");
+if (!Object.keys(ev).length) console.log("      0");
+for (const [h, n] of sorted(ev).slice(0, 20)) console.log(`  ${String(n).padStart(5)}  ${h}`);

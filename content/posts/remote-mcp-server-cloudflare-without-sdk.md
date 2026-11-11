@@ -110,7 +110,7 @@ Each tool has a name, a one-sentence description of when to use it, and an `inpu
 }
 ```
 
-`readOnlyHint` tells clients the tool changes nothing, so some of them skip the confirmation prompt. More on descriptions in [How to write tool descriptions Claude uses well](/blog/write-tool-descriptions-claude-uses-well/).
+`readOnlyHint` tells clients the tool changes nothing, so some of them skip the confirmation prompt.
 
 ## CORS and the Origin header
 

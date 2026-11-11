@@ -1,0 +1,359 @@
+{
+  "claude-api-pricing-calculator": {
+    "text": "When the estimate needs to become a measured number, Agentwright Starter records every Claude call per user with its tokens and cost in lib/billing/metering.ts and shows the month on a /usage page. Its price catalog in lib/billing/pricing.ts is versioned, so past totals stay the same when prices change.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/billing/pricing.ts",
+      "lib/billing/usage.ts",
+      "app/usage/page.tsx"
+    ]
+  },
+  "meter-claude-api-costs-per-user-nextjs": {
+    "text": "Agentwright Starter ships this layer as lib/billing/metering.ts: one usage_events row per model call with the cost in micro-USD and the price row used, a plan-cap check before every agent turn, and the /usage dashboard in app/usage/page.tsx. It is already wired into the streaming agent loop in lib/agent/loop.ts.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/billing/pricing.ts",
+      "lib/db/schema.ts",
+      "app/usage/page.tsx",
+      "lib/agent/loop.ts"
+    ]
+  },
+  "claude-agent-sdk-vs-your-own-tool-loop": {
+    "text": "Agentwright Starter takes option 1: lib/agent/loop.ts is a hand-written streaming loop of about 100 lines with parallel tool calls, a 12-turn guard, prompt caching on the system prompt and per-turn metering. You can read and change every line of it.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/agent/tools.ts"
+    ]
+  },
+  "snapshot-llm-prices-per-request": {
+    "text": "Agentwright Starter ships this as the model_prices table (drizzle/0002_price_snapshots.sql) and usage_events.price_id: recordUsage in lib/billing/metering.ts picks the price in effect at request time and stores the cost and the price id on every row. docs/pricing.md shows how to add a price change as a new row.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/billing/pricing.ts",
+      "drizzle/0002_price_snapshots.sql",
+      "docs/pricing.md",
+      "tests/pricing.test.ts"
+    ]
+  },
+  "verify-lemon-squeezy-webhooks-nextjs": {
+    "text": "Agentwright Starter ships this handler as app/api/webhooks/lemonsqueezy/route.ts with lib/billing/lemonsqueezy.ts: HMAC-SHA256 over the raw body with a timing-safe compare, a webhook_events log written before processing, and a 500 on failure so Lemon Squeezy retries. It also maps subscription variants to your plans and issues license keys for one-time orders.",
+    "files": [
+      "app/api/webhooks/lemonsqueezy/route.ts",
+      "lib/billing/lemonsqueezy.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "stream-claude-agent-sse-nextjs": {
+    "text": "Agentwright Starter ships this protocol as app/api/agent/route.ts (meta, text, tool_call, tool_result, usage, error and done events) and a fetch-based client in components/chat.tsx that shows tool calls. Before the stream starts, the route checks sign-in and per-plan rate limits and loads the stored conversation.",
+    "files": [
+      "app/api/agent/route.ts",
+      "components/chat.tsx",
+      "lib/agent/loop.ts"
+    ]
+  },
+  "prompt-caching-claude-agent-loop": {
+    "text": "Agentwright Starter puts one cache breakpoint on the system prompt in lib/agent/loop.ts, keeps tool definitions sorted by name in lib/agent/tools.ts so the cached prefix stays the same, and stores cache reads and writes on every usage_events row. Version 0.4.1 removed per-tool cache_control markers after they pushed requests past the API's limit of four cache breakpoints, with a regression test in tests/tools.test.ts.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/agent/tools.ts",
+      "lib/agent/system-prompt.ts",
+      "tests/tools.test.ts"
+    ]
+  },
+  "rate-limit-llm-endpoints-postgres": {
+    "text": "Agentwright Starter ships this limiter as lib/ratelimit/index.ts: a rate_limit_hits table, a one-minute sliding window per user, limits from plans.requests_per_minute (seeded 10/60/200) and 429 responses with Retry-After from app/api/agent/route.ts. The monthly cap from the second half of the post is a token cap, enforced by assertWithinCap in lib/billing/metering.ts.",
+    "files": [
+      "lib/ratelimit/index.ts",
+      "app/api/agent/route.ts",
+      "lib/billing/metering.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "evals-for-claude-agents-typescript": {
+    "text": "Agentwright Starter ships this runner as evals/run.ts with three golden cases in evals/cases.ts: it runs them through the real agent loop without a database, checks tool calls, text and turn counts, prints cost per case and exits non-zero on failure. Run it against another model with npm run eval -- --model <id>.",
+    "files": [
+      "evals/run.ts",
+      "evals/cases.ts"
+    ]
+  },
+  "remote-mcp-server-cloudflare-without-sdk": {
+    "text": "Agentwright Starter does not include an MCP server; it is the client side: lib/agent/mcp.ts connects stdio or Streamable HTTP servers like this one through a single MCP_SERVERS variable and registers their tools in the agent loop. Point it at the server you build here and your agent can call it.",
+    "files": [
+      "lib/agent/mcp.ts"
+    ]
+  },
+  "mcp-servers-as-tools-in-your-agent": {
+    "text": "Agentwright Starter ships this layer as lib/agent/mcp.ts: stdio and Streamable HTTP servers from one MCP_SERVERS variable, tools named <server>__<tool>, a per-server allowTools list and graceful failure per server. Tool definitions are sorted by name and carry no cache_control markers (lib/agent/tools.ts), so the cached prefix stays the same from one request to the next.",
+    "files": [
+      "lib/agent/mcp.ts",
+      "lib/agent/tools.ts",
+      "tests/tools.test.ts"
+    ]
+  },
+  "price-ai-saas-plan-margins": {
+    "text": "Agentwright Starter stores each plan's monthly token cap and requests-per-minute limit in the plans table (seeded by scripts/seed.ts), records the dollar cost of every request per user, and shows usage against the cap on /usage. Once this post has helped you pick your numbers, applying them means changing rows in the plans table, not building a feature.",
+    "files": [
+      "lib/db/schema.ts",
+      "scripts/seed.ts",
+      "lib/billing/metering.ts",
+      "app/usage/page.tsx"
+    ]
+  },
+  "license-keys-lemon-squeezy-cloudflare": {
+    "text": "Agentwright Starter includes a Postgres version of this flow for products you sell yourself: lib/licensing/index.ts issues one AW- key per order, app/api/download/route.ts serves HMAC-signed download links that check for revocation, a refund revokes the key, and /admin/licenses lets you resend or revoke. It runs inside the Next.js app, not on Cloudflare KV.",
+    "files": [
+      "lib/licensing/index.ts",
+      "app/api/download/route.ts",
+      "app/admin/licenses/page.tsx",
+      "app/api/admin/licenses/route.ts",
+      "lib/billing/lemonsqueezy.ts",
+      "docs/licensing.md"
+    ]
+  },
+  "claude-api-errors-retries-agent-loop": {
+    "text": "Agentwright Starter does not add its own retry or model-fallback layer; it relies on the Anthropic SDK's default retries. Its loop in lib/agent/loop.ts already appends history and records usage only after a turn completes and returns tool failures as is_error results, which is where the retry rules from this post fit.",
+    "files": [
+      "lib/agent/loop.ts"
+    ]
+  },
+  "choose-claude-model-per-route": {
+    "text": "In Agentwright Starter, runAgent in lib/agent/loop.ts takes a model per call (the default comes from AGENT_MODEL), and lib/billing/pricing.ts has prices for Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5, so every usage row is charged at that model's rate. Before you switch a route to a cheaper model, npm run eval -- --model <id> runs your golden cases on it.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/billing/pricing.ts",
+      "evals/run.ts"
+    ]
+  },
+  "per-user-spend-limits-in-dollars": {
+    "text": "Agentwright Starter caps each plan in tokens today, not dollars (assertWithinCap in lib/billing/metering.ts, checked before every agent turn), and it does not close the parallel-request race this post describes. Every usage row already stores its cost in micro-USD, so a dollar budget check can sum that column instead.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "structured-outputs-claude-typescript": {
+    "text": "The kit does not include a structured-output helper. What it has is lib/agent/tools.ts, which defines tools with Zod schemas, converts them to JSON Schema for Claude and validates the model's input against that schema before the tool runs; its eval runner (evals/run.ts) is where an extraction check would go.",
+    "files": [
+      "lib/agent/tools.ts",
+      "evals/run.ts"
+    ]
+  },
+  "background-agent-jobs-postgres-skip-locked": {
+    "text": "Agentwright Starter does not include a job queue or worker; agent runs happen inside the streaming request (app/api/agent/route.ts, maxDuration 300). Its runAgent function returns the full history and reports each turn through callbacks, so a worker like the one in this post can call it as it is.",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "store-agent-conversations-append-only": {
+    "text": "The agent loop in Agentwright Starter (lib/agent/loop.ts) returns the full history with every content block, including tool calls and tool results, and app/api/agent/route.ts saves it per user in the conversations table. The history is one jsonb column per conversation, rewritten after each run rather than stored as append-only rows, and it is deleted together with the user (onDelete cascade in lib/db/schema.ts).",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "find-most-expensive-users-sql": {
+    "text": "The kit does not ship these six queries or an admin cost report, but it records the usage_events table they run on: one row per model call with user, model, token counts including cache reads and writes, cost in micro-USD and price_id (lib/db/schema.ts, lib/billing/metering.ts). Each user sees their own month on /usage.",
+    "files": [
+      "lib/db/schema.ts",
+      "lib/billing/metering.ts",
+      "lib/billing/usage.ts",
+      "app/usage/page.tsx"
+    ]
+  },
+  "handle-claude-stop-reasons-agent": {
+    "text": "The loop in Agentwright Starter (lib/agent/loop.ts) records usage on every response, continues on tool_use, raises a typed AgentRefusedError with stop_details on refusal and stops after 12 turns. It does not handle max_tokens truncation or pause_turn on their own, which are the two additions this post walks through.",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "sync-lemon-squeezy-subscriptions-to-plans": {
+    "text": "Agentwright Starter has the simpler version this post improves on: lib/billing/lemonsqueezy.ts verifies the webhook, maps variants to plans, checks the subscription status and keeps access after a cancellation until the period ends, but it stores the plan on users and has no subscriptions table, updated_at ordering or nightly reconciliation. The webhook_events log is what you replay when you add them.",
+    "files": [
+      "lib/billing/lemonsqueezy.ts",
+      "app/api/webhooks/lemonsqueezy/route.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "magic-link-sign-in-authjs-resend": {
+    "text": "Agentwright Starter ships this setup in lib/auth/index.ts: Auth.js v5 with the Drizzle adapter, database sessions, GitHub sign-in, and the Resend magic-link provider with a 15-minute link lifetime, turned on when AUTH_RESEND_KEY is set. The fixes for link scanners and sign-in email abuse in this post are not built in.",
+    "files": [
+      "lib/auth/index.ts",
+      "app/login/page.tsx",
+      "lib/db/schema.ts"
+    ]
+  },
+  "deploy-nextjs-agent-saas-vercel-neon": {
+    "text": "Agentwright Starter includes this as docs/deploy.md: the Vercel and Neon steps, the environment variables to set, the 300-second agent route (maxDuration in app/api/agent/route.ts), the note that only HTTP MCP servers work on serverless, and a post-deploy checklist. lib/db/client.ts already sets prepare: false for Neon's pooled connection.",
+    "files": [
+      "docs/deploy.md",
+      "app/api/agent/route.ts",
+      "lib/db/client.ts",
+      ".env.example"
+    ]
+  },
+  "count-tokens-before-sending-claude": {
+    "text": "The kit does not call count_tokens. It checks the rate limit before each request and the plan cap before each model turn, and records exact usage from each response with a price snapshot (lib/billing/metering.ts); a count before sending, as described in this post, would go just before assertWithinCap in lib/agent/loop.ts.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "long-agent-conversations-compaction-context-editing": {
+    "text": "Agentwright Starter does not turn on context editing or compaction; its loop sends the full stored history on every run. It keeps each assistant turn as the API's full content blocks and records usage per response, so either feature can be added in lib/agent/loop.ts and its cost shows up on /usage.",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "write-tool-descriptions-claude-uses-well": {
+    "text": "The kit's tool registry (lib/agent/tools.ts) is where these definitions live: Zod schemas become the JSON Schema Claude sees and check the model's input before the tool runs, tools are sorted so the cached prefix stays the same, and a thrown error goes back to the model as an is_error result. It ships only one example tool, so writing the descriptions is up to you.",
+    "files": [
+      "lib/agent/tools.ts",
+      "lib/agent/loop.ts"
+    ]
+  },
+  "prompt-injection-defenses-agent-tools": {
+    "text": "Agentwright Starter does not include an injection filter or an approval step. It does scope conversations and usage to the signed-in user from the session, keeps API keys in environment variables, and lets you expose only listed tools from each MCP server (allowTools in lib/agent/mcp.ts), which covers part of defence 1.",
+    "files": [
+      "lib/agent/mcp.ts",
+      "lib/auth/index.ts",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "approval-gates-for-agent-tool-calls": {
+    "text": "The kit does not include approval gates; every tool call runs as soon as the model asks. Its loop (lib/agent/loop.ts) returns tool failures to the model as error results and its route stores each conversation per user in Postgres, which is where the pending-action table from this post plugs in.",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "postgres-row-level-security-multi-tenant-agent-saas": {
+    "text": "Agentwright Starter scopes data with WHERE user_id clauses in application code and does not turn on row-level security. Every user-owned table (conversations, usage_events, sessions, accounts) has a user_id with cascading deletes in lib/db/schema.ts, so the policies in this post can be added one migration at a time.",
+    "files": [
+      "lib/db/schema.ts",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "test-agent-tools-without-calling-claude": {
+    "text": "Agentwright Starter ships offline tests for the tool registry and pricing (tests/tools.test.ts, tests/pricing.test.ts), a Postgres integration test for metering and a GitHub Actions workflow that runs them on pull requests, but no scripted fake client for the loop. Checks against the real model live separately in evals/run.ts, as this post recommends.",
+    "files": [
+      "tests/tools.test.ts",
+      "tests/pricing.test.ts",
+      "tests/metering.db.test.ts",
+      ".github/workflows/ci.yml",
+      "evals/run.ts"
+    ]
+  },
+  "claude-agent-saas-architecture-request-path": {
+    "text": "Agentwright Starter is this request path in one Next.js codebase: auth in lib/auth/index.ts, the rate limit in lib/ratelimit/index.ts, the plan cap and metering in lib/billing/metering.ts, the loop in lib/agent/loop.ts, SSE in app/api/agent/route.ts and the Lemon Squeezy webhooks next to it. Its budget check is a monthly token cap, not a dollar limit.",
+    "files": [
+      "lib/auth/index.ts",
+      "lib/ratelimit/index.ts",
+      "lib/billing/metering.ts",
+      "lib/agent/loop.ts",
+      "app/api/agent/route.ts",
+      "app/api/webhooks/lemonsqueezy/route.ts"
+    ]
+  },
+  "cancel-claude-agent-runs-abortcontroller": {
+    "text": "Agentwright Starter passes the request's abort signal from app/api/agent/route.ts into the Claude stream in lib/agent/loop.ts, so a dropped connection can stop the model call. It does not ship the Stop button, tool cancellation or recording of partial usage that this post adds.",
+    "files": [
+      "app/api/agent/route.ts",
+      "lib/agent/loop.ts",
+      "components/chat.tsx"
+    ]
+  },
+  "spend-anomaly-alerts-llm-costs-sql": {
+    "text": "The kit does not include alerts or a cron job, but it records the data these three checks need: one usage_events row per model call with user, model and cost in micro-USD (lib/billing/metering.ts). The post-deploy checklist in docs/deploy.md also tells you to set a spend limit on your Anthropic workspace, the last safety net this post ends with.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/db/schema.ts",
+      "docs/deploy.md"
+    ]
+  },
+  "onboarding-emails-ai-saas-resend": {
+    "text": "Agentwright Starter does not send onboarding emails. It does have a small Resend sender with a logging fallback (lib/email/index.ts) and tracks each user's usage against their plan cap, the two hooks these five messages need.",
+    "files": [
+      "lib/email/index.ts",
+      "lib/billing/metering.ts",
+      "lib/billing/usage.ts"
+    ]
+  },
+  "postgres-full-text-search-tool-for-agents": {
+    "text": "The kit does not include a search tool or document tables. Its typed tool registry (lib/agent/tools.ts) and Drizzle migrations are where this one plugs in: one defineTool call with a Zod schema and one migration for the tsvector column.",
+    "files": [
+      "lib/agent/tools.ts",
+      "lib/db/schema.ts",
+      "drizzle.config.ts"
+    ]
+  },
+  "trace-claude-agent-runs-postgres": {
+    "text": "Agentwright Starter has no trace tables. It records one usage_events row per model call with tokens and cost, and passes every tool call and result through the onToolCall and onToolResult callbacks in lib/agent/loop.ts, the two places to write the run and step rows from this post.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "message-batches-claude-background-jobs": {
+    "text": "The kit does not use the Message Batches API, and it has no background job runner. It records one usage row per model call with a price snapshot (lib/billing/metering.ts), which is where a batch flag and the half-price rate from this post would go.",
+    "files": [
+      "lib/billing/metering.ts",
+      "lib/billing/pricing.ts"
+    ]
+  },
+  "pgvector-hybrid-search-agent-tool": {
+    "text": "Agentwright Starter does not include pgvector or a search tool. It runs on plain Postgres with Drizzle migrations and a typed tool registry (lib/agent/tools.ts), so this hybrid search goes in as a new tool and a migration. The kit has no embedding provider, so you add that too.",
+    "files": [
+      "lib/agent/tools.ts",
+      "lib/db/schema.ts"
+    ]
+  },
+  "pdf-uploads-claude-agent-files-api": {
+    "text": "The kit does not handle file uploads or the Files API; its chat endpoint accepts text messages only. Document tokens would be metered like any other input, because recordUsage in lib/billing/metering.ts prices whatever usage each response reports.",
+    "files": [
+      "app/api/agent/route.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "idempotent-agent-requests-double-submit": {
+    "text": "Agentwright Starter does not use idempotency keys on its chat endpoint; only license issuing is idempotent, once per order. The SSE route in app/api/agent/route.ts and the usage rows recorded per call are the two places where these keys plug in.",
+    "files": [
+      "app/api/agent/route.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "claude-web-search-tool-agent-saas": {
+    "text": "The kit does not turn on the web search server tool, and its loop does not handle pause_turn. It meters every model call per user with a price snapshot (lib/billing/metering.ts), where a search count would fit as one more column.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "prepaid-credits-ai-saas-postgres-ledger": {
+    "text": "Agentwright Starter bills with plans and monthly token caps, not credits, and has no ledger. It does include two pieces a credit ledger builds on: a verified Lemon Squeezy webhook with an event log (app/api/webhooks/lemonsqueezy/route.ts) and per-user usage rows with their cost (lib/billing/metering.ts).",
+    "files": [
+      "app/api/webhooks/lemonsqueezy/route.ts",
+      "lib/billing/lemonsqueezy.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "export-delete-user-data-ai-saas": {
+    "text": "The kit has no export or deletion job; deleting a user row removes their conversations, usage, sessions and accounts through cascading foreign keys in lib/db/schema.ts. That schema is the starting point for the data map this post asks you to write.",
+    "files": [
+      "lib/db/schema.ts"
+    ]
+  },
+  "kill-switches-ai-agent-models-tools": {
+    "text": "Agentwright Starter has no runtime config table or kill switches: the model comes from the AGENT_MODEL variable, MCP tools can be limited per server with allowTools, and admin access is an ADMIN_EMAILS list (lib/auth/admin.ts) used by /admin/licenses. Those are the places a switch table from this post plugs into.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/agent/mcp.ts",
+      "lib/auth/admin.ts",
+      "app/admin/licenses/page.tsx"
+    ]
+  }
+}

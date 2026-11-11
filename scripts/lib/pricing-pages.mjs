@@ -2,8 +2,9 @@
 //   /pricing/claude/            all models, one table
 //   /pricing/claude/<model-id>/ one page per model (worked examples, caching, batch, FAQ)
 // Every number comes from pricing.json, so updating that file + deploy updates these pages too.
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { buildCostPages } from "./cost-pages.mjs";
 
 const fmt = (n) => (n >= 1 ? `$${n.toFixed(2)}` : n >= 0.01 ? `$${n.toFixed(3)}` : `$${n.toPrecision(2)}`);
@@ -16,11 +17,22 @@ const EXAMPLES = [
   { name: "Summarize a 40-page document", input: 30_000, output: 1_000 },
 ];
 
+// Models that have a price row in the kit (content/kit/meta.json "models", synced from the
+// kit's BUILTIN_PRICES). Only these pages may say the kit charges usage at that model's rate.
+const KIT_META = join(dirname(fileURLToPath(import.meta.url)), "../../content/kit/meta.json");
+
 export function buildPricingPages({ page, esc, SITE, OUT, pricing }) {
+  const kitModels = new Set(JSON.parse(readFileSync(KIT_META, "utf8")).models ?? []);
   const models = pricing.models;
   const asOf = month(pricing.updated);
   const urls = [];
-  const footerLinks = `<div class="cta"><p><strong>Run your own numbers.</strong> The free <a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a> works out cost per request, per user and per month, and the <a href="/tools/claude-pricing-mcp/">Claude Pricing MCP server</a> lets Claude, Cursor or any MCP client answer the same questions inside your editor.</p><p>Building a Claude-powered SaaS? <a href="/">Agentwright Starter</a> records token usage per user and turns it into dollars with this same price table.</p></div>`;
+  // Footer box: the free tools first, then one line about the kit (neutral unless a page passes its own).
+  const KIT_NEUTRAL = `Building a Claude-powered SaaS? Agentwright Starter records every request's tokens and cost per user, together with the price version used, and shows it on a /usage page. <a href="/inside/">Read the code</a>.`;
+  const footerLinks = (kitHtml = KIT_NEUTRAL) => `<div class="cta"><p><strong>Run your own numbers.</strong> The free <a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a> works out cost per request, per user and per month, and the <a href="/tools/claude-pricing-mcp/">Claude Pricing MCP server</a> lets Claude, Cursor or any MCP client answer the same questions inside your editor.</p><p>${kitHtml}</p></div>`;
+  const kitModelLine = (m) =>
+    kitModels.has(m.id)
+      ? `Building on ${esc(m.name)}? Agentwright Starter takes the model as a setting (<code>AGENT_MODEL</code>) and charges each usage row at that model's rate from a versioned price table (<code>model_prices</code>, seeded from <code>lib/billing/pricing.ts</code>). <a href="/inside/">Read the code</a>.`
+      : KIT_NEUTRAL;
   const src = `<p class="meta">Prices in USD per million tokens, checked against the <a href="${esc(pricing.source)}">official Claude pricing page</a> on ${esc(pricing.updated)}.</p>`;
 
   // ---------- hub ----------
@@ -47,7 +59,7 @@ export function buildPricingPages({ page, esc, SITE, OUT, pricing }) {
     `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) })}</script>`;
   const faqHtml = (faq) => faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("");
 
-  const extra = buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, footerLinks, src });
+  const extra = buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, footerLinks, src, kitModels });
 
   mkdirSync(join(OUT, "pricing/claude"), { recursive: true });
   writeFileSync(
@@ -67,7 +79,7 @@ ${longNotes ? `<ul>${longNotes}</ul>` : ""}
 <table><thead><tr><th>Request</th>${models.map((m) => `<th>${esc(m.name.replace("Claude ", ""))}</th>`).join("")}</tr></thead><tbody>${exRows}</tbody></table>
 ${extra.hubHtml}
 <h2>Questions</h2>${faqHtml(hubFaq)}
-</article>${footerLinks}`,
+</article>${footerLinks()}`,
     }),
   );
   urls.push(`${SITE}/pricing/claude/`);
@@ -124,7 +136,7 @@ ${m.longPrompt ? `<tr><td>Prompts over ${m.longPrompt.thresholdTokens.toLocaleSt
 <p>Input + output price per million tokens, compared as a simple sum. Your real ratio depends on how many input versus output tokens your workload uses; the <a href="/tools/claude-api-cost-calculator/">calculator</a> compares models on your own numbers.</p>
 <p>What a typical app costs on ${esc(m.name)}: ${extra.costLinks}.</p>
 <h2>Questions</h2>${faqHtml(faq)}
-</article>${footerLinks}`,
+</article>${footerLinks(kitModelLine(m))}`,
       }),
     );
     urls.push(`${SITE}/pricing/claude/${m.id}/`);

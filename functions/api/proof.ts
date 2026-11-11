@@ -3,8 +3,9 @@
  *
  * Only true numbers, and small ones are hidden (null) so the page never shows "0 waiting":
  *   launchLeft   "NN of 50 left" at the launch price. 50 minus live (non-test) licenses ever
- *                issued (refunds don't give LS discount uses back). Shown only when the Pages
- *                variable SALES_LIVE = "1" (set it at the Lemon Squeezy live switch).
+ *                issued (refunds don't give discount uses back). Shown only when the Pages
+ *                variable SALES_LIVE = "1" AND at least MIN_LAUNCH_SOLD licenses are sold:
+ *                "50 of 50 left" only tells a visitor that nobody has bought yet.
  *   buyersMonth  live licenses issued this UTC month, shown when >= MIN_BUYERS.
  *   buyersTotal  all live licenses, shown when >= MIN_BUYERS.
  *   waiting      launch-list signups (WAITLIST `email:*`), shown when >= MIN_WAITING.
@@ -16,6 +17,7 @@ interface Env {
 }
 
 const LAUNCH_LIMIT = 50;
+const MIN_LAUNCH_SOLD = 5;
 const MIN_BUYERS = 10;
 const MIN_WAITING = 20;
 
@@ -51,7 +53,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, waitUntil
   const waitingCount = env.WAITLIST ? (await listAll(env.WAITLIST, "email:")).length : 0;
 
   const body = {
-    launchLeft: env.SALES_LIVE === "1" ? Math.max(0, LAUNCH_LIMIT - live) : null,
+    launchLeft: env.SALES_LIVE === "1" && live >= MIN_LAUNCH_SOLD ? Math.max(0, LAUNCH_LIMIT - live) : null,
     buyersMonth: month >= MIN_BUYERS ? month : null,
     buyersTotal: live >= MIN_BUYERS ? live : null,
     waiting: waitingCount >= MIN_WAITING ? waitingCount : null,

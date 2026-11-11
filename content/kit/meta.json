@@ -1,0 +1,315 @@
+{
+  "version": "0.4.2",
+  "models": [
+    "claude-fable-5-2",
+    "claude-fable-5-1",
+    "claude-opus-5-5",
+    "claude-sonnet-5-5",
+    "claude-haiku-5-5"
+  ],
+  "longContextModels": [
+    "claude-haiku-5-5"
+  ],
+  "commit": "941a053",
+  "commitDate": "2026-11-11",
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.3.0",
+    "@auth/drizzle-adapter": "1.11.3",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "drizzle-orm": "0.45.4",
+    "next": "15.5.28",
+    "next-auth": "5.0.0-beta.32",
+    "postgres": "3.4.9",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
+  },
+  "scripts": [
+    "dev",
+    "build",
+    "start",
+    "db:generate",
+    "db:migrate",
+    "db:seed",
+    "eval",
+    "typecheck",
+    "test"
+  ],
+  "previewFiles": [
+    "lib/agent/loop.ts",
+    "lib/billing/metering.ts",
+    "evals/cases.ts"
+  ],
+  "docs": [
+    "setup.md",
+    "deploy.md",
+    "pricing.md",
+    "licensing.md"
+  ],
+  "counts": {
+    "files": 64,
+    "codeFiles": 41,
+    "codeLines": 3338,
+    "testFiles": 3,
+    "tests": 15,
+    "migrations": 3
+  },
+  "files": [
+    {
+      "path": ".env.example",
+      "lines": 60
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "lines": 37
+    },
+    {
+      "path": ".gitignore",
+      "lines": 7
+    },
+    {
+      "path": "AGENTS.md",
+      "lines": 55
+    },
+    {
+      "path": "CHANGELOG.md",
+      "lines": 95
+    },
+    {
+      "path": "CLAUDE.md",
+      "lines": 1
+    },
+    {
+      "path": "LICENSE",
+      "lines": 116
+    },
+    {
+      "path": "README.md",
+      "lines": 90
+    },
+    {
+      "path": "app/admin/licenses/actions.tsx",
+      "lines": 107
+    },
+    {
+      "path": "app/admin/licenses/page.tsx",
+      "lines": 128
+    },
+    {
+      "path": "app/api/admin/licenses/route.ts",
+      "lines": 51
+    },
+    {
+      "path": "app/api/agent/route.ts",
+      "lines": 139
+    },
+    {
+      "path": "app/api/auth/[...nextauth]/route.ts",
+      "lines": 3
+    },
+    {
+      "path": "app/api/download/route.ts",
+      "lines": 30
+    },
+    {
+      "path": "app/api/webhooks/lemonsqueezy/route.ts",
+      "lines": 50
+    },
+    {
+      "path": "app/chat/page.tsx",
+      "lines": 38
+    },
+    {
+      "path": "app/globals.css",
+      "lines": 12
+    },
+    {
+      "path": "app/layout.tsx",
+      "lines": 15
+    },
+    {
+      "path": "app/login/page.tsx",
+      "lines": 68
+    },
+    {
+      "path": "app/page.tsx",
+      "lines": 23
+    },
+    {
+      "path": "app/pricing/page.tsx",
+      "lines": 85
+    },
+    {
+      "path": "app/usage/page.tsx",
+      "lines": 195
+    },
+    {
+      "path": "components/chat.tsx",
+      "lines": 162
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "lines": 25
+    },
+    {
+      "path": "docs/customizing.md",
+      "lines": 104
+    },
+    {
+      "path": "docs/deploy.md",
+      "lines": 70
+    },
+    {
+      "path": "docs/licensing.md",
+      "lines": 51
+    },
+    {
+      "path": "docs/next16.md",
+      "lines": 42
+    },
+    {
+      "path": "docs/pricing.md",
+      "lines": 113
+    },
+    {
+      "path": "docs/setup.md",
+      "lines": 53
+    },
+    {
+      "path": "drizzle.config.ts",
+      "lines": 9
+    },
+    {
+      "path": "drizzle/0000_many_sumo.sql",
+      "lines": 84
+    },
+    {
+      "path": "drizzle/0001_ratelimit_licenses.sql",
+      "lines": 33
+    },
+    {
+      "path": "drizzle/0002_price_snapshots.sql",
+      "lines": 24
+    },
+    {
+      "path": "evals/cases.ts",
+      "lines": 45
+    },
+    {
+      "path": "evals/run.ts",
+      "lines": 137
+    },
+    {
+      "path": "lib/agent/loop.ts",
+      "lines": 104
+    },
+    {
+      "path": "lib/agent/mcp.ts",
+      "lines": 143
+    },
+    {
+      "path": "lib/agent/system-prompt.ts",
+      "lines": 13
+    },
+    {
+      "path": "lib/agent/tools.ts",
+      "lines": 96
+    },
+    {
+      "path": "lib/auth/admin.ts",
+      "lines": 23
+    },
+    {
+      "path": "lib/auth/index.ts",
+      "lines": 78
+    },
+    {
+      "path": "lib/billing/checkout.ts",
+      "lines": 35
+    },
+    {
+      "path": "lib/billing/lemonsqueezy.ts",
+      "lines": 160
+    },
+    {
+      "path": "lib/billing/metering.ts",
+      "lines": 127
+    },
+    {
+      "path": "lib/billing/pricing.ts",
+      "lines": 154
+    },
+    {
+      "path": "lib/billing/usage.ts",
+      "lines": 168
+    },
+    {
+      "path": "lib/db/client.ts",
+      "lines": 33
+    },
+    {
+      "path": "lib/db/index.ts",
+      "lines": 3
+    },
+    {
+      "path": "lib/db/schema.ts",
+      "lines": 200
+    },
+    {
+      "path": "lib/email/index.ts",
+      "lines": 54
+    },
+    {
+      "path": "lib/licensing/index.ts",
+      "lines": 228
+    },
+    {
+      "path": "lib/ratelimit/index.ts",
+      "lines": 111
+    },
+    {
+      "path": "next-env.d.ts",
+      "lines": 6
+    },
+    {
+      "path": "next.config.ts",
+      "lines": 7
+    },
+    {
+      "path": "package.json",
+      "lines": 39
+    },
+    {
+      "path": "postcss.config.mjs",
+      "lines": 5
+    },
+    {
+      "path": "scripts/load-env.ts",
+      "lines": 8
+    },
+    {
+      "path": "scripts/seed.ts",
+      "lines": 54
+    },
+    {
+      "path": "scripts/smoke-agent.ts",
+      "lines": 35
+    },
+    {
+      "path": "tests/metering.db.test.ts",
+      "lines": 110
+    },
+    {
+      "path": "tests/pricing.test.ts",
+      "lines": 93
+    },
+    {
+      "path": "tests/tools.test.ts",
+      "lines": 16
+    },
+    {
+      "path": "tsconfig.json",
+      "lines": 21
+    }
+  ]
+}

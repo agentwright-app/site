@@ -82,7 +82,7 @@ footer a{color:inherit}
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
 <main>
 <h1>Claude API Cost Calculator</h1>
 <p class="lede">Estimate what a Claude-powered feature costs per month, per request and per user. Uses the official Claude API prices for Opus 5.5, Sonnet 5.5 and Haiku 5.5, including prompt caching and the Batch API discount. Change any input and the link updates, so you can share the result.</p>
@@ -142,12 +142,12 @@ footer a{color:inherit}
 <li><strong>Route by task.</strong> Classification, extraction and short replies on Haiku 5.5; agentic coding and multi-step tool use on Sonnet 5.5; reserve Opus 5.5 for the work where quality visibly matters. Try the comparison table above with your real token counts.</li>
 <li><strong>Batch what is not interactive.</strong> Nightly summaries, evals, backfills and reports can run through the Batch API at half price.</li>
 </ul>
-<p>To see actual per-user numbers instead of estimates, read <a href="/blog/meter-claude-api-costs-per-user-nextjs/">How to meter Claude API costs per user in a Next.js SaaS</a>. It walks through recording every call's token usage per user and converting it to dollars with the same price table.</p>
+<p>To see actual per-user numbers instead of estimates, read <a href="/blog/meter-claude-api-costs-per-user-nextjs/">How to meter Claude API costs per user in a Next.js SaaS</a>. It walks through recording every call's token usage per user and converting it to dollars with the official per-token prices.</p>
 </section>
 
-<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with this metering built in: per-user token tracking in Postgres, plan caps and rate limits, a streaming agent loop with tool calls, MCP, evals, auth and Lemon Squeezy billing. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
+<div class="cta"><p>This is an estimate. <strong>Agentwright Starter</strong> records the real tokens and cost of every Claude call per user (<code>lib/billing/metering.ts</code>) and shows them on a /usage page in your Next.js app. <a href="/faq/" style="color:var(--link)">FAQ</a></p><a class="btn" href="/inside/">Read the code</a></div>
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 <script id="pricing-data" type="application/json">__PRICING_JSON__</script>
 <script>

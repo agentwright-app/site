@@ -48,14 +48,14 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
 
 <main>
 <h1 id="title">Thanks for your purchase.</h1>
 <p class="lede" id="lede">Fetching your license…</p>
 
 <section class="card" id="state-loading">
-  <div class="status"><span class="spin"></span><span id="loading-msg">Confirming your order with Lemon Squeezy…</span></div>
+  <div class="status"><span class="spin"></span><span id="loading-msg">Confirming your order…</span></div>
 </section>
 
 <section class="card" id="state-pending" hidden>
@@ -65,14 +65,14 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 
 <section class="card" id="state-error" hidden>
   <h2 id="error-title">We couldn't find that order.</h2>
-  <p id="error-msg">Check the link in your Lemon Squeezy receipt email, or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we'll sort it out.</p>
+  <p id="error-msg">Check the link in your receipt email, or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we'll sort it out.</p>
 </section>
 
 <div id="state-ready" hidden>
   <section class="card">
     <p class="label">Your license key <span class="badge" id="test-badge" hidden>test mode</span></p>
     <div class="key"><code id="key"></code><button class="btn alt" id="copy" type="button">Copy</button></div>
-    <p style="margin-top:12px">Keep this key — it's your proof of license. Your Lemon Squeezy receipt (<span id="email"></span>) links back to this page, so you can return any time.</p>
+    <p style="margin-top:12px">Keep this key — it's your proof of license. Your receipt email (<span id="email"></span>) links back to this page, so you can return any time.</p>
   </section>
 
   <section class="card">
@@ -86,16 +86,21 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
     <ol>
       <li>Unzip, then <code class="inline">cd</code> into the folder and run <code class="inline">npm install</code>.</li>
       <li>Copy <code class="inline">.env.example</code> to <code class="inline">.env.local</code> and add your <code class="inline">ANTHROPIC_API_KEY</code>, a Postgres <code class="inline">DATABASE_URL</code> and an <code class="inline">AUTH_SECRET</code>.</li>
-      <li>Run <code class="inline">npm run db:migrate</code>, then <code class="inline">npm run dev</code> and open <a href="http://localhost:3000">localhost:3000</a>.</li>
-      <li>Read <code class="inline">docs/setup.md</code> and <code class="inline">docs/deploy.md</code> in the zip for GitHub login, billing webhooks and deploying to Vercel + Neon.</li>
+      <li>Run <code class="inline">npm run db:migrate</code> and <code class="inline">npm run db:seed</code> (plans and model prices), then <code class="inline">npm run dev</code> and open <a href="http://localhost:3000">localhost:3000</a>.</li>
+      <li>Read <code class="inline">docs/setup.md</code> in the zip for GitHub sign-in (<code class="inline">AUTH_GITHUB_ID</code> and <code class="inline">AUTH_GITHUB_SECRET</code>, needed to use <code class="inline">/chat</code>) and billing webhooks, <code class="inline">docs/customizing.md</code> for tools, plans and the model, and <code class="inline">docs/deploy.md</code> for Vercel + Neon.</li>
     </ol>
-    <p style="margin-top:14px">Questions, bugs, or a feature you need? Reply to your receipt or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> — a real person answers.</p>
-    <p style="margin-top:10px">Not what you expected? You have a <b>14-day no-questions refund</b>. See the <a href="/legal/">refund policy &amp; license terms</a> (one developer or one team, no redistribution of the source).</p>
+    <p style="margin-top:14px">Questions, bugs, or a feature you need? Reply to your receipt or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>. We usually answer within one business day.</p>
+    <p style="margin-top:10px">Not what you expected? You have a <b>14-day no-questions refund</b>. See the <a href="/legal/">refund policy &amp; license terms</a> (one person or one team, no redistribution of the source).</p>
+  </section>
+
+  <section class="card">
+    <h2>One favor</h2>
+    <p>You are one of the first buyers. Reply to the delivery email and tell us what you are building and what almost stopped you from buying. We read every reply.</p>
   </section>
 </div>
 </main>
 
-<footer>© 2026 Agentwright · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/faq/" style="color:inherit">FAQ</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="/terms/" style="color:inherit">Terms</a> · <a href="/privacy/" style="color:inherit">Privacy</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/inside/" style="color:inherit">What's inside</a> · <a href="/docs/" style="color:inherit">Docs</a> · <a href="/changelog/" style="color:inherit">Changelog</a> · <a href="/tools/" style="color:inherit">Tools</a> · <a href="/blog/" style="color:inherit">Blog</a> · <a href="/feed.xml" style="color:inherit">RSS</a> · <a href="/faq/" style="color:inherit">FAQ</a> · <a href="/legal/" style="color:inherit">Refunds &amp; license</a> · <a href="/terms/" style="color:inherit">Terms</a> · <a href="/privacy/" style="color:inherit">Privacy</a> · <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a></footer>
 </div>
 <script>
 (function(){
@@ -105,8 +110,8 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
   var states=['loading','pending','error','ready'];
   function show(s){states.forEach(function(x){$('state-'+x).hidden=(x!==s)});}
   function fail(title,msg){show('error');$('error-title').textContent=title;if(msg)$('error-msg').innerHTML=msg;$('lede').textContent='';}
-  if(q.get('polar_checkout')){show('error');$('lede').innerHTML='<span class="ok">Payment received.</span> Thank you!';$('error-title').textContent='Your license key is on its way by email.';$('error-msg').innerHTML='We email your license key and download link to the address you used at checkout, usually within a minute. Nothing there after 10 minutes (check spam too)? Email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we\'ll send it by hand.';return;}
-  if(!orderId||!ident){fail('This page needs an order link.','Open the "Get your license" button in your Lemon Squeezy receipt email, or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>.');return;}
+  if(q.get('polar_checkout')){show('error');$('lede').innerHTML='<span class="ok">Payment received.</span> Thank you!';$('error-title').textContent='Your license key is on its way by email.';$('error-msg').innerHTML='We email your license key and download link to the address you used at checkout, usually within a minute. Nothing there after 10 minutes (check spam too)? Email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we\'ll send it by hand.<br><br>While you wait: the <a href="/docs/setup/">setup guide</a> is the place to start. You are one of the first buyers, so reply to the delivery email and tell us what you are building and what almost stopped you from buying. We read every reply.';return;}
+  if(!orderId||!ident){fail('This page needs an order link.','Open the link in your receipt email, or email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>.');return;}
   var attempts=0, delays=[2000,3000,5000,8000,8000,10000,10000,15000,15000,15000,20000,20000];
   function poll(){
     fetch('/api/order?order_id='+encodeURIComponent(orderId)+'&id='+encodeURIComponent(ident),{headers:{accept:'application/json'}})
@@ -127,7 +132,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var
         else fail("Your key is taking longer than usual.",'Payment went through, but the license hasn\'t been issued yet. Email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>'+($('pending-order').textContent||'')+' and we\'ll send it within a few hours.');
         return;
       }
-      if(b.status==='unpaid'){fail('Payment not completed yet.','Lemon Squeezy reports this order as "'+(b.orderStatus||'pending')+'". Once it clears, reload this page or use the link in your receipt.');return;}
+      if(b.status==='unpaid'){fail('Payment not completed yet.','Our payment provider reports this order as "'+(b.orderStatus||'pending')+'". Once it clears, reload this page or use the link in your receipt.');return;}
       if(b.status==='revoked'){fail('This license was refunded.','If that\'s a mistake, email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>.');return;}
       fail("We couldn't find that order.");
     })

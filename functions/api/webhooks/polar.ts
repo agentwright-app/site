@@ -1,10 +1,12 @@
 /**
- * POST /api/webhooks/polar — Polar (polar.sh) webhook receiver. Polar is our dormant backup seller;
- * Lemon Squeezy stays the primary and its webhook (./lemonsqueezy.ts) is untouched.
+ * POST /api/webhooks/polar — Polar (polar.sh) webhook receiver. Polar has been the live seller
+ * since 2026-11-10: the site's only checkout link goes to Polar. Lemon Squeezy is the dormant
+ * backup; its webhook (./lemonsqueezy.ts) is kept and untouched.
  *
  * OFF SWITCH: unless the Pages variable POLAR_ENABLED is exactly "true", every POST answers 503
- * and nothing is written. Polar retries failed deliveries, so flipping the switch on later does
- * not lose an order that arrived while it was off (within Polar's retry window).
+ * and nothing is written. Polar retries failed deliveries, so an order that arrives while the
+ * switch is off is not lost if it is turned back on within Polar's retry window. It must stay
+ * "true" while Polar is the live seller.
  *
  * When enabled, verifies the Standard Webhooks signature against POLAR_WEBHOOK_SECRET, then:
  *   order.paid      (Starter product) → issue a license key into KV `LICENSES` (same records,

@@ -84,7 +84,7 @@ footer a{color:inherit}
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
 <main>
 <h1>AI SaaS Margin Calculator</h1>
 <p class="lede">You charge a flat monthly price, but every user costs you Claude API tokens. Enter your plan and a typical user's usage to see your gross margin per user, how much usage breaks even, and the monthly cap that keeps the margin you want. The link updates as you type, so you can share the result.</p>
@@ -166,9 +166,9 @@ footer a{color:inherit}
 <p>For the raw cost of a workload without a plan price, use the <a href="/tools/claude-api-cost-calculator/">Claude API Cost Calculator</a>.</p>
 </section>
 
-<div class="cta"><p><strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with per-user metering, plan caps, rate limits and Lemon Squeezy billing already wired, plus a streaming agent loop, MCP tools, evals and auth. Launch price $99. <a href="/faq/" style="color:var(--link)">FAQ</a></p><a class="btn" href="/#pricing">See what's inside</a></div>
+<div class="cta"><p><strong>Agentwright Starter</strong> stores each plan's monthly token cap and requests-per-minute limit in a <code>plans</code> table. Its cap counts input + output tokens per month, like the token cap above, so the number you pick here goes into one row. <a href="/faq/" style="color:var(--link)">FAQ</a></p><a class="btn" href="/inside/">Read the code</a></div>
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
 <script id="pricing-data" type="application/json">__PRICING_JSON__</script>
 <script src="calc.js"></script>

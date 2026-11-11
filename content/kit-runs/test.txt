@@ -1,0 +1,26 @@
+> agentwright-starter@0.4.2 test
+> tsx --test tests/*.test.ts
+
+✔ migration seeds the price catalog (191.231499ms)
+✔ recordUsage stores cost and price_id; a later price row does not change history (179.649277ms)
+✔ unknown model fails before anything is recorded (0.634417ms)
+✔ assertWithinCap: a missing plan row or user is a clear error, not a TypeError (7.206581ms)
+✔ checkRateLimit: parallel requests for one subject never exceed the limit (70.605894ms)
+✔ built-in ids are unique and rates are integers (1.042023ms)
+✔ current list prices (official pricing page, 2026-11-04) (1.274969ms)
+✔ Claude Fable 5.2 row (official pricing page, 2026-11-11) (0.210474ms)
+✔ worked example: 2,000 Sonnet requests = $40 (0.098611ms)
+✔ cost includes cache read and write (0.074623ms)
+✔ Haiku 5.5 switches to the long-context row above 100,000 prompt tokens (0.122804ms)
+✔ a new row takes effect on its date and old dates keep the old row (0.145353ms)
+✔ unknown model or a date before any row has no price (0.286775ms)
+✔ formatRate (0.335253ms)
+✔ tool definitions are sorted and carry no cache_control (API allows max 4 breakpoints) (7.278277ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 730.873396

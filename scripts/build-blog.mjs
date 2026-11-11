@@ -3,19 +3,29 @@
 // and robots.txt. `npm run deploy` runs this and uploads dist/ (functions/ is
 // picked up from the repo root by wrangler).
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, copyFileSync, cpSync } from "node:fs";
-import { join, dirname, relative, sep } from "node:path";
+import { join, dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
 import { buildPricingPages } from "./lib/pricing-pages.mjs";
 import { priceAlertBox, wantsPriceAlert, PRICE_ALERT_MARK } from "./lib/price-alert.mjs";
+import { markedHighlight, HL_CSS } from "./lib/highlight.mjs";
+import { buildKitPages, renderLanding } from "./lib/kit-pages.mjs";
+import { buildComparePages, compareLastmod } from "./lib/compare-page.mjs";
+
+// Code blocks are highlighted at build time (spans only, no script on the page).
+marked.use(markedHighlight);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
 const POSTS_DIR = join(root, "content/posts");
-const OUT = join(root, "dist");
+// BLOG_OUT builds into another folder (used for side-by-side test builds); the deploy uses dist/.
+const OUT = process.env.BLOG_OUT ? resolve(process.env.BLOG_OUT) : join(root, "dist");
+// The next line deletes OUT, so it must never be the repository or a folder that contains it.
+if (OUT === resolve(root) || resolve(root).startsWith(OUT + sep) || (OUT.startsWith(resolve(root) + sep) && OUT !== join(root, "dist")))
+  throw new Error(`BLOG_OUT=${OUT} would delete files in the repository; use a folder outside it`);
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
-copyFileSync(join(root, "index.html"), join(OUT, "index.html"));
+// The landing page is rendered further down (it needs the kit preview data and the highlight CSS).
 // Post-checkout page: Pages serves thanks.html at /thanks (noindex, not in sitemap).
 copyFileSync(join(root, "thanks.html"), join(OUT, "thanks.html"));
 // Static root assets (favicons, manifest, OG image) live in public/.
@@ -66,7 +76,7 @@ article h3{font-size:19px;margin:32px 0 8px}
 article p,article li{font-size:17px}
 article a{color:var(--link)}
 code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
-code{font-size:.92em;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+code{font-size:.92em;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px;overflow-wrap:anywhere}
 pre{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;overflow:auto;font-size:14px;line-height:1.5}
 pre code{background:none;border:0;padding:0;font-size:inherit}
 table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px;display:block;overflow-x:auto}
@@ -81,7 +91,13 @@ blockquote{margin:0;padding-left:16px;border-left:3px solid var(--accent);color:
 .post-list p{margin:8px 0 0;color:var(--muted)}
 .cta{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card);margin-top:40px}
 .cta p{margin:0 0 12px}
+.cta-link{color:var(--link);margin-left:12px;font-size:15px;white-space:nowrap}
+.cta .cta-note{margin:14px 0 0;color:var(--muted);font-size:13px}
 .btn{display:inline-block;background:var(--primary);color:var(--bg);padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:15px}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line);margin-left:6px}
+.files td{white-space:normal;vertical-align:top}.files td:first-child{white-space:nowrap}.files code{font-size:13px}
+details{margin:14px 0}summary{cursor:pointer;font-weight:600;color:var(--ink)}details[open] summary{margin-bottom:8px}
+pre.file{max-height:640px}
 .comments{margin-top:48px;border-top:1px solid var(--line);padding-top:8px}
 .comments h2{font-size:22px;letter-spacing:-.02em;margin:24px 0 6px}
 .comments .hint{color:var(--muted);font-size:14px;margin:0 0 20px}
@@ -102,7 +118,14 @@ footer a{color:inherit}
 .faq h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:48px 0 4px}
 .faq h3{font-size:19px;margin:28px 0 6px}
 .faq p{margin:0 0 10px}
-`;
+${HL_CSS}`;
+
+// Canonical header nav and footer for every page built here (static pages in tools/ and
+// thanks.html carry the same markup by hand). No GitHub link: the kit is not a public repo.
+const NAV = `<nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav>`;
+const FOOTER = `<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>`;
+// The only checkout link (the visit beacon counts clicks on buy.polar.sh as buy_click).
+const BUY_URL = "https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n";
 
 function page({ title, description, url, body, meta = "", type = "website" }) {
   return `<!doctype html>
@@ -137,11 +160,11 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/#features">What's inside</a><a href="/#pricing">Pricing</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a><a href="https://github.com/agentwright-app">GitHub</a></nav></header>
+<header><a class="logo" href="/">agentwright</a>${NAV}</header>
 <main>
 ${body}
 </main>
-<footer>© 2026 Agentwright · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
+${FOOTER}
 </div>
 </body>
 </html>
@@ -229,6 +252,27 @@ const allPosts = readdirSync(POSTS_DIR)
 const built = allPosts.filter((p) => PREVIEW || p.draft !== "true");
 const liveOn = (day) => built.filter((p) => PREVIEW || p.date <= day);
 const posts = liveOn(TODAY);
+// Per-post kit box text from content/post-cta.json: { "<slug>": { text, files[] } }.
+// Every sentence there must be true for the current kit. A slug that matches no post is a
+// typo and fails the build; a post without an entry gets the neutral fallback.
+const POST_CTA = JSON.parse(readFileSync(join(root, "content/post-cta.json"), "utf8"));
+{
+  const known = new Set(allPosts.map((p) => p.slug));
+  const unknown = Object.keys(POST_CTA).filter((s) => !known.has(s));
+  if (unknown.length) throw new Error(`content/post-cta.json: no post with slug ${unknown.map((s) => `"${s}"`).join(", ")} (typo?)`);
+}
+const CTA_FALLBACK = "<strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with the agent loop, sign-in, Lemon Squeezy billing, per-user cost metering, MCP connectors and evals already wired.";
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function postCta(slug) {
+  const entry = POST_CTA[slug];
+  let text = CTA_FALLBACK;
+  if (entry) {
+    text = esc(entry.text);
+    const files = [...(entry.files ?? [])].sort((a, b) => b.length - a.length).map((f) => reEsc(esc(f)));
+    if (files.length) text = text.replace(new RegExp(`(?<![\\w/.-])(${files.join("|")})(?![\\w/-])`, "g"), "<code>$1</code>");
+  }
+  return `<div class="cta"><p>${text}</p><a class="btn" href="/inside/">Read the code</a> <a class="cta-link" href="/#pricing">Price, refund and license</a><p class="cta-note">We write these posts while building the kit.</p></div>`;
+}
 const queued = built.filter((p) => !posts.includes(p)).sort((a, b) => (a.date < b.date ? -1 : 1));
 const futureDates = [...new Set(queued.map((p) => p.date))].sort();
 
@@ -252,7 +296,7 @@ for (const p of built) {
 <p class="meta"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p>
 ${p.html}
 </article>
-<div class="cta"><p><strong>Agentwright Starter</strong> ships this metering layer, the agent loop, auth, Lemon Squeezy billing, MCP and evals as one Next.js codebase. Launch price $99.</p><a class="btn" href="/#pricing">See what's inside</a></div>
+${postCta(p.slug)}
 ${commentsBlock(p.slug)}`;
   const meta = `<meta property="article:published_time" content="${p.date}T00:00:00Z">
 ${(p.tags ?? []).map((t) => `<meta property="article:tag" content="${esc(t)}">`).join("\n")}
@@ -275,7 +319,7 @@ writeFileSync(
     title: "Blog — Agentwright",
     description: "Practical notes on building Claude-powered SaaS: metering, billing, agent loops, MCP and evals. From the team behind Agentwright Starter.",
     url: `${SITE}/blog/`,
-    body: `<h1>Blog</h1><p class="lede">Practical notes on building Claude-powered SaaS: metering, billing, agent loops, MCP and evals.</p><ul class="post-list">${list}</ul>`,
+    body: `<h1>Blog</h1><p class="lede">Practical notes on building Claude-powered SaaS: metering, billing, agent loops, MCP and evals.</p><p>We write these while building Agentwright Starter, a Next.js codebase that has the core of these posts already wired: the agent loop, metering, billing, MCP and evals. <a href="/inside/">Read the code</a>.</p><ul class="post-list">${list}</ul>`,
   }),
 );
 
@@ -345,9 +389,9 @@ writeFileSync(
   join(OUT, "tools/index.html"),
   page({
     title: "Free tools — Agentwright",
-    description: "Free calculators and templates for teams building Claude-powered products.",
+    description: "Free calculators and an MCP server for teams building Claude-powered products.",
     url: `${SITE}/tools/`,
-    body: `<h1>Tools</h1><p class="lede">Free calculators and templates for teams building Claude-powered products. No sign-up.</p><ul class="post-list">${toolList}</ul>`,
+    body: `<h1>Tools</h1><p class="lede">Free calculators and an MCP server for teams building Claude-powered products. No sign-up.</p><ul class="post-list">${toolList}</ul><p>The calculators estimate; Agentwright Starter measures. It records tokens and cost per user for every Claude call in a Next.js app. <a href="/inside/">Read the code</a>.</p>`,
   }),
 );
 
@@ -358,6 +402,15 @@ const pricingUrls = buildPricingPages({
 });
 const pricingUpdated = JSON.parse(readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8")).updated;
 
+// What a buyer gets: /inside/ (file list + three files in full), /docs/ and /changelog/, from content/kit/.
+const kitUrls = buildKitPages({ page, esc, SITE, OUT, root });
+writeFileSync(join(OUT, "index.html"), renderLanding({ template: readFileSync(join(root, "index.html"), "utf8"), root, esc, SITE, HL_CSS }));
+const kitUpdated = JSON.parse(readFileSync(join(root, "content/kit/meta.json"), "utf8")).commitDate;
+
+// Comparison pages (/compare/...), from content/compare/*.json: every fact carries its source and check date.
+const compareUrls = buildComparePages({ page, esc, SITE, OUT, root });
+const compareChecked = compareLastmod({ SITE, root });
+
 // Sitemap (today + one snapshot per future publish date)
 function writeSitemap(base, posts) {
 const urls = [
@@ -365,10 +418,12 @@ const urls = [
   { loc: `${SITE}/tools/`, lastmod: "2026-11-01", priority: "0.8" },
   ...tools.map((t) => ({ loc: `${SITE}/tools/${t.slug}/`, lastmod: "2026-11-01", priority: "0.8" })),
   ...pricingUrls.map((loc) => ({ loc, lastmod: pricingUpdated, priority: "0.8" })),
-  { loc: `${SITE}/faq/`, lastmod: "2026-11-04", priority: "0.6" },
+  ...kitUrls.map((loc) => ({ loc, lastmod: kitUpdated, priority: loc.endsWith("/inside/") ? "0.9" : "0.6" })),
+  ...compareUrls.map((loc) => ({ loc, lastmod: compareChecked[loc], priority: "0.8" })),
+  { loc: `${SITE}/faq/`, lastmod: "2026-11-12", priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },
-  { loc: `${SITE}/privacy/`, lastmod: "2026-11-10", priority: "0.3" },
+  { loc: `${SITE}/privacy/`, lastmod: "2026-11-12", priority: "0.3" },
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),
 ];
@@ -402,7 +457,7 @@ writeFileSync(
       title: "Refund policy & license terms — Agentwright",
       description: "14-day no-questions refund, and what the Agentwright Starter license lets you do.",
       url: `${SITE}/legal/`,
-      body: `<h1>Refund policy &amp; license terms</h1>\n<article>\n${marked.parse(readFileSync(join(root, "content/pages/legal.md"), "utf8"))}</article>`,
+      body: `<h1>Refund policy &amp; license terms</h1>\n<article>\n${marked.parse(readFileSync(join(root, "content/pages/legal.md"), "utf8"))}</article>\n<p>Ready, or still have a question? <a href="/#pricing">Back to pricing</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></p>`,
     }),
   );
 }
@@ -449,7 +504,7 @@ for (const [slug, title, description] of [
       description: "Price, refunds, license, what's inside, tech stack and updates for Agentwright Starter, the Claude agent SaaS starter kit.",
       url: `${SITE}/faq/`,
       meta: `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>\n`,
-      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Launch price $99</strong> (list $149) for the first 50 licenses.</p><a class="btn" href="/#pricing">See pricing</a></div>`,
+      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Agentwright Starter, $99 launch price</strong> (list $149, first 50 licenses). The code LAUNCH is applied at checkout. 14-day refund, no questions asked.</p><a class="btn" href="${BUY_URL}">Buy now</a> <a class="cta-link" href="/inside/">Read the code first</a></div>`,
     }),
   );
 }
@@ -476,7 +531,8 @@ writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE
 // Cookieless visit counter (functions/api/hit.ts): add one beacon to every HTML page in dist/.
 {
   // Owner opt-out: open any page once with ?notrack=1 (per browser/device) to stop counting your own visits; ?notrack=0 undoes it.
-  const BEACON = `<script>var n=0;try{var q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("aw_notrack","1");if(q==="0")localStorage.removeItem("aw_notrack");n=localStorage.getItem("aw_notrack")}catch(e){}try{if(!n)navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer}))}catch(e){}</script>`;
+  // Also counts new visitors per ?utm_source= and clicks on checkout links (buy_click) and on the code preview (preview_click).
+  const BEACON = `<script>var n=0,u="";try{var s=new URLSearchParams(location.search),q=s.get("notrack");u=s.get("utm_source")||"";if(q==="1")localStorage.setItem("aw_notrack","1");if(q==="0")localStorage.removeItem("aw_notrack");n=localStorage.getItem("aw_notrack")}catch(e){}try{if(!n){navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer,u:u}));document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;var h=a.getAttribute("href")||"",ev=h.indexOf("buy.polar.sh")>=0?"buy_click":(h.indexOf("/inside/")===0?"preview_click":"");if(ev)navigator.sendBeacon("/api/hit",JSON.stringify({e:ev,p:location.pathname}))},true)}}catch(e){}</script>`;
   const walk = (d) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       const f = join(d, e.name);

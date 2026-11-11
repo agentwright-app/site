@@ -119,7 +119,13 @@ export const USE_CASES = [
   },
 ];
 
-export function buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, footerLinks, src }) {
+// Kit lines for the footer box. The kit has no document upload or search, so the two
+// document workloads say so instead of implying it.
+const KIT_COST = `An estimate is a guess until you measure it. Agentwright Starter records the tokens and cost of every Claude call per user, and checks the user's monthly token cap before each model turn. <a href="/inside/">Read the code</a>.`;
+const KIT_NO_DOCS = "The kit does not include document upload or search; it gives you the agent loop, metering and billing those features build on.";
+const DOC_WORKLOADS = new Set(["rag-document-qa", "document-summarization"]);
+
+export function buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, footerLinks, src, kitModels = new Set() }) {
   const models = [...pricing.models].sort((a, b) => b.input + b.output - (a.input + a.output)); // most expensive first
   const urls = [];
   const bd = pricing.batchDiscount;
@@ -165,7 +171,7 @@ export function buildCostPages({ page, esc, SITE, OUT, pricing, faqLd, faqHtml, 
 <p>To check what a plan price leaves you after these costs, use the <a href="/tools/ai-saas-margin-calculator/">AI SaaS margin calculator</a>. To see how much caching saves on your own prompt sizes, use the <a href="/tools/prompt-caching-savings-calculator/">prompt caching savings calculator</a>.</p>
 <h2>Questions</h2>${faqHtml(faq)}
 <p class="meta">Other workloads: ${others}</p>
-</article>${footerLinks}`,
+</article>${footerLinks(DOC_WORKLOADS.has(u.slug) ? `${KIT_COST} ${KIT_NO_DOCS}` : KIT_COST)}`,
       }),
     );
     urls.push(`${SITE}/pricing/claude/cost/${u.slug}/`);
@@ -218,11 +224,12 @@ ${longNote}
 <p class="meta">With prompt caching. Each workload links to its assumptions (tokens per call, calls per task).</p>
 <h2>How to decide</h2>
 <ul><li>Measure, do not guess: run 50 to 200 of your real requests through both models and score the answers. Our guide to <a href="/blog/evals-for-claude-agents-typescript/">evals for Claude agents</a> shows a small setup.</li>
+<li>${kitModels.has(b.id) ? `Agentwright Starter includes a small runner for this: <code>npm run eval -- --model ${esc(b.id)}</code> runs its golden cases (<code>evals/cases.ts</code>) through the real agent loop and prints the cost of each case.` : `Agentwright Starter includes a small runner for this: <code>npm run eval</code> with <code>--model</code> runs its golden cases (<code>evals/cases.ts</code>) through the real agent loop, and prints the cost of each case for models in its price table.`}</li>
 <li>Route by request: send routine requests to ${esc(sb)} and hand only the hard ones to ${esc(sa)}. Even a 70/30 split cuts most of the gap.</li>
 <li>Cache first: <a href="/blog/prompt-caching-claude-agent-loop/">prompt caching</a> often saves more than a model switch on agent and chat workloads.</li></ul>
 <h2>Questions</h2>${faqHtml(faq)}
 <p class="meta">Other comparisons: ${pairs.filter(([p, q]) => pairSlug(p, q) !== slug).map(([p, q]) => `<a href="/pricing/claude/compare/${pairSlug(p, q)}/">${esc(short(p))} vs ${esc(short(q))}</a>`).join(" · ")}</p>
-</article>${footerLinks}`,
+</article>${footerLinks()}`,
       }),
     );
     urls.push(`${SITE}/pricing/claude/compare/${slug}/`);

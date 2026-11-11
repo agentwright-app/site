@@ -85,7 +85,7 @@ Vector databases, multi-agent orchestration, fine-tuning and a custom model gate
 
 <!-- site-only -->
 
-*Agentwright Starter is this architecture as a Next.js codebase: sign-in, rate and spend limits, the tool loop with MCP, SSE streaming, usage metering with price snapshots, Lemon Squeezy billing, evals and tests. Details and launch status are in the [FAQ](/faq/).*
+*Agentwright Starter is this architecture as a Next.js codebase: sign-in, rate limits and monthly token caps, the tool loop with MCP, SSE streaming, usage metering with price snapshots, Lemon Squeezy billing, evals and tests. Details and launch status are in the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 
