@@ -3,7 +3,8 @@
 //
 //   node scripts/deploy-cron-worker.mjs
 //
-// Needs env CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DEVTO_API_KEY, RESEND_API_KEY and the four X_* keys.
+// Needs env CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DEVTO_API_KEY, RESEND_API_KEY and the four X_* keys;
+// BLUESKY_HANDLE + BLUESKY_APP_PASSWORD are added when both are set.
 // The API keys are uploaded as worker secrets; no value is ever printed.
 // The mail template is taken from the project's shared mail folder (render-mail.mjs) with its CLI part
 // stripped, so alert mails look the same as every other "[Agentwright 알림]" mail.
@@ -15,7 +16,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const NAME = "agentwright-cron";
 const CRONS = [
   "0 22 * * *", // 22:00 UTC = 07:00 KST daily blog + dev.to (must match X_DAILY in workers/cron/index.mjs)
-  "7 * * * *", // hourly at :07, X posts from content/x-queue.json
+  "7 * * * *", // hourly at :07, X posts (content/x-queue.json) then Bluesky posts (content/bsky-queue.json)
 ];
 const STATE_KV = "be212341e70a4670889b4f2a93acebd4"; // KV namespace agentwright-cron-state
 const MAIL = process.env.MAIL_TEMPLATE ?? "/mnt/project-files/agentwright/mail/render-mail.mjs";
@@ -24,6 +25,10 @@ const SECRETS = ["DEVTO_API_KEY", "RESEND_API_KEY", "X_API_KEY", "X_API_SECRET",
 for (const v of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", ...SECRETS]) {
   if (!process.env[v]) throw new Error(`${v} is not set`);
 }
+// Bluesky is optional: uploaded only when both are set (the worker skips Bluesky otherwise).
+const OPTIONAL = ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD"];
+if (OPTIONAL.every((v) => process.env[v])) SECRETS.push(...OPTIONAL);
+else console.log("Bluesky secrets not set: deploying without Bluesky posting");
 const api = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/workers/scripts/${NAME}`;
 const auth = { authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}` };
 
@@ -34,6 +39,7 @@ if (/readFileSync|process\./.test(mail)) throw new Error("render-mail.mjs still 
 
 const modules = {
   "index.mjs": readFileSync(join(root, "workers/cron/index.mjs"), "utf8"),
+  "bsky.mjs": readFileSync(join(root, "workers/cron/bsky.mjs"), "utf8"),
   "devto-format.mjs": readFileSync(join(root, "scripts/lib/devto-format.mjs"), "utf8"),
   "render-mail.mjs": mail,
 };
