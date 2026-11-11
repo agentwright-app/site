@@ -27,7 +27,17 @@ for (const v of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", ...SECRETS]) {
 }
 // Bluesky is optional: uploaded only when both are set (the worker skips Bluesky otherwise).
 const OPTIONAL = ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD"];
-if (OPTIONAL.every((v) => process.env[v])) SECRETS.push(...OPTIONAL);
+const BSKY_DID = "did:plc:pvgxmysqaezcfmornmfrkjod"; // brand account, created 2026-11-11
+if (OPTIONAL.every((v) => process.env[v])) {
+  SECRETS.push(...OPTIONAL);
+  // The env var may still hold the signup handle (agentwright.bsky.social); after the switch to
+  // @agentwright.app that name no longer logs in, so upload the account's CURRENT handle instead.
+  const prof = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${BSKY_DID}`).then((r) => r.json()).catch(() => ({}));
+  if (prof.handle && prof.handle !== "handle.invalid" && prof.handle !== process.env.BLUESKY_HANDLE) {
+    console.log(`Bluesky: using current handle @${prof.handle} instead of BLUESKY_HANDLE`);
+    process.env.BLUESKY_HANDLE = prof.handle;
+  }
+}
 else console.log("Bluesky secrets not set: deploying without Bluesky posting");
 const api = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/workers/scripts/${NAME}`;
 const auth = { authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}` };
