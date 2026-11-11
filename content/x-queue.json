@@ -24,7 +24,7 @@
     },
     {
       "id": "d2-1",
-      "at": "2026-11-12T04:00:00+09:00",
+      "at": "2026-11-12T02:30:00+09:00",
       "text": "If you recompute last month's LLM costs with today's price table, your totals move.\n\nStore the rate used on every usage row, version the price table, and keep raw token counts so a re-price is a deliberate step.\n\nFull write-up with code on our blog, link in profile."
     },
     {
@@ -35,7 +35,7 @@
     },
     {
       "id": "d4-1",
-      "at": "2026-11-13T04:00:00+09:00",
+      "at": "2026-11-13T02:30:00+09:00",
       "text": "Connecting MCP servers to your own Claude agent loop: one env variable for all servers, stdio and HTTP, namespaced tool names, an allowlist.\n\nPlus the detail that costs money: keep tool order stable or your prompt cache misses.\n\nOn our blog, link in profile."
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "id": "sale-soft-1",
-      "at": "2026-11-17T04:00:00+09:00",
+      "at": "2026-11-17T02:30:00+09:00",
       "text": "We opened sales for Agentwright Starter this week: the Next.js codebase behind the posts on this account, with metering, billing, auth and the agent loop already wired.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing. Link in profile."
     }
   ]
