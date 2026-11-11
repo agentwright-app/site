@@ -3,9 +3,9 @@
   "paused": false,
   "posts": [
     {
-      "id": "b-intro",
+      "id": "b-tool-order",
       "at": "2026-11-12T23:00:00+09:00",
-      "text": "Hi Bluesky. This is Agentwright: we write about building SaaS products on the Claude API (metering, pricing, caching, agent loops, MCP) and sell a Next.js starter kit for it.\n\nPosts here are scheduled by a bot. Every number we post comes from current list prices."
+      "text": "If your Claude agent's prompt cache hit rate drops for no clear reason, check the order of your tools.\n\nTool definitions sit at the front of the cached prefix. Load MCP servers in a different order and every request pays full input price again."
     },
     {
       "id": "b-output-cost",
