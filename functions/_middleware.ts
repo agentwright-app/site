@@ -8,6 +8,7 @@
  *   /blog/<slug>/ of a post dated after today            → 404
  *   /blog/, /feed.xml, /sitemap.xml                       → latest snapshot dated on/before today
  *   /_asof/*, /_schedule.json requested from outside      → 404 (internal only)
+ * www.agentwright.app/*                               → 301 to agentwright.app (same path)
  * Everything else passes straight through.
  */
 interface Schedule {
@@ -39,6 +40,12 @@ export function resolve(path: string, s: Schedule, today: string): { notFound: t
 
 export const onRequest: PagesFunction<{ ASSETS: Fetcher }> = async ({ request, env, next }) => {
   const url = new URL(request.url);
+  // One host for search engines: www.agentwright.app served the same pages as agentwright.app
+  // (Search Console counted them as duplicates). Send it to the apex, keeping path and query.
+  if (url.hostname === "www.agentwright.app") {
+    url.hostname = "agentwright.app";
+    return Response.redirect(url.toString(), 301);
+  }
   const path = url.pathname;
   if (path.startsWith("/_asof/") || path === "/_schedule.json") return notFound(env, url);
   if (!(path in LISTINGS) && !path.startsWith("/blog/")) return next();
