@@ -5,6 +5,7 @@
 //   const compareChecked = compareLastmod({ SITE, root }); // sitemap lastmod = each page's `checked`
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { loadAlternatives } from "./alternative-pages.mjs";
 
 const fmtDay = (iso) =>
   new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
@@ -46,7 +47,7 @@ function kitLink(esc, kit) {
   return `<a href="${esc(kit.url)}" rel="nofollow noopener">${esc(kit.name)}</a>`;
 }
 
-function renderCompare({ page, esc, SITE, data }) {
+function renderCompare({ page, esc, SITE, data, alternatives = [] }) {
   const url = `${SITE}/${data.slug}/`;
   const checked = fmtDay(data.checked);
   const byId = Object.fromEntries(data.kits.map((k) => [k.id, k]));
@@ -148,6 +149,16 @@ ${different}
 ${checks}
 </ol>
 
+${
+  alternatives.length
+    ? `<h2 id="one-to-one">One-to-one comparisons</h2>
+<p>Longer pages about a single product: what it is, the two side by side, and what you would still have to build.</p>
+<ul>
+${alternatives.map((p) => `<li><a href="/${esc(p.slug)}/">${esc(p.title)}</a></li>`).join("\n")}
+</ul>
+`
+    : ""
+}
 <p class="meta">Checked on ${esc(checked)}. We re-check every ${esc(data.recheckEvery)}. If a fact about your product is wrong or out of date, email <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> and we will fix it.</p>
 <div class="cmp-end"><a class="btn" href="/inside/">Read the code</a><a class="btn alt" href="/#pricing">Price, refund and license</a></div>
 </article>`;
@@ -157,8 +168,9 @@ ${checks}
 
 export function buildComparePages({ page, esc, SITE, OUT, root }) {
   const urls = [];
+  const alternatives = loadAlternatives(root);
   for (const data of loadPages(root)) {
-    const { url, html } = renderCompare({ page, esc, SITE, data });
+    const { url, html } = renderCompare({ page, esc, SITE, data, alternatives });
     mkdirSync(join(OUT, data.slug), { recursive: true });
     writeFileSync(join(OUT, data.slug, "index.html"), html);
     urls.push(url);

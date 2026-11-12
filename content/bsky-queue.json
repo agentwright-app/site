@@ -35,6 +35,11 @@
       "link": "https://agentwright.app/inside/"
     },
     {
+      "id": "b-agent-parts",
+      "at": "2026-11-15T01:30:00+09:00",
+      "text": "A SaaS boilerplate gives you sign-in, payments and a landing page.\n\nA product where an agent does the work needs more, because every request costs you money: a tool loop with a turn limit, a usage row per model call, plan caps checked before the call, and evals in CI."
+    },
+    {
       "id": "b-model-route",
       "at": "2026-11-15T23:00:00+09:00",
       "text": "Haiku, Sonnet or Opus? Pick the model per route (chat, summaries, background jobs), not per message.\n\nCost per request at current prices, sensible effort defaults, and the API differences that bite when you switch. Questions go in the comments on the post; we answer there.",
@@ -109,6 +114,18 @@
       "at": "2026-11-25T23:00:00+09:00",
       "text": "Long-running Claude agent conversations: clear old tool results with context editing, or let the server compact at a token threshold.\n\nHow each interacts with prompt caching and billing, and the one mistake that silently turns compaction off.",
       "link": "https://agentwright.app/blog/long-agent-conversations-compaction-context-editing/"
+    },
+    {
+      "id": "b-guide",
+      "at": "2026-11-26T23:00:00+09:00",
+      "text": "What a Next.js boilerplate for a Claude agent SaaS has to cover beyond login and payments: the tool loop, token and cost metering per user, price snapshots, plan caps, prompt caching, billing webhooks, MCP tools and evals.\n\nOne table, with a post that has the code for each part.",
+      "link": "https://agentwright.app/claude-agent-saas-boilerplate/"
+    },
+    {
+      "id": "b-free-template",
+      "at": "2026-11-27T23:00:00+09:00",
+      "text": "Starting from a free chat template? Before you charge for the product, you add four things: billing webhooks that set each user's plan, a usage row per model call, caps that belong to a plan, and evals.\n\nVercel's free Chatbot template next to our paid kit, and when the free one is the better start.",
+      "link": "https://agentwright.app/alternatives/vercel-chatbot-template/"
     }
   ]
 }

@@ -1,0 +1,164 @@
+{
+  "slug": "alternatives/vercel-chatbot-template",
+  "title": "Vercel's free Chatbot template or a paid Claude starter kit?",
+  "metaTitle": "Vercel Chatbot template vs a paid Claude starter kit (Nov 2026)",
+  "description": "Vercel's free Chatbot template has the better chat UI. What its repo includes, what you add before charging (billing, per-user cost, caps), and when to use it.",
+  "hubLine": "A free, open-source chat template next to a paid kit: what the repository includes, and what you add before you charge for the product.",
+  "checked": "2026-11-12",
+  "published": "2026-11-12",
+  "recheckEvery": "month",
+  "other": {
+    "name": "Vercel's Chatbot template",
+    "url": "https://github.com/vercel/chatbot",
+    "sourceKind": "its public repository",
+    "notMentioned": "Not mentioned in the README.",
+    "sources": [
+      { "url": "https://github.com/vercel/chatbot", "what": "README, LICENSE, package.json and .env.example on the main branch" },
+      { "url": "https://github.com/vercel/chatbot/blob/main/lib/ai/entitlements.ts", "what": "message limit per user type" },
+      { "url": "https://github.com/vercel/chatbot/blob/main/lib/db/schema.ts", "what": "database tables" },
+      { "url": "https://github.com/vercel/chatbot/blob/main/app/(chat)/api/chat/route.ts", "what": "the chat route: limits and tools" }
+    ]
+  },
+  "lede": "Vercel's Chatbot template is free, open source, and has a much better chat interface than our kit. If you are building a chat product, look at it first. This page is about the moment you want to charge for the product: what the template's repository includes, what you would add, and when a paid kit for a Claude agent saves you that work.",
+  "about": [
+    "Chatbot (formerly AI Chatbot) is, in the words of its README, \"a free, open-source template built with Next.js and the AI SDK\". Its license file is the Apache License 2.0. The README lists the Next.js App Router, the AI SDK, shadcn/ui with Tailwind CSS, Neon Serverless Postgres for chat history and user data, Vercel Blob for file storage, and Auth.js for sign-in. On the check date, package.json used Next.js 16.",
+    "Models are reached through the Vercel AI Gateway. The README says the included models come from Mistral, Moonshot, DeepSeek, OpenAI and xAI, and that you can switch to direct providers such as OpenAI, Anthropic or Cohere with a few lines of code.",
+    "For limits, the repository has a number of messages per hour for each user type (10 for guest and regular users in `lib/ai/entitlements.ts` on the check date), and the chat route adds an IP rate limit and a bot check. The database schema has tables for users, chats, messages, votes, documents, suggestions and streams. We found no table or column for token usage, cost or plans, and no payment provider package in package.json."
+  ],
+  "rows": [
+    { "label": "Price", "other": "Free. Open source under the Apache License 2.0.", "oursKey": "price" },
+    { "label": "Refund", "other": "Nothing to refund: it is free.", "oursKey": "refund" },
+    {
+      "label": "Model providers",
+      "other": "The Vercel AI Gateway. Included models from Mistral, Moonshot, DeepSeek, OpenAI and xAI; the README says you can switch to direct providers such as Anthropic.",
+      "ours": "Claude only, through the Anthropic TypeScript SDK."
+    },
+    {
+      "label": "Chat interface",
+      "other": "A full chat UI on shadcn/ui, with chat history, file storage on Vercel Blob, and tools that create and edit documents.",
+      "ours": "Minimal: one streaming chat page that shows plain text. The UI does not list past conversations yet."
+    },
+    {
+      "label": "Limits per user",
+      "other": "Messages per hour for each user type (10 for guest and regular users in `lib/ai/entitlements.ts`), plus an IP rate limit.",
+      "ours": "A monthly token cap and a requests-per-minute limit for each plan. Both are checked before the model is called."
+    },
+    {
+      "label": "Token and cost records",
+      "other": "None found in the database schema (`lib/db/schema.ts`).",
+      "oursKey": "metering"
+    },
+    { "label": "Billing", "other": "None found: package.json has no payment provider package.", "oursKey": "billing" },
+    {
+      "label": "Sign-in",
+      "other": "Auth.js, with guest and regular users.",
+      "ours": "Auth.js v5: GitHub sign-in, plus optional email magic links through Resend."
+    },
+    {
+      "label": "Database and storage",
+      "other": "Neon Serverless Postgres with Drizzle ORM, Vercel Blob, and Redis (`REDIS_URL` in .env.example).",
+      "ours": "Postgres with Drizzle ORM, and nothing else."
+    },
+    { "label": "Next.js version", "other": "16 (package.json on the check date).", "ours": "15. The upgrade to 16 is on the roadmap." },
+    {
+      "label": "Tests",
+      "other": "Playwright tests (the test script in package.json).",
+      "ours": "{tests} unit and database tests, an eval runner for the agent, and a GitHub Actions workflow."
+    },
+    {
+      "label": "Hosting",
+      "other": "Made for Vercel. The README says the AI Gateway signs in by itself on Vercel; elsewhere you set `AI_GATEWAY_API_KEY`.",
+      "ours": "A Node.js host with Postgres. The deploy guide covers Vercel with Neon and has notes for Railway, Fly.io, Render and Docker."
+    },
+    {
+      "label": "MCP servers as tools",
+      "other": "Not mentioned in the README.",
+      "ours": "Yes: stdio or Streamable HTTP servers, set in `MCP_SERVERS`."
+    },
+    {
+      "label": "License of the code",
+      "other": "Apache License 2.0, open source.",
+      "ours": "A commercial license for one person or one team. Unlimited products; you may not resell or republish the kit itself."
+    }
+  ],
+  "gapsTitle": "What you add to the template before you charge for it",
+  "gapsIntro": "The template gives you the face of the product. A paid product also needs the parts below. Each one links to a post with code for Next.js and Postgres. The posts call Claude through the Anthropic SDK, so on the template you would adapt them to the AI SDK. The file names show where the same part lives in Agentwright Starter.",
+  "gaps": [
+    {
+      "title": "Checkout and webhooks that set each user's plan",
+      "text": "A payment provider tells your app about subscriptions through webhooks. The route has to check the signature on the raw request body, survive retries, and map the product to a plan in your database.",
+      "files": ["app/api/webhooks/lemonsqueezy/route.ts", "lib/billing/lemonsqueezy.ts"],
+      "posts": [
+        { "href": "/blog/verify-lemon-squeezy-webhooks-nextjs/", "title": "Lemon Squeezy webhooks in Next.js: verify the signature, log the event, survive retries" }
+      ]
+    },
+    {
+      "title": "A usage row for every model call, per user",
+      "text": "A limit on messages per hour treats a 200-token question and a 50,000-token document the same. To know what a user costs you, store the token counts of every response per user, with the cost and the price that was used.",
+      "files": ["lib/billing/metering.ts", "lib/billing/pricing.ts"],
+      "posts": [
+        { "href": "/blog/meter-claude-api-costs-per-user-nextjs/", "title": "How to meter Claude API costs per user in a Next.js SaaS" },
+        { "href": "/blog/snapshot-llm-prices-per-request/", "title": "Model prices change. Snapshot them on every usage row" }
+      ]
+    },
+    {
+      "title": "Caps that belong to a plan",
+      "text": "A paid plan needs its own monthly cap and rate limit, stored in the database, so that a user who upgrades gets the new limits without a deploy.",
+      "files": ["lib/billing/metering.ts", "lib/ratelimit/index.ts"],
+      "posts": [
+        { "href": "/blog/rate-limit-llm-endpoints-postgres/", "title": "Rate limiting an LLM endpoint with only Postgres" },
+        { "href": "/blog/price-ai-saas-plan-margins/", "title": "How to price an AI SaaS plan so heavy users don't eat your margin" }
+      ]
+    },
+    {
+      "title": "Evals for the agent",
+      "text": "The template has Playwright tests. An agent also needs cases that check which tools it calls and what it answers, run before every release.",
+      "files": ["evals/run.ts", "evals/cases.ts"],
+      "posts": [
+        { "href": "/blog/evals-for-claude-agents-typescript/", "title": "Evals for a Claude agent in 140 lines of TypeScript" }
+      ]
+    }
+  ],
+  "routesTitle": "Two ways to get there",
+  "routes": [
+    {
+      "title": "The template, plus billing and metering written by you",
+      "text": "This fits if the chat interface is the product, if you want several model providers behind one gateway, or if the product is free or internal for now. You keep an open-source base and add the four parts above when you start charging."
+    },
+    {
+      "title": "Agentwright Starter, plus an interface written by you",
+      "text": "This fits if the agent and its tools are the product, and a plain chat page is enough to start with. Billing, metering, caps and evals are already wired together. You would build the interface yourself, and there is no document editing, no file storage and no gateway to other providers."
+    }
+  ],
+  "stayIf": [
+    "The chat interface matters most. The template's UI is far ahead of ours.",
+    "You want several model providers behind one gateway, or you have not decided on Claude.",
+    "The product is free, internal or a prototype, so billing and cost per user can wait.",
+    "You want open-source code under the Apache License 2.0.",
+    "You deploy on Vercel and want Next.js 16 today."
+  ],
+  "pickIf": [
+    "You will charge for plans from the start, and you need the cost per user from day one.",
+    "Claude is your model, and you want to call it through Anthropic's own SDK.",
+    "You want evals and MCP tools without adding them yourself.",
+    "A plain UI is acceptable, because you will design your own."
+  ],
+  "faq": [
+    {
+      "q": "Can I sell a product built on Vercel's Chatbot template?",
+      "a": "Its license file is the Apache License 2.0, which allows commercial use under its conditions. Read the license in the repository before you decide. This is not legal advice."
+    },
+    {
+      "q": "Does the template work with Claude?",
+      "a": "Yes. Models go through the Vercel AI Gateway, and the README says the AI SDK lets you switch to direct providers such as Anthropic with a few lines of code."
+    },
+    {
+      "q": "Why pay for a kit when the template is free?",
+      "a": "You may not need to. Pay only if the parts the template leaves out are the ones you would build next: billing webhooks, usage and cost records per user, plan caps and evals. If the interface is your main work, the free template is the better start."
+    },
+    {
+      "q": "Can I put the template's UI on top of Agentwright Starter?",
+      "a": "They are separate codebases. The template is built on the AI SDK, and Agentwright Starter streams its own events from the Anthropic SDK, so joining them is real work. It is simpler to pick one as the base and build the missing parts."
+    }
+  ]
+}

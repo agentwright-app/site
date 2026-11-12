@@ -1,0 +1,162 @@
+{
+  "slug": "alternatives/anotherwrapper-for-claude",
+  "title": "An AnotherWrapper alternative for a Claude-only agent product",
+  "metaTitle": "AnotherWrapper alternative for a Claude agent SaaS (Nov 2026)",
+  "description": "AnotherWrapper is a multi-provider AI kit with demo apps. Agentwright Starter is one Claude agent with per-user cost metering, caps, MCP and evals. Side by side.",
+  "hubLine": "A wide AI kit with demo apps on six model providers next to a narrow one for a single Claude agent.",
+  "checked": "2026-11-12",
+  "published": "2026-11-12",
+  "recheckEvery": "month",
+  "other": {
+    "name": "AnotherWrapper",
+    "url": "https://anotherwrapper.com",
+    "sourceKind": "its own public page",
+    "notMentioned": "Not mentioned on their page.",
+    "sources": [
+      { "url": "https://anotherwrapper.com", "what": "home page with features and pricing" }
+    ]
+  },
+  "lede": "AnotherWrapper and Agentwright Starter are both starter kits for AI products, and they made opposite choices. AnotherWrapper is wide: several kinds of AI app on six model providers. Agentwright Starter is narrow: one Claude agent, with the cost of every model call recorded per user. This page shows where that difference matters.",
+  "about": [
+    "AnotherWrapper is a Next.js 16 starter kit for AI apps. Its page says 8 demo apps are included. The ones it names are an AI chat agent with RAG, an image studio, a calorie tracker, structured output, a voice studio and audio transcription, with a video studio marked as coming soon.",
+    "The AI layer is the Vercel AI SDK, with streaming responses, tool calling, structured output and generative UI. The providers it names are OpenAI, Anthropic, Google, Groq, xAI and DeepSeek. Around that, the page lists Better Auth (email and password, magic link, Google OAuth), PostgreSQL with Drizzle ORM and pgvector, payments through Stripe, Lemon Squeezy and Polar with credit-based consumption, rate limiting, landing page sections and shadcn/ui components.",
+    "It is a one-time purchase with lifetime updates: Solo $249 (list $349, one developer), Startup $549 (list $799, up to 5 developers) and Agency $999 (list $1,499, up to 10 developers). The page says the Solo price goes up to $299 after the current batch of licenses. There is a 30-day money-back guarantee, and the page says it is trusted by 400+ founders."
+  ],
+  "rows": [
+    {
+      "label": "Price",
+      "other": "One-time. Solo $249 (list $349), Startup $549 (list $799, up to 5 developer seats), Agency $999 (list $1,499, up to 10 seats). The page says the Solo price goes up to $299 after the current batch.",
+      "oursKey": "price"
+    },
+    { "label": "Refund", "other": "30-day money-back guarantee.", "oursKey": "refund" },
+    { "label": "Model providers", "other": "OpenAI, Anthropic, Google, Groq, xAI and DeepSeek.", "ours": "Claude only." },
+    {
+      "label": "How the model is called",
+      "other": "Through the Vercel AI SDK: streaming responses, tool calling, structured output and generative UI.",
+      "oursKey": "llm"
+    },
+    {
+      "label": "What you start from",
+      "other": "8 demo apps, among them chat with RAG, image, voice and audio transcription.",
+      "ours": "One agent: a streaming chat page, a usage page, a pricing page and an admin page for licenses."
+    },
+    {
+      "label": "Usage metering per user",
+      "other": "\"Credit-based consumption\" is listed under payments, and rate limiting is listed as a feature. Token or cost records per user are not mentioned on their page.",
+      "oursKey": "metering"
+    },
+    { "label": "Billing providers", "other": "Stripe, Lemon Squeezy and Polar.", "oursKey": "billing" },
+    {
+      "label": "Sign-in",
+      "other": "Better Auth: email and password, magic link, Google OAuth.",
+      "ours": "Auth.js v5: GitHub sign-in, plus optional email magic links through Resend."
+    },
+    {
+      "label": "Database",
+      "other": "PostgreSQL with Drizzle ORM and pgvector.",
+      "ours": "Postgres with Drizzle ORM. No vector search."
+    },
+    { "label": "Next.js version", "other": "16.", "ours": "15. The upgrade to 16 is on the roadmap." },
+    { "label": "RAG, image and voice", "other": "Yes, as demo apps.", "ours": "No." },
+    {
+      "label": "MCP servers as tools",
+      "other": "Not mentioned on their page.",
+      "ours": "Yes: stdio or Streamable HTTP servers, set in `MCP_SERVERS`."
+    },
+    {
+      "label": "Evals",
+      "other": "Not mentioned on their page.",
+      "ours": "An eval runner with golden cases. It prints the cost of each case and exits non-zero when a case fails, so it can run in CI."
+    },
+    {
+      "label": "UI and landing page",
+      "other": "shadcn/ui components, landing page sections and dark mode.",
+      "ours": "A plain UI. No landing page and no component library."
+    },
+    {
+      "label": "Track record",
+      "other": "The page says it is trusted by 400+ founders.",
+      "ours": "New. The first release was on 2026-11-01. There are no customers yet, so there are no reviews."
+    }
+  ],
+  "gapsTitle": "Where the two differ in approach",
+  "gapsIntro": "Neither choice is right for everyone. These are the things a kit for one Claude agent does that are not on AnotherWrapper's page, each with the file in Agentwright Starter and a post that explains the code. The posts are free to read and do not need our kit.",
+  "gaps": [
+    {
+      "title": "One provider, called through its own SDK",
+      "text": "Agentwright Starter calls Claude through the Anthropic TypeScript SDK and runs its own loop of about 100 lines. There is no provider layer between your code and the API. The cost is plain: there is no OpenAI, Gemini or other provider, and adding one means rewriting the loop and the metering.",
+      "files": ["lib/agent/loop.ts"],
+      "posts": [
+        { "href": "/blog/claude-agent-sdk-vs-your-own-tool-loop/", "title": "Claude Agent SDK vs rolling your own tool loop" }
+      ]
+    },
+    {
+      "title": "Cost per user in dollars, with the price that was used",
+      "text": "Each model turn writes a row with input, output, cache read and cache write tokens, the cost in micro-dollars and the id of the price row. Monthly totals are sums of stored costs, so they do not move when model prices change. If you want to sell credits, AnotherWrapper lists credit-based consumption; Agentwright Starter has no credit system.",
+      "files": ["lib/billing/metering.ts", "lib/billing/pricing.ts"],
+      "posts": [
+        { "href": "/blog/meter-claude-api-costs-per-user-nextjs/", "title": "How to meter Claude API costs per user in a Next.js SaaS" },
+        { "href": "/blog/snapshot-llm-prices-per-request/", "title": "Model prices change. Snapshot them on every usage row" }
+      ]
+    },
+    {
+      "title": "A cap checked before every model turn",
+      "text": "Before each call to the model, the loop compares the user's tokens this month with the plan's monthly cap. A per-plan rate limit answers 429 with Retry-After.",
+      "files": ["lib/agent/loop.ts", "lib/ratelimit/index.ts"],
+      "posts": [
+        { "href": "/blog/rate-limit-llm-endpoints-postgres/", "title": "Rate limiting an LLM endpoint with only Postgres" }
+      ]
+    },
+    {
+      "title": "Evals as part of the kit",
+      "text": "`npm run eval` sends golden cases through the real agent loop, checks which tools were called and what the answer contains, and prints the cost of each case.",
+      "files": ["evals/run.ts", "evals/cases.ts"],
+      "posts": [
+        { "href": "/blog/evals-for-claude-agents-typescript/", "title": "Evals for a Claude agent in 140 lines of TypeScript" }
+      ]
+    },
+    {
+      "title": "MCP servers as tool sources",
+      "text": "One setting connects stdio or Streamable HTTP MCP servers. Their tools are registered next to your own, and the agent calls them the same way.",
+      "files": ["lib/agent/mcp.ts"],
+      "posts": [
+        { "href": "/blog/mcp-servers-as-tools-in-your-agent/", "title": "Use MCP servers as tools in your own Claude agent loop" }
+      ]
+    },
+    {
+      "title": "A small codebase",
+      "text": "Version {kitVersion} has {codeFiles} code files and {codeLines} lines, so you can read all of it before you change it. The other side of that: it does far less than AnotherWrapper's 8 demo apps."
+    }
+  ],
+  "stayIf": [
+    "You need more than one model provider, or you have not chosen one yet.",
+    "You want image, voice, audio or RAG features, or demo apps to start from.",
+    "You want Stripe or Polar billing, or a credit system.",
+    "You want Next.js 16 today, and a finished UI with shadcn/ui and landing page sections.",
+    "You want the longer refund window: 30 days against our 14."
+  ],
+  "pickIf": [
+    "Claude is the only model you plan to use, and the product is one agent with tools.",
+    "You need to know what each user's model calls cost you, and to stop a plan at its cap.",
+    "You want evals in CI and MCP servers as tools without adding them yourself.",
+    "You would rather read {codeLines} lines once than learn a large codebase, and a plain UI is fine because you will design your own."
+  ],
+  "faq": [
+    {
+      "q": "Does AnotherWrapper support Claude?",
+      "a": "Yes. Its page names Anthropic among six providers and lists Claude models for its chat agent. If you need Claude next to other providers, that is a reason to choose AnotherWrapper."
+    },
+    {
+      "q": "Why would I pick a Claude-only kit, then?",
+      "a": "Only if the narrow scope is what you want: one agent, the Anthropic SDK with no provider layer, cost records per user with the price version, plan caps, evals and MCP tools. If you want many kinds of app or many providers, it is the wrong kit."
+    },
+    {
+      "q": "Does Agentwright Starter have RAG, file uploads or image generation?",
+      "a": "No. None of them are in the kit."
+    },
+    {
+      "q": "Which one costs less?",
+      "a": "On {checked} the two pages showed AnotherWrapper Solo at $249 and Agentwright Starter at $99 for the first 50 licenses, then $149. Both are one-time payments with updates included. AnotherWrapper gives you many more features for its price, so compare what you would really use."
+    }
+  ]
+}
