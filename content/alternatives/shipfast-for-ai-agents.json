@@ -1,0 +1,172 @@
+{
+  "slug": "alternatives/shipfast-for-ai-agents",
+  "title": "A ShipFast alternative for AI agent products",
+  "metaTitle": "ShipFast alternative for an AI agent SaaS (November 2026)",
+  "description": "ShipFast is a general Next.js SaaS boilerplate. What it covers, what an AI agent product still needs (tool loop, per-user metering, caps), and when to stay.",
+  "hubLine": "A general SaaS boilerplate next to a kit built around a Claude agent: what each one covers, and what you would still build.",
+  "checked": "2026-11-12",
+  "published": "2026-11-12",
+  "recheckEvery": "month",
+  "other": {
+    "name": "ShipFast",
+    "url": "https://shipfa.st",
+    "sourceKind": "its own public page",
+    "notMentioned": "Not mentioned on their page.",
+    "sources": [
+      { "url": "https://shipfa.st", "what": "home page with pricing and FAQ" }
+    ]
+  },
+  "lede": "ShipFast is a Next.js boilerplate for launching a SaaS quickly, and its page says 8,447 makers use it. If your product is an AI agent that customers pay for, the useful question is not which kit is better. It is which parts each one covers, and which parts you would still have to build.",
+  "about": [
+    "ShipFast describes itself as \"the NextJS boilerplate with all you need to build your SaaS, AI tool, or any other web app\". Its page lists a payment system (Stripe or Lemon Squeezy), a database (MongoDB or Supabase), login with Google OAuth and magic links, emails through Mailgun or Resend, SEO and a blog, UI components and animations, and ChatGPT prompts for writing terms and a privacy policy. The repo comes in JavaScript and TypeScript, for the app router and the pages router.",
+    "It is a one-time purchase. Starter is $199 (list $299), All-in is $249 (list $349), and a bundle with the CodeFast course is $299 (list $648). The page says the $100 discount is for the first 8,460 customers. On the Starter card, four lines are greyed out: the Discord community, the leaderboard, the partner discounts and lifetime updates. The All-in card includes them. The FAQ says there is no refund once you have access to the repo.",
+    "On AI, the FAQ says ShipFast is built for AI code editors such as Cursor and Copilot: the codebase gives the editor context, so it can write features for you. That is about how you write your app. The page does not list code for running a model inside your app: no tool loop, no usage metering per user and no plan caps."
+  ],
+  "rows": [
+    {
+      "label": "Price",
+      "other": "One-time. Starter $199 (list $299), All-in $249 (list $349), bundle with the CodeFast course $299 (list $648). Unlimited projects. Lifetime updates are on the All-in card and greyed out on the Starter card.",
+      "oursKey": "price"
+    },
+    { "label": "Refund", "other": "No refund once you have access to the repo (FAQ).", "oursKey": "refund" },
+    {
+      "label": "Built for",
+      "other": "A general SaaS or web app: payments, database, login, emails, SEO and blog, UI components.",
+      "oursKey": "bestFor"
+    },
+    {
+      "label": "Model calls inside your app",
+      "other": "No in-app LLM integration listed. The FAQ covers AI code editors, which help you write the app.",
+      "oursKey": "llm"
+    },
+    { "label": "Usage metering per user", "other": "Not mentioned on their page.", "oursKey": "metering" },
+    { "label": "Billing providers", "other": "Stripe or Lemon Squeezy.", "oursKey": "billing" },
+    {
+      "label": "Database",
+      "other": "MongoDB or Supabase.",
+      "ours": "Postgres with Drizzle ORM. Any Postgres should work; the deploy guide uses Neon."
+    },
+    {
+      "label": "Sign-in",
+      "other": "Google OAuth and magic links.",
+      "ours": "GitHub sign-in, plus optional email magic links through Resend (Auth.js v5)."
+    },
+    {
+      "label": "Landing page, blog, SEO",
+      "other": "Included: sections to copy for a landing page, a blog, SEO tags and UI components.",
+      "ours": "Not included. The home page is a stub, and there is no blog or component library."
+    },
+    {
+      "label": "Language and router",
+      "other": "JavaScript or TypeScript; app router or pages router.",
+      "ours": "TypeScript, Next.js 15 app router."
+    },
+    { "label": "Teams", "other": "Not mentioned on their page.", "oursKey": "teams" },
+    {
+      "label": "Evals and tests",
+      "other": "Not mentioned on their page.",
+      "ours": "An eval runner with golden cases, {tests} unit and database tests, and a GitHub Actions workflow."
+    },
+    {
+      "label": "Track record",
+      "other": "The page says 8,447 makers use it. The FAQ says the premium plan comes with a Discord of 5,000+ makers.",
+      "ours": "New. The first release was on 2026-11-01. There are no customers yet, so there are no reviews."
+    }
+  ],
+  "gapsTitle": "What an agent product needs that a general kit leaves to you",
+  "gapsIntro": "These parts are specific to a product where a model does the work and every request costs you money. Each one links to a post with the code, so you can build it yourself on ShipFast or on any other kit. The file names show where the same part lives in Agentwright Starter.",
+  "gaps": [
+    {
+      "title": "A tool loop with a turn limit, streamed to the browser",
+      "text": "The agent calls the model, runs the tools it asks for, sends the results back, and repeats until the model is done. The loop needs a maximum number of turns, has to return all tool results of a turn in one message, and has to stream text to the browser while it works.",
+      "files": ["lib/agent/loop.ts", "app/api/agent/route.ts"],
+      "posts": [
+        { "href": "/blog/stream-claude-agent-sse-nextjs/", "title": "Stream a tool-using Claude agent to the browser with SSE in Next.js" },
+        { "href": "/blog/claude-agent-sdk-vs-your-own-tool-loop/", "title": "Claude Agent SDK vs rolling your own tool loop" }
+      ]
+    },
+    {
+      "title": "A usage row for every model call, per user",
+      "text": "Every response reports input, output, cache read and cache write tokens. To know what a customer costs you, store those per user together with the cost in dollars and the price that was used, because model prices change.",
+      "files": ["lib/billing/metering.ts", "lib/billing/pricing.ts"],
+      "posts": [
+        { "href": "/blog/meter-claude-api-costs-per-user-nextjs/", "title": "How to meter Claude API costs per user in a Next.js SaaS" },
+        { "href": "/blog/snapshot-llm-prices-per-request/", "title": "Model prices change. Snapshot them on every usage row" }
+      ]
+    },
+    {
+      "title": "Plan caps and rate limits",
+      "text": "A subscription price is fixed and usage is not. Each plan needs a monthly cap that is checked before the model is called, and a requests-per-minute limit that answers 429 instead of spending tokens.",
+      "files": ["lib/billing/metering.ts", "lib/ratelimit/index.ts"],
+      "posts": [
+        { "href": "/blog/rate-limit-llm-endpoints-postgres/", "title": "Rate limiting an LLM endpoint with only Postgres" },
+        { "href": "/blog/price-ai-saas-plan-margins/", "title": "How to price an AI SaaS plan so heavy users don't eat your margin" }
+      ]
+    },
+    {
+      "title": "Prompt caching that stays on",
+      "text": "An agent sends the same system prompt and tool list on every turn. Caching them lowers the input cost, and small changes can switch the cache off without any error.",
+      "files": ["lib/agent/loop.ts", "lib/agent/system-prompt.ts"],
+      "posts": [
+        { "href": "/blog/prompt-caching-claude-agent-loop/", "title": "Prompt caching in a Claude agent loop: where the breakpoints go and what silently breaks them" }
+      ]
+    },
+    {
+      "title": "Evals you can run in CI",
+      "text": "Changing a prompt or a tool description changes what the agent does. A small set of golden cases, run through the real loop, shows a regression before your users see it.",
+      "files": ["evals/run.ts", "evals/cases.ts"],
+      "posts": [
+        { "href": "/blog/evals-for-claude-agents-typescript/", "title": "Evals for a Claude agent in 140 lines of TypeScript" }
+      ]
+    },
+    {
+      "title": "Tools from MCP servers",
+      "text": "If the agent should use tools that already exist as MCP servers, the loop needs a client that connects to them and registers their tools next to your own.",
+      "files": ["lib/agent/mcp.ts"],
+      "posts": [
+        { "href": "/blog/mcp-servers-as-tools-in-your-agent/", "title": "Use MCP servers as tools in your own Claude agent loop" }
+      ]
+    }
+  ],
+  "routesTitle": "Two ways to get there",
+  "routes": [
+    {
+      "title": "ShipFast, plus these parts written by you",
+      "text": "This fits if you already own ShipFast, or if the landing page, the blog, Stripe billing and the MongoDB or Supabase setup are what you want most. You add the six parts above yourself. The linked posts have the code and do not need our kit. Leave the most time for metering and plan caps, because a mistake there shows up on your API bill."
+    },
+    {
+      "title": "A kit built around the agent, plus a public site written by you",
+      "text": "Agentwright Starter has the six parts wired together, with tests. It has no landing page, blog or component library, and its billing code is Lemon Squeezy only. You would build the public site yourself and, if you need Stripe, your own billing code."
+    }
+  ],
+  "stayIf": [
+    "Your product is a general SaaS, and AI is a small part of it or no part.",
+    "You want a landing page, a blog, SEO tags and UI components on the first day. Agentwright Starter has none of them.",
+    "You want Stripe or MongoDB. Agentwright Starter is Postgres and Lemon Squeezy only.",
+    "A large community matters to you. ShipFast's page says 8,447 makers use it; Agentwright Starter is new and has no customers yet."
+  ],
+  "pickIf": [
+    "The product is a Claude agent, and your customers pay for a plan.",
+    "You need to see what each user's model calls cost, and to stop a plan at its cap.",
+    "You will build your own UI and public site anyway.",
+    "You want to read code before you pay and be able to change your mind: [What's inside](/inside/) shows three files in full, and the refund window is 14 days."
+  ],
+  "faq": [
+    {
+      "q": "Can I build an AI app with ShipFast?",
+      "a": "Yes. Its page says makers have built AI tools with it, and you can call any model API from a ShipFast app. What the page does not list is the code that runs a model inside your product: the tool loop, usage metering per user and plan caps. Those would be yours to write."
+    },
+    {
+      "q": "Is Agentwright Starter a drop-in replacement for ShipFast?",
+      "a": "No. It has no landing page, blog, SEO setup or component library, and it bills through Lemon Squeezy, not Stripe. It covers the part that ShipFast's page does not list: the agent loop, metering, plan caps, MCP tools and evals."
+    },
+    {
+      "q": "Which one costs less?",
+      "a": "On {checked} the two pages showed ShipFast Starter at $199 and Agentwright Starter at $99 for the first 50 licenses, then $149. Both are one-time payments. They cover different work, so compare what you would still have to build with each."
+    },
+    {
+      "q": "Can I use both together?",
+      "a": "They are separate codebases with different databases and billing code, so you would be merging two apps. It is simpler to pick one as the base and build the missing parts from the posts linked above."
+    }
+  ]
+}

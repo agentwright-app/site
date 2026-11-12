@@ -16,6 +16,11 @@ Not included: Stripe or Polar billing (Lemon Squeezy only), teams, organizations
 - [License key delivery](https://agentwright.app/docs/license-delivery/): issuing license keys, signed download links and the admin page
 - [Changelog](https://agentwright.app/changelog/): every release of the kit since 0.1.0
 - [Starter kits compared](https://agentwright.app/compare/ai-saas-boilerplates/): Agentwright Starter next to eight other SaaS starter kits on price, refunds, LLM support, usage metering, billing and teams, with a source link for every fact
+- [Alternatives](https://agentwright.app/alternatives/): one-to-one comparisons with other ways to start an AI product, each with sources, a check date and the cases where the other product is the better choice
+- [ShipFast alternative for AI agent products](https://agentwright.app/alternatives/shipfast-for-ai-agents/): what a general SaaS boilerplate covers, and the parts an agent product still needs (tool loop, per-user metering, plan caps, evals)
+- [AnotherWrapper alternative for a Claude-only agent product](https://agentwright.app/alternatives/anotherwrapper-for-claude/): a multi-provider kit with demo apps next to a kit for one Claude agent with per-user cost metering
+- [Vercel's free Chatbot template or a paid Claude starter kit?](https://agentwright.app/alternatives/vercel-chatbot-template/): what the free template's repository includes, and what you add before you charge for a product built on it
+- [Claude agent SaaS boilerplate for Next.js: what it has to cover](https://agentwright.app/claude-agent-saas-boilerplate/): the parts beyond login and payments, with the file in the kit and a post with the code for each; the kit uses its own loop on the Anthropic TypeScript SDK, not the Claude Agent SDK
 - [FAQ](https://agentwright.app/faq/): price, refunds, license, stack, hosting, models, delivery, what is not included
 - [Refunds and license](https://agentwright.app/legal/): refund policy and license terms
 

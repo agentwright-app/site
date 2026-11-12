@@ -11,6 +11,8 @@ import { priceAlertBox, wantsPriceAlert, PRICE_ALERT_MARK } from "./lib/price-al
 import { markedHighlight, HL_CSS } from "./lib/highlight.mjs";
 import { buildKitPages, renderLanding } from "./lib/kit-pages.mjs";
 import { buildComparePages, compareLastmod } from "./lib/compare-page.mjs";
+import { buildAlternativePages, alternativeLastmod } from "./lib/alternative-pages.mjs";
+import { buildGuidePages, guideLastmod } from "./lib/guide-pages.mjs";
 
 // Code blocks are highlighted at build time (spans only, no script on the page).
 marked.use(markedHighlight);
@@ -126,7 +128,7 @@ ${HL_CSS}`;
 // Canonical header nav and footer for every page built here (static pages in tools/ and
 // thanks.html carry the same markup by hand). No GitHub link: the kit is not a public repo.
 const NAV = `<nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav>`;
-const FOOTER = `<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>`;
+const FOOTER = `<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/alternatives/">Alternatives</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>`;
 // The only checkout link (the visit beacon counts clicks on buy.polar.sh as buy_click).
 const BUY_URL = "https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n";
 
@@ -414,6 +416,18 @@ const kitUpdated = JSON.parse(readFileSync(join(root, "content/kit/meta.json"), 
 const compareUrls = buildComparePages({ page, esc, SITE, OUT, root });
 const compareChecked = compareLastmod({ SITE, root });
 
+// One-to-one comparison pages (/alternatives/...), from content/alternatives/*.json. Same rules as above;
+// what they say about our own kit is read from the comparison data, so the pages cannot disagree.
+const altUrls = buildAlternativePages({ page, esc, SITE, OUT, root });
+const altChecked = alternativeLastmod({ SITE, root });
+
+// Long-form pages about the kit (/claude-agent-saas-boilerplate/), from content/guides/*.md.
+const guideUrls = buildGuidePages({
+  page, esc, SITE, OUT, root, buyUrl: BUY_URL,
+  pricing: JSON.parse(readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8")),
+});
+const guideUpdated = guideLastmod({ SITE, root });
+
 // Sitemap (today + one snapshot per future publish date)
 function writeSitemap(base, posts) {
 const urls = [
@@ -423,6 +437,8 @@ const urls = [
   ...pricingUrls.map((loc) => ({ loc, lastmod: pricingUpdated, priority: "0.8" })),
   ...kitUrls.map((loc) => ({ loc, lastmod: kitUpdated, priority: loc.endsWith("/inside/") ? "0.9" : "0.6" })),
   ...compareUrls.map((loc) => ({ loc, lastmod: compareChecked[loc], priority: "0.8" })),
+  ...altUrls.map((loc) => ({ loc, lastmod: altChecked[loc], priority: loc.endsWith("/alternatives/") ? "0.6" : "0.8" })),
+  ...guideUrls.map((loc) => ({ loc, lastmod: guideUpdated[loc], priority: "0.8" })),
   { loc: `${SITE}/faq/`, lastmod: "2026-11-12", priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },

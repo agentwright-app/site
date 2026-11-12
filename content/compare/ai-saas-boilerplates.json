@@ -43,7 +43,7 @@
       "url": "https://shipfa.st",
       "sources": [{ "url": "https://shipfa.st", "what": "home page with pricing and FAQ" }],
       "cells": {
-        "price": { "text": "One-time. Starter $199 (list $299), All-in $249 (list $349), bundle with the CodeFast course $299 (list $648). Unlimited projects, lifetime updates.", "source": "https://shipfa.st" },
+        "price": { "text": "One-time. Starter $199 (list $299), All-in $249 (list $349), bundle with the CodeFast course $299 (list $648). Unlimited projects. Lifetime updates are on the All-in card and greyed out on the Starter card.", "source": "https://shipfa.st" },
         "refund": { "text": "No refund once you have access to the repo (FAQ).", "source": "https://shipfa.st" },
         "llm": { "text": "No in-app LLM integration listed. The FAQ says the codebase gives AI code editors such as Cursor and Copilot context to build features.", "source": "https://shipfa.st" },
         "metering": { "text": "Not mentioned on their page.", "source": "https://shipfa.st" },
@@ -177,7 +177,7 @@
   ],
   "weaker": [
     "It is new. The first release was on 2026-11-01 and the current version is 0.4.2. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
-    "Claude only. The agent loop, metering and evals are built on the Anthropic SDK. If you need OpenAI or Gemini too, another kit here fits better.",
+    "Claude only. The agent loop, metering and evals are built on the Anthropic SDK. If you need OpenAI or Gemini too, another kit fits better.",
     "Lemon Squeezy only for your app's billing. There is no Stripe code. The roadmap lists a second billing adapter (Polar or Stripe) with no date. (You buy the kit itself through Polar; that is our store, not code in the kit.)",
     "No teams, organizations or seats. Each user has one plan; \"team\" is only a plan name.",
     "Minimal UI: sign-in, chat, usage, pricing and an admin page for licenses. The home page is a stub. There is no marketing site, blog or component library.",
