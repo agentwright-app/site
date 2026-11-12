@@ -1,7 +1,8 @@
 // One-to-one comparison pages, /alternatives/<name>/, and the /alternatives/ index,
 // built from content/alternatives/*.json. Called from build-blog.mjs:
 //   const altUrls = buildAlternativePages({ page, esc, SITE, OUT, root });
-//   const altChecked = alternativeLastmod({ SITE, root }); // sitemap lastmod = each page's `checked`
+//   const altChecked = alternativeLastmod({ SITE, root }); // sitemap lastmod = each page's `checked`, or its `updated`
+//     (`updated`, optional: a later day on which only our own facts changed; see compare-page.mjs)
 //
 // Rules the data must follow. The build fails when one is broken, so a wrong page cannot ship:
 //   - every page names its sources and its check date, and every row says something about the
@@ -17,6 +18,8 @@ const fmtDay = (iso) =>
   new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 const n = (x) => x.toLocaleString("en-US");
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
+/** The later of `checked` and the optional `updated` (both YYYY-MM-DD): the day the page last changed. */
+export const lastChange = (d) => (d.updated && d.updated > d.checked ? d.updated : d.checked);
 
 const STYLE = `<style>
 .alt-note{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;background:var(--card);padding:14px 16px;margin:20px 0;font-size:16px}
@@ -79,6 +82,7 @@ export function validateAlternative(data, { root, shared, file = "content/altern
   need(/^alternatives\/[a-z0-9-]+$/.test(data.slug ?? ""), "slug must look like alternatives/<name>");
   for (const k of ["title", "description", "hubLine", "lede"]) need(text(data[k]), `${k} is missing`);
   for (const k of ["checked", "published"]) need(DAY.test(data[k] ?? ""), `${k} must be YYYY-MM-DD`);
+  need(data.updated === undefined || DAY.test(data.updated), "updated must be YYYY-MM-DD");
   need(text(data.other?.name) && /^https:\/\//.test(data.other?.url ?? ""), "other.name and other.url (https) are required");
   need(list(data.other?.sources) && data.other.sources.every((s) => /^https:\/\//.test(s.url ?? "") && text(s.what)), "other.sources needs at least one { url (https), what }");
   need(list(data.about) && data.about.every(text), "about needs at least one paragraph");
@@ -177,7 +181,7 @@ function renderAlternative({ page, esc, SITE, data, shared, all }) {
     description: data.description,
     url,
     datePublished: data.published,
-    dateModified: data.checked,
+    dateModified: lastChange(data),
     inLanguage: "en",
     publisher: { "@type": "Organization", name: "Agentwright", url: SITE },
   };
@@ -307,7 +311,7 @@ export function buildAlternativePages({ page, esc, SITE, OUT, root }) {
 /** Check date of each page, by URL, for the sitemap's lastmod (the index takes the latest one). */
 export function alternativeLastmod({ SITE, root }) {
   const all = loadAlternatives(root);
-  const out = Object.fromEntries(all.map((d) => [`${SITE}/${d.slug}/`, d.checked]));
-  if (all.length) out[`${SITE}/alternatives/`] = all.map((d) => d.checked).sort().at(-1);
+  const out = Object.fromEntries(all.map((d) => [`${SITE}/${d.slug}/`, lastChange(d)]));
+  if (all.length) out[`${SITE}/alternatives/`] = all.map(lastChange).sort().at(-1);
   return out;
 }

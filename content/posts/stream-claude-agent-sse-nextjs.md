@@ -8,7 +8,7 @@ tags: [claude, nextjs, streaming, typescript]
 
 <p class="lede">Streaming a chat answer token by token is the easy part. An agent also pauses to call tools, sometimes several in parallel, runs for many seconds, and costs money on every turn. This post shows a small event protocol that carries all of that from a Next.js route handler to a React client, and the handful of details that make it work behind real proxies.</p>
 
-The code uses the official `@anthropic-ai/sdk`, the Next.js 15 App Router and no streaming library on either side. Server-sent events are just lines of text, so you can read every byte that crosses the wire.
+The code uses the official `@anthropic-ai/sdk`, the Next.js App Router and no streaming library on either side. Server-sent events are just lines of text, so you can read every byte that crosses the wire.
 
 ## Why SSE, and why not `EventSource`
 

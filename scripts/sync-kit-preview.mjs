@@ -20,8 +20,8 @@ const OUT = join(root, "content/kit");
 
 // Source files shown in full on /inside/ ("read the code before you buy").
 const PREVIEW_FILES = ["lib/agent/loop.ts", "lib/billing/metering.ts", "evals/cases.ts"];
-// Docs published under /docs/. docs/TODO.md and docs/next16.md are internal notes and stay out.
-const DOCS = ["setup.md", "deploy.md", "pricing.md", "licensing.md"];
+// Docs published under /docs/. The other files in docs/ ship with the kit only.
+const DOCS = ["setup.md", "deploy.md", "pricing.md", "licensing.md", "polar.md"];
 
 const git = (...args) => execFileSync("git", ["-C", src, ...args], { encoding: "utf8" }).trim();
 // Files are copied from the working tree and labelled with HEAD, so the tree must be clean.
@@ -44,7 +44,8 @@ const tracked = git("ls-files").split("\n").filter((f) => f && !SKIP.test(f));
 const lines = (f) => readFileSync(join(src, f), "utf8").split("\n").length - 1;
 const files = tracked.map((path) => ({ path, lines: lines(path) }));
 const isCode = (p) => /\.(ts|tsx)$/.test(p) && !p.endsWith(".d.ts");
-const isTest = (p) => p.startsWith("tests/");
+// Test files only: tests/ also holds fixtures and helpers.
+const isTest = (p) => /^tests\/[^/]+\.test\.ts$/.test(p);
 
 // One-line notes per file come from the "## Layout" block of the Starter's README.
 const readme = readFileSync(join(src, "README.md"), "utf8");

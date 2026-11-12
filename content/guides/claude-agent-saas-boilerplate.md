@@ -20,7 +20,7 @@ This page lists the parts such a boilerplate has to cover, shows where each one 
 | Price snapshots | Model prices change. Each usage row keeps the price it was charged with, so past totals stay the same. | `lib/billing/pricing.ts` | [Snapshot prices on every usage row](/blog/snapshot-llm-prices-per-request/) |
 | Plan caps and rate limits | A monthly cap checked before each model call, and a requests-per-minute limit that answers 429. | `lib/billing/metering.ts`<br>`lib/ratelimit/index.ts` | [Rate limiting an LLM endpoint with Postgres](/blog/rate-limit-llm-endpoints-postgres/) |
 | Prompt caching | The system prompt and the tool list are sent on every turn. Read from the cache, they cost a fraction of the normal input price. | `lib/agent/loop.ts`<br>`lib/agent/system-prompt.ts` | [Prompt caching in an agent loop](/blog/prompt-caching-claude-agent-loop/) |
-| Billing webhooks | A subscription changes a user's plan through a signed webhook. | `lib/billing/lemonsqueezy.ts` | [Verify Lemon Squeezy webhooks](/blog/verify-lemon-squeezy-webhooks-nextjs/) |
+| Billing webhooks | A subscription changes a user's plan through a signed webhook. | `lib/billing/lemonsqueezy.ts`, `lib/billing/polar-events.ts` | [Verify Lemon Squeezy webhooks](/blog/verify-lemon-squeezy-webhooks-nextjs/) |
 | MCP servers as tools | Tools that already exist as MCP servers become callable next to your own. | `lib/agent/mcp.ts` | [MCP servers as tools in your own loop](/blog/mcp-servers-as-tools-in-your-agent/) |
 | Evals | Golden cases run through the real loop, so a prompt change that breaks behaviour fails CI. | `evals/run.ts`<br>`evals/cases.ts` | [Evals in 140 lines of TypeScript](/blog/evals-for-claude-agents-typescript/) |
 
@@ -42,7 +42,7 @@ The phrase can mean two things, and the kit does one of them.
 
 **Metering: yes.** Every model turn writes one row to `usage_events`: input, output, cache read and cache write tokens, the cost in micro-dollars, and the id of the price row that was used. The `/usage` page shows each user their tokens, cost and plan cap. Totals are sums of stored costs, so a price change does not rewrite history. A model without a price row is refused before the API is called, so no call goes unrecorded.
 
-**Charging per token: no.** Plans are flat subscriptions through Lemon Squeezy, and each plan has a monthly token cap. The seeded plans are Free (200,000 tokens a month), Pro (5 million) and Team (25 million). A plan can be allowed to run past its cap, as the seeded Team plan is. That usage is recorded, but the kit does not create a charge for it.
+**Charging per token: no.** Plans are flat subscriptions through Lemon Squeezy or Polar, and each plan has a monthly token cap. The seeded plans are Free (200,000 tokens a month), Pro (5 million) and Team (25 million). A plan can be allowed to run past its cap, as the seeded Team plan is. That usage is recorded, but the kit does not create a charge for it.
 
 The numbers are yours to change: plans and caps are rows in your database.
 
@@ -56,7 +56,7 @@ Every current price, with the caching and batch rates, is on [Claude API pricing
 
 ## The stack
 
-Next.js 15 with the App Router, TypeScript, the Anthropic TypeScript SDK, the MCP TypeScript SDK, Drizzle ORM on Postgres, Auth.js v5, Tailwind CSS v4 and Zod. Sign-in is GitHub OAuth, with optional email magic links through Resend.
+Next.js 16 with the App Router, TypeScript, the Anthropic TypeScript SDK, the MCP TypeScript SDK, Drizzle ORM on Postgres, Auth.js v5, Tailwind CSS v4 and Zod. Sign-in is GitHub OAuth, with optional email magic links through Resend.
 
 Version {{kit_version}} has {{code_files}} code files with {{code_lines}} lines, {{tests}} tests, and a GitHub Actions workflow that runs the type check, the tests and a production build. The [setup guide](/docs/setup/) and the [deploy guide for Vercel and Neon](/docs/deploy/) that ship with the kit are public.
 
@@ -86,11 +86,11 @@ No. The loop, the metering and the evals are written for Claude and the Anthropi
 
 ### Does it work with Stripe?
 
-Not out of the box. Lemon Squeezy is the only billing provider in the kit. The provider code sits in a few files, and metering and plan caps read your own database, so they stay the same if you replace it. The [FAQ](/faq/) names the files.
+Not out of the box. The kit has billing code for Lemon Squeezy and for Polar, and none for Stripe. The provider code sits in a few files, and metering and plan caps read your own database, so they stay the same if you add another provider. The [FAQ](/faq/) names the files.
 
 ### Which Next.js version does it use?
 
-Next.js 15. The upgrade to 16 is on the roadmap, and the kit includes a note on what changes (`docs/next16.md`).
+Next.js 16, since version 0.5.0. The kit includes a note on what changed and how to bring a project built on an earlier version up to date (`docs/next16.md`).
 
 ### Can I see the code before I pay?
 

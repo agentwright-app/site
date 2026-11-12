@@ -4,8 +4,9 @@
   "metaTitle": "Next.js SaaS starter kits compared for Claude agent products (November 2026)",
   "description": "A vendor's comparison of ShipFast, MakerKit, supastarter, AnotherWrapper, TurboStarter, StartKit.AI, AgentShip, Open SaaS and Agentwright Starter: price, refund, LLM support, usage metering, billing and teams, each fact linked to the kit's own page.",
   "checked": "2026-11-11",
+  "updated": "2026-11-12",
   "published": "2026-11-11",
-  "kitVersion": "0.4.2",
+  "kitVersion": "0.5.0",
   "recheckEvery": "month",
   "howChecked": "Each page was downloaded with curl on the check date and read as text. Only what the page says is used. 'Not mentioned on their page' means we did not find it on the linked pages, not that the kit lacks it.",
   "columns": [
@@ -32,7 +33,7 @@
         "refund": { "text": "14 days, no reason needed.", "source": "https://agentwright.app/legal/" },
         "llm": { "text": "Claude only, through the Anthropic TypeScript SDK. Its own streaming tool loop with parallel tool calls, a 12-turn limit and prompt caching. MCP servers can be connected as tools.", "source": "lib/agent/loop.ts, lib/agent/mcp.ts" },
         "metering": { "text": "Yes. One usage row per model turn with input, output, cache read and cache write tokens, the cost and the id of the price row used. A monthly token cap per plan, checked before each model turn. A plan with overage_allowed set (the seeded Team plan has it) keeps running past the cap; that usage is recorded, and the kit does not bill for it.", "source": "lib/billing/metering.ts, lib/billing/pricing.ts" },
-        "billing": { "text": "Lemon Squeezy only (plan subscriptions and one-time license orders through signed webhooks).", "source": "lib/billing/lemonsqueezy.ts" },
+        "billing": { "text": "Lemon Squeezy or Polar, chosen with one setting (plan subscriptions and one-time license orders through signed webhooks). No Stripe.", "source": "lib/billing/lemonsqueezy.ts, lib/billing/polar.ts" },
         "teams": { "text": "No. Each user has one plan.", "source": "docs/ROADMAP.md" },
         "bestFor": { "text": "A Claude agent product billed per user, built by one developer or a small team who will make their own UI.", "source": "" }
       }
@@ -165,7 +166,7 @@
     }
   ],
   "pickIf": [
-    { "id": "agentwright", "text": "Pick Agentwright Starter if your product is a Claude agent, you charge per plan and need to know what each user's Claude calls cost, and you are fine with Lemon Squeezy, no organizations and a plain UI. /inside/ lists every file in the kit and shows three of them in full before you pay." },
+    { "id": "agentwright", "text": "Pick Agentwright Starter if your product is a Claude agent, you charge per plan and need to know what each user's Claude calls cost, and you are fine with Lemon Squeezy or Polar for billing, no organizations and a plain UI. /inside/ lists every file in the kit and shows three of them in full before you pay." },
     { "id": "shipfast", "text": "Pick ShipFast if you are building a general SaaS without AI at its core, want a landing page, blog, SEO and emails ready, and like MongoDB or Supabase. It includes a landing page, blog, SEO tags and UI components. Its page cites 8,447 makers using it and a Discord community. You would add the LLM calls and any metering yourself." },
     { "id": "makerkit", "text": "Pick MakerKit if you sell B2B with teams, roles, invitations and per-seat billing, want Stripe or Polar, and want a super admin, i18n and a marketing site. It has a demo, public docs and a free Lite repo to read first. You would add the in-app LLM and token metering yourself." },
     { "id": "supastarter", "text": "Pick supastarter if you need organizations and seats, a wide choice of billing providers (Stripe included), and AI features on several model providers through the Vercel AI SDK. It has a demo and versions for Nuxt and TanStack Start. Check its refund terms before you buy; we did not find them on the pages we read." },
@@ -176,13 +177,12 @@
     { "id": "opensaas", "text": "Pick Open SaaS if you want to pay nothing, want the code to be open source, and are happy with the Wasp framework instead of Next.js. It has tests and CI. Beyond the OpenAI demo app, you would add LLM metering and the agent parts yourself." }
   ],
   "weaker": [
-    "It is new. The first release was on 2026-11-01 and the current version is 0.4.2. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
+    "It is new. The first release was on 2026-11-01 and the current version is 0.5.0. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
     "Claude only. The agent loop, metering and evals are built on the Anthropic SDK. If you need OpenAI or Gemini too, another kit fits better.",
-    "Lemon Squeezy only for your app's billing. There is no Stripe code. The roadmap lists a second billing adapter (Polar or Stripe) with no date. (You buy the kit itself through Polar; that is our store, not code in the kit.)",
+    "No Stripe. Your app's billing is Lemon Squeezy or Polar. The Polar adapter is new in version 0.5.0: it has 49 automated tests that use real and sample Polar webhook payloads and a stand-in for Polar's API, but we have not yet run a real subscription through it from checkout to renewal. Its docs list five steps to check in Polar's sandbox before you take payments.",
     "No teams, organizations or seats. Each user has one plan; \"team\" is only a plan name.",
     "Minimal UI: sign-in, chat, usage, pricing and an admin page for licenses. The home page is a stub. There is no marketing site, blog or component library.",
     "No live demo. Instead, /inside/ lists every file and shows three of them in full.",
-    "Next.js 15, not 16. The upgrade is on the roadmap.",
     "No RAG or search, no file uploads, no job queue. The plan cap is a monthly token count, and the kit does not charge for usage past it (on a plan with overage_allowed set, such as the seeded Team plan, usage simply continues)."
   ],
   "different": [
@@ -190,7 +190,7 @@
     { "title": "An eval runner", "files": ["evals/run.ts", "evals/cases.ts"], "text": "npm run eval sends golden cases through the real agent loop without a database, checks tool calls, text and turn count, prints the cost of each case, and exits non-zero when a case fails, so it can run in CI." },
     { "title": "MCP servers as tools for your agent", "files": ["lib/agent/mcp.ts"], "text": "Set MCP_SERVERS to connect stdio or Streamable HTTP MCP servers. Their tools are registered as server__tool and the agent calls them like local tools. You can allow only some tools per server, and a server that fails to connect does not stop the agent." },
     { "title": "A plan cap checked before every agent turn", "files": ["lib/agent/loop.ts", "lib/billing/metering.ts"], "text": "Before each model turn, the loop checks the user's input and output tokens this month against the plan's monthly token cap. A turn that starts under the cap runs to the end, so one turn can go past it; the next turn is refused, unless the plan has overage_allowed set (the seeded Team plan does), in which case usage continues past the cap and is recorded but not billed. Cache tokens are charged but not counted toward the cap. A per-plan rate limit answers 429 with Retry-After (lib/ratelimit/index.ts)." },
-    { "title": "License key delivery", "files": ["lib/licensing/index.ts", "app/admin/licenses/"], "text": "If your product is a one-time download, a Lemon Squeezy order creates a license key, invites the buyer's GitHub login to a repo when configured, and emails the key with a signed download link. A refund revokes the key. /admin/licenses lists keys and lets you resend or revoke them." },
+    { "title": "License key delivery", "files": ["lib/licensing/index.ts", "app/admin/licenses/"], "text": "If your product is a one-time download, a Lemon Squeezy or Polar order creates a license key, invites the buyer's GitHub login to a repo when configured, and emails the key with a signed download link. A refund revokes the key. /admin/licenses lists keys and lets you resend or revoke them." },
     { "title": "A 14-day refund", "files": [], "link": "/legal/", "text": "Email us within 14 days of purchase and you get a full refund. You don't need to give a reason." }
   ],
   "checks": [

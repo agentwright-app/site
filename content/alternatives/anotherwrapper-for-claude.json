@@ -5,6 +5,7 @@
   "description": "AnotherWrapper is a multi-provider AI kit with demo apps. Agentwright Starter is one Claude agent with per-user cost metering, caps, MCP and evals. Side by side.",
   "hubLine": "A wide AI kit with demo apps on six model providers next to a narrow one for a single Claude agent.",
   "checked": "2026-11-12",
+  "updated": "2026-11-12",
   "published": "2026-11-12",
   "recheckEvery": "month",
   "other": {
@@ -56,7 +57,7 @@
       "other": "PostgreSQL with Drizzle ORM and pgvector.",
       "ours": "Postgres with Drizzle ORM. No vector search."
     },
-    { "label": "Next.js version", "other": "16.", "ours": "15. The upgrade to 16 is on the roadmap." },
+    { "label": "Next.js version", "other": "16.", "ours": "16." },
     { "label": "RAG, image and voice", "other": "Yes, as demo apps.", "ours": "No." },
     {
       "label": "MCP servers as tools",
@@ -131,8 +132,8 @@
   "stayIf": [
     "You need more than one model provider, or you have not chosen one yet.",
     "You want image, voice, audio or RAG features, or demo apps to start from.",
-    "You want Stripe or Polar billing, or a credit system.",
-    "You want Next.js 16 today, and a finished UI with shadcn/ui and landing page sections.",
+    "You want Stripe billing, or a credit system.",
+    "You want a finished UI with shadcn/ui and landing page sections.",
     "You want the longer refund window: 30 days against our 14."
   ],
   "pickIf": [

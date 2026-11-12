@@ -8,7 +8,7 @@ tags: [claude, nextjs, billing, typescript]
 
 If you charge users for an AI feature, you need to know what each of them costs you. Not in aggregate, on the Anthropic invoice at the end of the month, but per user, per request, in real time, so you can cap free accounts, show a usage page, and find out which 2% of users are 60% of your bill.
 
-This post walks through the metering layer we use in [Agentwright Starter](https://agentwright.app): a Next.js 15 app with Drizzle + Postgres and the official `@anthropic-ai/sdk`. Everything below is plain TypeScript you can drop into an existing project. The design is small on purpose: one table, one pure pricing module, two functions.
+This post walks through the metering layer we use in [Agentwright Starter](https://agentwright.app): a Next.js app with Drizzle + Postgres and the official `@anthropic-ai/sdk`. Everything below is plain TypeScript you can drop into an existing project. The design is small on purpose: one table, one pure pricing module, two functions.
 
 ## What the API gives you
 
@@ -248,4 +248,4 @@ Rate limiting (requests per minute per plan) is a separate concern and lives in 
 
 ---
 
-*Agentwright Starter is a Next.js 15 starter kit for Claude-powered SaaS: GitHub and magic-link auth, the streaming agent loop above with tool calls and MCP, per-user metering and plan caps, Lemon Squeezy billing, an eval runner and a usage dashboard, already wired together. Launch price $99. Details are at [agentwright.app](https://agentwright.app).*
+*Agentwright Starter is a Next.js starter kit for Claude-powered SaaS: GitHub and magic-link auth, the streaming agent loop above with tool calls and MCP, per-user metering and plan caps, Lemon Squeezy billing, an eval runner and a usage dashboard, already wired together. Launch price $99. Details are at [agentwright.app](https://agentwright.app).*

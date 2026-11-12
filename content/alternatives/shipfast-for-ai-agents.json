@@ -5,6 +5,7 @@
   "description": "ShipFast is a general Next.js SaaS boilerplate. What it covers, what an AI agent product still needs (tool loop, per-user metering, caps), and when to stay.",
   "hubLine": "A general SaaS boilerplate next to a kit built around a Claude agent: what each one covers, and what you would still build.",
   "checked": "2026-11-12",
+  "updated": "2026-11-12",
   "published": "2026-11-12",
   "recheckEvery": "month",
   "other": {
@@ -59,7 +60,7 @@
     {
       "label": "Language and router",
       "other": "JavaScript or TypeScript; app router or pages router.",
-      "ours": "TypeScript, Next.js 15 app router."
+      "ours": "TypeScript, Next.js 16 app router."
     },
     { "label": "Teams", "other": "Not mentioned on their page.", "oursKey": "teams" },
     {
@@ -136,13 +137,13 @@
     },
     {
       "title": "A kit built around the agent, plus a public site written by you",
-      "text": "Agentwright Starter has the six parts wired together, with tests. It has no landing page, blog or component library, and its billing code is Lemon Squeezy only. You would build the public site yourself and, if you need Stripe, your own billing code."
+      "text": "Agentwright Starter has the six parts wired together, with tests. It has no landing page, blog or component library, and its billing code is for Lemon Squeezy and Polar, not Stripe. You would build the public site yourself and, if you need Stripe, your own billing code."
     }
   ],
   "stayIf": [
     "Your product is a general SaaS, and AI is a small part of it or no part.",
     "You want a landing page, a blog, SEO tags and UI components on the first day. Agentwright Starter has none of them.",
-    "You want Stripe or MongoDB. Agentwright Starter is Postgres and Lemon Squeezy only.",
+    "You want Stripe or MongoDB. Agentwright Starter is Postgres, with Lemon Squeezy or Polar for billing.",
     "A large community matters to you. ShipFast's page says 8,447 makers use it; Agentwright Starter is new and has no customers yet."
   ],
   "pickIf": [
@@ -158,7 +159,7 @@
     },
     {
       "q": "Is Agentwright Starter a drop-in replacement for ShipFast?",
-      "a": "No. It has no landing page, blog, SEO setup or component library, and it bills through Lemon Squeezy, not Stripe. It covers the part that ShipFast's page does not list: the agent loop, metering, plan caps, MCP tools and evals."
+      "a": "No. It has no landing page, blog, SEO setup or component library, and it bills through Lemon Squeezy or Polar, not Stripe. It covers the part that ShipFast's page does not list: the agent loop, metering, plan caps, MCP tools and evals."
     },
     {
       "q": "Which one costs less?",
