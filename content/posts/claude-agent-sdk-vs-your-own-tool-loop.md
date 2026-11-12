@@ -231,6 +231,6 @@ If you are unsure, start with the Tool Runner. Moving from it to a manual loop i
 
 <!-- site-only -->
 
-*Agentwright Starter uses option 1, a hand-written streaming loop of about 100 lines with prompt caching, MCP tools, per-request metering and plan caps, because it is a multi-tenant SaaS kit and every request has to be counted and capped. It is a Next.js starter kit for Claude-powered SaaS with auth, Lemon Squeezy billing and an eval runner already wired together. Launch price $99. Details are at [agentwright.app](https://agentwright.app).*
+*Agentwright Starter uses option 1, a hand-written streaming loop of about 100 lines with prompt caching, MCP tools, per-request metering and plan caps, because it is a multi-tenant SaaS kit and every request has to be counted and capped. It is a Next.js starter kit for Claude-powered SaaS with auth, Lemon Squeezy or Polar billing and an eval runner already wired together. Launch price $99. Details are at [agentwright.app](https://agentwright.app).*
 
 <!-- /site-only -->
