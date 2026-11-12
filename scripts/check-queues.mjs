@@ -82,6 +82,8 @@ export function checkQueue(name, queue, now = Date.now()) {
       else if (!post.date || post.date > kstDay(run))
         errors.push(`${tag}: goes out ${kst(run)} KST but the linked post opens on ${post.date} (the page is 404 until then)`);
     }
+    if (p.link && !m && !/^https:\/\/agentwright\.app(\/|$)/.test(p.link))
+      warnings.push(`${tag}: \`link\` is not one of our pages. If that site blocks bots (Product Hunt does), the card shows only the URL; put the URL at the end of \`text\` instead.`);
     rows.push(`${p.id.padEnd(20)} at ${kst(at)}  really ${kst(run)} KST  ${String(len).padStart(3)}/${max}${p.link ? "  link" : ""}${p.community_id ? "  community" : ""}`);
   }
   return { rows, errors, warnings };

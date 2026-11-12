@@ -1,12 +1,11 @@
 {
-  "note": "Bluesky posts for the agentwright-cron worker (workers/cron/bsky.mjs). Each item is posted once at or after `at` (within 3 hours; later it is skipped and reported). Max 300 graphemes. Optional `link`: shown as a link card. First week: 1-2 posts/day, at most 1 link post/day. No automated follows, likes, reposts, replies or DMs. Questions are steered to our blog comments. The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at`. A linked blog post must already be open (its date, KST) when the item goes out, or the link is a 404 with an empty card. Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Top-level \"paused\": true stops all posting.",
+  "note": "Bluesky posts for the agentwright-cron worker (workers/cron/bsky.mjs). Each item is posted once at or after `at` (within 3 hours; later it is skipped and reported). Max 300 graphemes. Optional `link`: shown as a link card. The card is built by fetching the page from the worker, so use `link` only for our own pages: a site behind bot protection (Product Hunt answers 403) gives a card with nothing but the URL. Put such a URL at the end of `text` instead; it becomes a clickable link. First week: 1-2 posts/day, at most 1 link post/day. No automated follows, likes, reposts, replies or DMs. Questions are steered to our blog comments. The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at`. A linked blog post must already be open (its date, KST) when the item goes out, or the link is a 404 with an empty card. Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Top-level \"paused\": true stops all posting.",
   "paused": false,
   "posts": [
     {
       "id": "b-ph-launch",
       "at": "2026-11-12T22:00:00+09:00",
-      "text": "Agentwright Starter is on Product Hunt today: a Next.js starter kit for Claude-powered agent SaaS with per-user cost tracking.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing.",
-      "link": "https://www.producthunt.com/posts/agentwright-starter"
+      "text": "Agentwright Starter is on Product Hunt today: a Next.js starter kit for Claude-powered agent SaaS with per-user cost tracking.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing.\n\nhttps://www.producthunt.com/posts/agentwright-starter"
     },
     {
       "id": "b-tool-order",
