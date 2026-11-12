@@ -31,11 +31,19 @@ export function linkFacets(text) {
   return facets;
 }
 
-const meta = (html, prop) => {
-  const re = new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]*content=["']([^"']*)["']|<meta[^>]+content=["']([^"']*)["'][^>]*(?:property|name)=["']${prop}["']`, "i");
+// content="..." of a <meta property|name="prop"> tag, entities decoded. The value ends at the SAME quote
+// character that opened it: until 2026-11-12 it ended at the first " or ', so a title such as
+// "... heavy users don't eat your margin" reached the link card as "... heavy users don".
+export const meta = (html, prop) => {
+  const value = (n) => `(["'])((?:(?!\\${n}).)*)\\${n}`;
+  const re = new RegExp(
+    `<meta\\s[^>]*?(?:property|name)=["']${prop}["'][^>]*?\\scontent=${value(1)}|<meta\\s(?:[^>]*?\\s)?content=${value(3)}[^>]*?(?:property|name)=["']${prop}["']`,
+    "is",
+  );
   const m = html.match(re);
-  const v = m ? m[1] ?? m[2] : "";
-  return v.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  const v = m ? m[2] ?? m[4] ?? "" : "";
+  // &amp; last, so "&amp;quot;" stays the text &quot; instead of becoming a quote.
+  return v.replace(/&quot;/g, '"').replace(/&(?:#39|#x27|apos);/gi, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 };
 
 async function xrpc(method, nsid, { token, body, headers = {}, raw } = {}) {
