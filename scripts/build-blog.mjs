@@ -132,7 +132,7 @@ const FOOTER = `<footer>© 2026 Agentwright · <a href="/inside/">What's inside<
 // The only checkout link (the visit beacon counts clicks on buy.polar.sh as buy_click).
 const BUY_URL = "https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n";
 
-function page({ title, description, url, body, meta = "", type = "website" }) {
+function page({ title, description, url, body, meta = "", type = "website", canonical = true }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -140,8 +140,7 @@ function page({ title, description, url, body, meta = "", type = "website" }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${url}">
-<link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="${SITE}/feed.xml">
+${canonical ? `<link rel="canonical" href="${url}">\n` : ""}<link rel="alternate" type="application/rss+xml" title="Agentwright blog" href="${SITE}/feed.xml">
 <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
@@ -462,7 +461,10 @@ writeFileSync(
   page({
     title: "Page not found — Agentwright",
     description: "That page does not exist.",
-    url: `${SITE}/404`,
+    url: `${SITE}/`,
+    // Served for every missing URL (and at /404 itself): never indexed, no canonical.
+    canonical: false,
+    meta: `<meta name="robots" content="noindex">\n`,
     body: `<h1>Page not found</h1><p class="lede">That page does not exist. Try the <a href="/">home page</a> or the <a href="/blog/">blog</a>.</p>`,
   }),
 );
@@ -527,7 +529,8 @@ for (const [slug, title, description] of [
     }),
   );
 }
-writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+// /api/ holds JSON endpoints (comments, visit counter, order lookup), not pages: crawling them only produced 4xx reports.
+writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${SITE}/sitemap.xml\n`);
 
 // Price change alert signup (scripts/lib/price-alert.mjs) on pricing pages, tools and blog posts.
 {

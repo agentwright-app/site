@@ -135,6 +135,8 @@ ${figs}
 </section>`;
   }
 
+  // Sold worldwide; Google's markup takes a country list (up to 50), so these are the main buyer countries.
+  const MARKETS = ["US", "GB", "CA", "AU", "DE", "FR", "NL", "ES", "IT", "SE", "IN", "JP", "KR", "SG", "BR"];
   const jsonld = {
     "@context": "https://schema.org",
     "@graph": [
@@ -153,7 +155,30 @@ ${figs}
         operatingSystem: "Any (Node.js)",
         softwareVersion: meta.version,
         // The launch price: $99 through the auto-applied code LAUNCH for the first 50 licenses; list price $149.
-        offers: { "@type": "Offer", url: `${SITE}/#pricing`, price: "99.00", priceCurrency: "USD", availability: "https://schema.org/InStock", seller: { "@id": `${SITE}/#org` } },
+        offers: {
+          "@type": "Offer", url: `${SITE}/#pricing`, price: "99.00", priceCurrency: "USD", availability: "https://schema.org/InStock", seller: { "@id": `${SITE}/#org` },
+          // The published refund policy (/legal/): 14 days, no questions, full refund, nothing to send back.
+          hasMerchantReturnPolicy: {
+            "@type": "MerchantReturnPolicy",
+            applicableCountry: MARKETS,
+            returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+            merchantReturnDays: 14,
+            returnFees: "https://schema.org/FreeReturn",
+            refundType: "https://schema.org/FullRefund",
+            merchantReturnLink: `${SITE}/legal/`,
+          },
+          // A digital download: the zip and license key arrive by email right after payment, free, in every country.
+          shippingDetails: {
+            "@type": "OfferShippingDetails",
+            shippingRate: { "@type": "MonetaryAmount", value: 0, currency: "USD" },
+            shippingDestination: MARKETS.map((c) => ({ "@type": "DefinedRegion", addressCountry: c })),
+            deliveryTime: {
+              "@type": "ShippingDeliveryTime",
+              handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+              transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+            },
+          },
+        },
       },
     ],
   };
