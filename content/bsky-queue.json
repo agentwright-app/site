@@ -3,6 +3,12 @@
   "paused": false,
   "posts": [
     {
+      "id": "b-ph-launch",
+      "at": "2026-11-12T22:00:00+09:00",
+      "text": "Agentwright Starter is on Product Hunt today: a Next.js starter kit for Claude-powered agent SaaS with per-user cost tracking.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing.",
+      "link": "https://www.producthunt.com/posts/agentwright-starter"
+    },
+    {
       "id": "b-tool-order",
       "at": "2026-11-12T23:00:00+09:00",
       "text": "If your Claude agent's prompt cache hit rate drops for no clear reason, check the order of your tools.\n\nTool definitions sit at the front of the cached prefix. Load MCP servers in a different order and every request pays full input price again."
