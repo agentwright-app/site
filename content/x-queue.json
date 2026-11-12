@@ -28,6 +28,11 @@
       "text": "If you recompute last month's LLM costs with today's price table, your totals move.\n\nStore the rate used on every usage row, version the price table, and keep raw token counts so a re-price is a deliberate step.\n\nFull write-up with code on our blog, link in profile."
     },
     {
+      "id": "x-ph-launch",
+      "at": "2026-11-12T22:00:00+09:00",
+      "text": "Agentwright Starter is on Product Hunt today: a Next.js starter kit for Claude-powered agent SaaS with per-user cost tracking.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing.\n\nhttps://www.producthunt.com/posts/agentwright-starter"
+    },
+    {
       "id": "d3-2",
       "at": "2026-11-12T23:00:00+09:00",
       "text": "The last line of defence most AI apps forget: a monthly spend limit on the API provider's side.\n\nIt is the only limit that still works when your own metering code has a bug.",
