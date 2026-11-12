@@ -83,6 +83,8 @@ pre{background:var(--card);border:1px solid var(--line);border-radius:12px;paddi
 pre code{background:none;border:0;padding:0;font-size:inherit}
 table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px;display:block;overflow-x:auto}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.doc-page th,.doc-page td{white-space:normal;vertical-align:top}
+.doc-page td:first-child{min-width:132px}
 th{color:var(--muted);font-weight:600}
 hr{border:0;border-top:1px solid var(--line);margin:40px 0}
 blockquote{margin:0;padding-left:16px;border-left:3px solid var(--accent);color:var(--muted)}
@@ -265,7 +267,7 @@ const POST_CTA = JSON.parse(readFileSync(join(root, "content/post-cta.json"), "u
   const unknown = Object.keys(POST_CTA).filter((s) => !known.has(s));
   if (unknown.length) throw new Error(`content/post-cta.json: no post with slug ${unknown.map((s) => `"${s}"`).join(", ")} (typo?)`);
 }
-const CTA_FALLBACK = "<strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with the agent loop, sign-in, Lemon Squeezy billing, per-user cost metering, MCP connectors and evals already wired.";
+const CTA_FALLBACK = "<strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with the agent loop, sign-in, billing through Lemon Squeezy or Polar, per-user cost metering, MCP connectors and evals already wired.";
 const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 function postCta(slug) {
   const entry = POST_CTA[slug];

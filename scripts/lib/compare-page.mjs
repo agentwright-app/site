@@ -2,10 +2,14 @@
 // Every fact about another kit lives in that JSON with its source URL and the check date,
 // so the page can be re-checked monthly by editing data only. Called from build-blog.mjs:
 //   const compareUrls = buildComparePages({ page, esc, SITE, OUT, root });
-//   const compareChecked = compareLastmod({ SITE, root }); // sitemap lastmod = each page's `checked`
+//   const compareChecked = compareLastmod({ SITE, root }); // sitemap lastmod = each page's `checked`, or its `updated`
+//
+// `checked` is the day the other products' pages were read. `updated` (optional) is a later day on
+// which only our own facts changed, for example after a release of the kit: it moves dateModified
+// and the sitemap's lastmod, and never the "Checked on" line.
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { loadAlternatives } from "./alternative-pages.mjs";
+import { lastChange, loadAlternatives } from "./alternative-pages.mjs";
 
 const fmtDay = (iso) =>
   new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
@@ -101,7 +105,7 @@ function renderCompare({ page, esc, SITE, data, alternatives = [] }) {
     description: data.description,
     url,
     datePublished: data.published ?? data.checked,
-    dateModified: data.checked,
+    dateModified: lastChange(data),
     inLanguage: "en",
     publisher: { "@type": "Organization", name: "Agentwright", url: SITE },
   };
@@ -180,5 +184,5 @@ export function buildComparePages({ page, esc, SITE, OUT, root }) {
 
 /** Check date of each compare page, by URL, for the sitemap's lastmod. */
 export function compareLastmod({ SITE, root }) {
-  return Object.fromEntries(loadPages(root).map((d) => [`${SITE}/${d.slug}/`, d.checked]));
+  return Object.fromEntries(loadPages(root).map((d) => [`${SITE}/${d.slug}/`, lastChange(d)]));
 }

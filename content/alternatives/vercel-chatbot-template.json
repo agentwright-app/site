@@ -5,6 +5,7 @@
   "description": "Vercel's free Chatbot template has the better chat UI. What its repo includes, what you add before charging (billing, per-user cost, caps), and when to use it.",
   "hubLine": "A free, open-source chat template next to a paid kit: what the repository includes, and what you add before you charge for the product.",
   "checked": "2026-11-12",
+  "updated": "2026-11-12",
   "published": "2026-11-12",
   "recheckEvery": "month",
   "other": {
@@ -59,7 +60,7 @@
       "other": "Neon Serverless Postgres with Drizzle ORM, Vercel Blob, and Redis (`REDIS_URL` in .env.example).",
       "ours": "Postgres with Drizzle ORM, and nothing else."
     },
-    { "label": "Next.js version", "other": "16 (package.json on the check date).", "ours": "15. The upgrade to 16 is on the roadmap." },
+    { "label": "Next.js version", "other": "16 (package.json on the check date).", "ours": "16." },
     {
       "label": "Tests",
       "other": "Playwright tests (the test script in package.json).",
@@ -87,7 +88,7 @@
     {
       "title": "Checkout and webhooks that set each user's plan",
       "text": "A payment provider tells your app about subscriptions through webhooks. The route has to check the signature on the raw request body, survive retries, and map the product to a plan in your database.",
-      "files": ["app/api/webhooks/lemonsqueezy/route.ts", "lib/billing/lemonsqueezy.ts"],
+      "files": ["app/api/webhooks/lemonsqueezy/route.ts", "lib/billing/lemonsqueezy.ts", "app/api/webhooks/polar/route.ts", "lib/billing/polar-events.ts"],
       "posts": [
         { "href": "/blog/verify-lemon-squeezy-webhooks-nextjs/", "title": "Lemon Squeezy webhooks in Next.js: verify the signature, log the event, survive retries" }
       ]
@@ -134,8 +135,7 @@
     "The chat interface matters most. The template's UI is far ahead of ours.",
     "You want several model providers behind one gateway, or you have not decided on Claude.",
     "The product is free, internal or a prototype, so billing and cost per user can wait.",
-    "You want open-source code under the Apache License 2.0.",
-    "You deploy on Vercel and want Next.js 16 today."
+    "You want open-source code under the Apache License 2.0."
   ],
   "pickIf": [
     "You will charge for plans from the start, and you need the cost per user from day one.",

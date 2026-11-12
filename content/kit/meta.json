@@ -1,5 +1,5 @@
 {
-  "version": "0.4.2",
+  "version": "0.5.0",
   "models": [
     "claude-fable-5-2",
     "claude-fable-5-1",
@@ -10,14 +10,14 @@
   "longContextModels": [
     "claude-haiku-5-5"
   ],
-  "commit": "941a053",
-  "commitDate": "2026-11-11",
+  "commit": "7d1a957",
+  "commitDate": "2026-11-12",
   "dependencies": {
     "@anthropic-ai/sdk": "1.3.0",
     "@auth/drizzle-adapter": "1.11.3",
     "@modelcontextprotocol/sdk": "1.32.2",
     "drizzle-orm": "0.45.4",
-    "next": "15.5.28",
+    "next": "16.4.6",
     "next-auth": "5.0.0-beta.32",
     "postgres": "3.4.9",
     "react": "19.3.1",
@@ -44,20 +44,21 @@
     "setup.md",
     "deploy.md",
     "pricing.md",
-    "licensing.md"
+    "licensing.md",
+    "polar.md"
   ],
   "counts": {
-    "files": 64,
-    "codeFiles": 41,
-    "codeLines": 3338,
-    "testFiles": 3,
-    "tests": 15,
-    "migrations": 3
+    "files": 87,
+    "codeFiles": 48,
+    "codeLines": 5776,
+    "testFiles": 5,
+    "tests": 64,
+    "migrations": 4
   },
   "files": [
     {
       "path": ".env.example",
-      "lines": 60
+      "lines": 89
     },
     {
       "path": ".github/workflows/ci.yml",
@@ -65,15 +66,15 @@
     },
     {
       "path": ".gitignore",
-      "lines": 7
+      "lines": 8
     },
     {
       "path": "AGENTS.md",
-      "lines": 55
+      "lines": 75
     },
     {
       "path": "CHANGELOG.md",
-      "lines": 95
+      "lines": 129
     },
     {
       "path": "CLAUDE.md",
@@ -85,7 +86,7 @@
     },
     {
       "path": "README.md",
-      "lines": 90
+      "lines": 96
     },
     {
       "path": "app/admin/licenses/actions.tsx",
@@ -93,7 +94,7 @@
     },
     {
       "path": "app/admin/licenses/page.tsx",
-      "lines": 128
+      "lines": 142
     },
     {
       "path": "app/api/admin/licenses/route.ts",
@@ -116,6 +117,10 @@
       "lines": 50
     },
     {
+      "path": "app/api/webhooks/polar/route.ts",
+      "lines": 65
+    },
+    {
       "path": "app/chat/page.tsx",
       "lines": 38
     },
@@ -136,8 +141,12 @@
       "lines": 23
     },
     {
+      "path": "app/pricing/actions.ts",
+      "lines": 102
+    },
+    {
       "path": "app/pricing/page.tsx",
-      "lines": 85
+      "lines": 160
     },
     {
       "path": "app/usage/page.tsx",
@@ -149,23 +158,27 @@
     },
     {
       "path": "docs/ROADMAP.md",
-      "lines": 25
+      "lines": 23
     },
     {
       "path": "docs/customizing.md",
-      "lines": 104
+      "lines": 111
     },
     {
       "path": "docs/deploy.md",
-      "lines": 70
+      "lines": 98
     },
     {
       "path": "docs/licensing.md",
-      "lines": 51
+      "lines": 66
     },
     {
       "path": "docs/next16.md",
-      "lines": 42
+      "lines": 119
+    },
+    {
+      "path": "docs/polar.md",
+      "lines": 279
     },
     {
       "path": "docs/pricing.md",
@@ -173,7 +186,7 @@
     },
     {
       "path": "docs/setup.md",
-      "lines": 53
+      "lines": 62
     },
     {
       "path": "drizzle.config.ts",
@@ -190,6 +203,10 @@
     {
       "path": "drizzle/0002_price_snapshots.sql",
       "lines": 24
+    },
+    {
+      "path": "drizzle/0003_polar.sql",
+      "lines": 18
     },
     {
       "path": "evals/cases.ts",
@@ -225,15 +242,23 @@
     },
     {
       "path": "lib/billing/checkout.ts",
-      "lines": 35
+      "lines": 46
     },
     {
       "path": "lib/billing/lemonsqueezy.ts",
-      "lines": 160
+      "lines": 174
     },
     {
       "path": "lib/billing/metering.ts",
       "lines": 127
+    },
+    {
+      "path": "lib/billing/polar-events.ts",
+      "lines": 351
+    },
+    {
+      "path": "lib/billing/polar.ts",
+      "lines": 440
     },
     {
       "path": "lib/billing/pricing.ts",
@@ -253,31 +278,27 @@
     },
     {
       "path": "lib/db/schema.ts",
-      "lines": 200
+      "lines": 248
     },
     {
       "path": "lib/email/index.ts",
-      "lines": 54
+      "lines": 56
     },
     {
       "path": "lib/licensing/index.ts",
-      "lines": 228
+      "lines": 252
     },
     {
       "path": "lib/ratelimit/index.ts",
       "lines": 111
     },
     {
-      "path": "next-env.d.ts",
-      "lines": 6
-    },
-    {
       "path": "next.config.ts",
-      "lines": 7
+      "lines": 10
     },
     {
       "path": "package.json",
-      "lines": 39
+      "lines": 42
     },
     {
       "path": "postcss.config.mjs",
@@ -296,8 +317,80 @@
       "lines": 35
     },
     {
+      "path": "tests/fixtures/polar/README.md",
+      "lines": 21
+    },
+    {
+      "path": "tests/fixtures/polar/checkout-updated.json",
+      "lines": 195
+    },
+    {
+      "path": "tests/fixtures/polar/order-paid-subscription.json",
+      "lines": 171
+    },
+    {
+      "path": "tests/fixtures/polar/order-paid.json",
+      "lines": 158
+    },
+    {
+      "path": "tests/fixtures/polar/order-refunded.json",
+      "lines": 158
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-active.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-canceled.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-created.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-cycled.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-past-due.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-paused.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-resumed.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-revoked.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-uncanceled.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/fixtures/polar/subscription-updated.json",
+      "lines": 147
+    },
+    {
+      "path": "tests/helpers/migrate.ts",
+      "lines": 26
+    },
+    {
       "path": "tests/metering.db.test.ts",
       "lines": 110
+    },
+    {
+      "path": "tests/polar.db.test.ts",
+      "lines": 762
+    },
+    {
+      "path": "tests/polar.test.ts",
+      "lines": 501
     },
     {
       "path": "tests/pricing.test.ts",

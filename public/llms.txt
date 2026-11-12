@@ -1,19 +1,20 @@
 # Agentwright
 
-> Agentwright Starter (version 0.4.2) is a paid Next.js 15 starter kit for developers building SaaS products on Claude agents. One TypeScript codebase with Postgres (Drizzle): a streaming (SSE) agent loop with parallel tool calls, a 12-turn guard and prompt caching; MCP servers (stdio or Streamable HTTP) as tool sources; per-user token and cost metering with a price snapshot on every usage row; monthly token caps and per-plan rate limits; GitHub sign-in with optional Resend magic links; Lemon Squeezy checkout links and subscription webhooks; an eval runner with cost per case; license-key delivery with an admin page; tests and CI. Price rows ship for Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5.
+> Agentwright Starter (version 0.5.0) is a paid Next.js 16 starter kit for developers building SaaS products on Claude agents. One TypeScript codebase with Postgres (Drizzle): a streaming (SSE) agent loop with parallel tool calls, a 12-turn guard and prompt caching; MCP servers (stdio or Streamable HTTP) as tool sources; per-user token and cost metering with a price snapshot on every usage row; monthly token caps and per-plan rate limits; GitHub sign-in with optional Resend magic links; billing through Lemon Squeezy or Polar (checkout and subscription webhooks that set each user's plan); an eval runner with cost per case; license-key delivery with an admin page; tests and CI. Price rows ship for Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5.
 
 Price: $99 at launch for the first 50 licenses (list $149; the code LAUNCH is applied at checkout), paid once, every future version included. 14-day refund, no questions asked. Sold through Polar (merchant of record). Delivery is a zip download and a license key by email; there is no GitHub repository access.
 
-Not included: Stripe or Polar billing (Lemon Squeezy only), teams, organizations or seats, other model providers, charging for overage, dollar spend caps (the cap is monthly tokens), a job queue, RAG or search, file uploads, an MCP server of its own, Markdown rendering in the chat UI.
+Not included: Stripe billing (billing is Lemon Squeezy or Polar), teams, organizations or seats, other model providers, charging for overage, dollar spend caps (the cap is monthly tokens), a job queue, RAG or search, file uploads, an MCP server of its own, Markdown rendering in the chat UI.
 
 ## Product
 - [Agentwright Starter](https://agentwright.app/): what the kit does, pricing, delivery and the questions buyers ask
 - [What's inside](https://agentwright.app/inside/): every file in the kit with a one-line note, and three source files in full (lib/agent/loop.ts, lib/billing/metering.ts, evals/cases.ts)
 - [Docs](https://agentwright.app/docs/): the docs that ship with the kit
-- [Setup](https://agentwright.app/docs/setup/): Postgres, Anthropic key, GitHub sign-in, Lemon Squeezy, MCP servers and evals
+- [Setup](https://agentwright.app/docs/setup/): Postgres, Anthropic key, GitHub sign-in, billing, MCP servers and evals
 - [Deploy](https://agentwright.app/docs/deploy/): Vercel and Neon step by step, notes for other hosts
 - [Model prices and price snapshots](https://agentwright.app/docs/price-snapshots/): how each usage row stores its cost and the price version used
 - [License key delivery](https://agentwright.app/docs/license-delivery/): issuing license keys, signed download links and the admin page
+- [Billing with Polar](https://agentwright.app/docs/polar/): setup, what each webhook event does, the customer portal, limits and what is tested
 - [Changelog](https://agentwright.app/changelog/): every release of the kit since 0.1.0
 - [Starter kits compared](https://agentwright.app/compare/ai-saas-boilerplates/): Agentwright Starter next to eight other SaaS starter kits on price, refunds, LLM support, usage metering, billing and teams, with a source link for every fact
 - [Alternatives](https://agentwright.app/alternatives/): one-to-one comparisons with other ways to start an AI product, each with sources, a check date and the cases where the other product is the better choice

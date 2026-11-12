@@ -10,7 +10,7 @@ No. You pay once and keep the code. There is no monthly fee and no update plan t
 
 ### When can I buy it?
 
-Now. The Starter (version 0.4.2) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
+Now. The Starter (version 0.5.0) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
 
 ### Who handles the payment?
 
@@ -42,12 +42,12 @@ Yes. [What's inside](/inside/) lists every file in the kit with a one-line note 
 
 ### What is inside the Starter?
 
-One Next.js codebase (currently version 0.4.2) with these parts already wired together:
+One Next.js codebase (currently version 0.5.0) with these parts already wired together:
 
 - **Agent loop:** a streaming (SSE) route with parallel tool calls, a 12-turn guard and prompt caching on the system prompt and tools, plus a minimal chat UI.
 - **MCP tools:** connect stdio or Streamable HTTP MCP servers with one entry each in `MCP_SERVERS`; their tools become callable by the agent.
 - **Per-user metering:** every Claude call is recorded with tokens, cost and the exact price version used, checked against the plan's monthly token cap, and shown on a `/usage` dashboard. Prices are versioned, so past totals stay the same when model prices change.
-- **Billing:** Lemon Squeezy checkout links and subscription webhooks that set each user's plan.
+- **Billing:** Lemon Squeezy or Polar, chosen with one setting: checkout from the pricing page and subscription webhooks that set each user's plan. With Polar, the pricing page also opens the customer's billing portal.
 - **Auth:** GitHub sign-in, plus optional email magic links through Resend.
 - **Rate limiting:** per-plan requests per minute, with proper `429` responses.
 - **Evals:** a small runner with golden test cases and a cost report per case.
@@ -57,11 +57,11 @@ One Next.js codebase (currently version 0.4.2) with these parts already wired to
 
 ### What is not included?
 
-No Stripe or Polar integration (Lemon Squeezy is the only billing provider). No teams, organizations or seats: each user has one plan. No other model providers, only Claude. No charging for overage: a plan can be allowed to go past its cap, but nothing bills for it. Caps are monthly token counts, not dollar limits. No job queue, no RAG or search, no file uploads, no MCP server of its own (it connects to MCP servers as a client), and the chat UI shows plain text, without Markdown rendering.
+No Stripe or Paddle integration (billing is Lemon Squeezy or Polar). No teams, organizations or seats: each user has one plan. No other model providers, only Claude. No charging for overage: a plan can be allowed to go past its cap, but nothing bills for it. Caps are monthly token counts, not dollar limits. No job queue, no RAG or search, no file uploads, no MCP server of its own (it connects to MCP servers as a client), and the chat UI shows plain text, without Markdown rendering.
 
 ### What is the tech stack?
 
-Next.js 15 (App Router), TypeScript, the official Anthropic TypeScript SDK, the MCP TypeScript SDK, Drizzle ORM with Postgres, Auth.js v5, Tailwind CSS v4 and Zod. It runs on Node.js.
+Next.js 16 (App Router), TypeScript, the official Anthropic TypeScript SDK, the MCP TypeScript SDK, Drizzle ORM with Postgres, Auth.js v5, Tailwind CSS v4 and Zod. It runs on Node.js.
 
 ### Where can I deploy it?
 
@@ -73,11 +73,13 @@ The default is Claude Sonnet 5.5. The metering price table ships with Claude Fab
 
 ### What do I need to run it?
 
-An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Lemon Squeezy account is only needed when you start charging your own users. Your API and hosting costs are your own.
+An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Lemon Squeezy or Polar account is only needed when you start charging your own users. Your API and hosting costs are your own.
 
-### Can I use Stripe, Polar or Paddle instead of Lemon Squeezy?
+### Can I use Polar, Stripe or Paddle instead of Lemon Squeezy?
 
-Yes, but you do that part yourself. Lemon Squeezy is the only billing provider wired in; Stripe, Polar and Paddle are not in the kit. (We sell the Starter through Polar, but the kit's own billing code is Lemon Squeezy only.) The provider-specific code sits in a few files: the webhook route (`app/api/webhooks/lemonsqueezy/route.ts`), the checkout helpers in `lib/billing/`, and the mapping from product variants to plans. Metering, plan caps and the rest of the app read your own database, not the provider, so they stay the same. Swapping providers means rewriting those billing files for the new provider's checkout and webhooks.
+Polar: yes, since version 0.5.0. Set `BILLING_PROVIDER=polar` and follow the [Polar guide](/docs/polar/). The pricing page then creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it is tested with real and sample Polar webhook payloads, and the guide lists five steps to check in Polar's sandbox before you take payments.
+
+Stripe and Paddle: yes, but you do that part yourself. The provider-specific code sits in a few files: a webhook route (`app/api/webhooks/polar/route.ts`), the event handling and API calls in `lib/billing/`, and the mapping from products to plans. Metering, plan caps and the rest of the app read your own database, not the provider, so they stay the same. Adding a provider means writing those billing files for its checkout and webhooks; the two that ship are the examples to follow.
 
 ### How is it delivered?
 

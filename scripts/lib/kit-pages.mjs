@@ -30,10 +30,11 @@ const PREVIEW_NOTES = {
 };
 
 const DOC_TITLES = {
-  "setup.md": ["setup", "Setup", "Postgres, the Anthropic key, GitHub sign-in, Lemon Squeezy, MCP servers and evals: the steps from zip to a running app."],
+  "setup.md": ["setup", "Setup", "Postgres, the Anthropic key, GitHub sign-in, billing, MCP servers and evals: the steps from zip to a running app."],
   "deploy.md": ["deploy", "Deploy on Vercel and Neon", "The zero-ops path: Neon for Postgres, Vercel for the app, the webhook, a post-deploy checklist and notes for other hosts."],
   "pricing.md": ["price-snapshots", "Model prices and price snapshots", "How every usage row stores its cost and the price version used, and how to add a price change without rewriting history."],
   "licensing.md": ["license-delivery", "License key delivery", "If you sell a digital product yourself: issuing license keys on purchase, signed download links, and the admin page."],
+  "polar.md": ["polar", "Billing with Polar", "Polar as the billing provider: setup, what each webhook event does to a user's plan, the customer portal, failed payments, limits, and what is and is not tested."],
 };
 
 const n = (x) => x.toLocaleString("en-US");
@@ -73,7 +74,10 @@ export function releases(dir) {
       const head = chunk.match(/^([0-9.]+)\]\s*[—-]\s*(\d{4}-\d{2}-\d{2})/);
       if (!head) return null;
       // One short point per bullet: its bold lead if it has one, otherwise its first sentence.
-      const bullets = [...chunk.matchAll(/^- (.+)$/gm)].map((m) => m[1]);
+      // Bullets that open with a bold lead are the release's headlines, so they come first.
+      const all = [...chunk.matchAll(/^- (.+)$/gm)].map((m) => m[1]);
+      const headline = (b) => /^\*\*.+?\*\*/.test(b);
+      const bullets = [...all.filter(headline), ...all.filter((b) => !headline(b))];
       const paras = bullets.length ? bullets : [chunk.split("\n").slice(1).join(" ").trim()];
       const points = paras.map((b) => {
         const bold = b.match(/^\*\*(.+?)\*\*/);
@@ -147,7 +151,7 @@ ${figs}
         "@id": `${SITE}/#product`,
         name: "Agentwright Starter",
         description:
-          "Next.js 15 + TypeScript starter kit (source code) for Claude-powered agent SaaS: streaming agent loop with tools, MCP connectors, per-user token metering with price snapshots, plan caps, rate limiting, sign-in, Lemon Squeezy billing and an eval runner.",
+          "Next.js 16 + TypeScript starter kit (source code) for Claude-powered agent SaaS: streaming agent loop with tools, MCP connectors, per-user token metering with price snapshots, plan caps, rate limiting, sign-in, billing through Lemon Squeezy or Polar and an eval runner.",
         url: `${SITE}/`,
         image: `${SITE}/og.png?v=3`,
         brand: { "@type": "Brand", name: "Agentwright" },
@@ -286,7 +290,7 @@ ${allFiles}
 ${previews}
 
 <h2 id="tests">Tests and CI</h2>
-<p><code>npm test</code> runs ${c.tests} tests in ${c.testFiles} files: price selection and cost math, the tool registry (including the regression test for the 4-cache-breakpoint limit), and a metering test against a real Postgres database. The GitHub Actions workflow that ships with the kit runs the type check, the tests with a Postgres service, and <code>next build</code> on every pull request:</p>
+<p><code>npm test</code> runs ${c.tests} tests in ${c.testFiles} files: price selection and cost math, the tool registry (including the regression test for the 4-cache-breakpoint limit), the Polar adapter (signature check, payloads and API calls), and metering and Polar billing events against a real Postgres database. The GitHub Actions workflow that ships with the kit runs the type check, the tests with a Postgres service, and <code>next build</code> on every pull request:</p>
 <pre><code class="language-yaml">${hl(readFileSync(join(dir, "ci.yml"), "utf8").replace(/\n+$/, ""), "yaml")}</code></pre>
 <p><code>npm run eval</code> is separate, because it calls the Claude API and costs money: three golden cases on Claude Haiku 5.5 cost well under one cent per run.</p>
 ${runs}
@@ -301,7 +305,7 @@ ${docLinks}
 <p>So you can decide quickly whether it fits:</p>
 <ul>
 <li><strong>Organizations, teams and seats.</strong> Accounts are single users. If you sell to companies that need invites and roles, you build that part.</li>
-<li><strong>Other payment providers.</strong> Lemon Squeezy is wired in. Stripe, Polar or Paddle means rewriting the webhook route and checkout helpers; metering and plan caps do not depend on the provider.</li>
+<li><strong>Other payment providers.</strong> Lemon Squeezy and Polar are wired in. Stripe or Paddle means writing a webhook route and checkout calls for it; metering and plan caps do not depend on the provider.</li>
 <li><strong>A marketing site or component library.</strong> The UI is deliberately plain: sign-in, chat, usage dashboard, pricing and an admin page, styled with Tailwind. You bring your own design.</li>
 <li><strong>Other model providers.</strong> It is built on the Anthropic SDK and Claude's features (prompt caching, tool use, stop reasons). It is not a multi-provider abstraction.</li>
 <li><strong>A hosted service.</strong> You get source code. You run it on your own Vercel, Neon and Anthropic accounts.</li>
@@ -323,7 +327,7 @@ ${buyBox(esc, "If it is not what you expected, email us within 14 days and you g
         title: `${title} — Agentwright Starter docs`,
         description: desc,
         url: `${SITE}/docs/${slug}/`,
-        body: `<article>
+        body: `<article class="doc-page">
 <p class="meta"><a href="/docs/" style="color:inherit;text-decoration:none">← Docs</a></p>
 <h1>${esc(title)}</h1>
 <p class="meta">Ships with Agentwright Starter ${esc(meta.version)} as <code>docs/${esc(d)}</code>. File paths refer to the Starter's source.</p>

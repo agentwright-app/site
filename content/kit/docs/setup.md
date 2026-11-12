@@ -25,7 +25,14 @@ Create an API key at https://resend.com/api-keys and verify your sending domain.
 Set `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM` (e.g. `Agentwright <login@yourdomain.com>`).
 The email form on `/login` appears automatically; leave the key empty to keep GitHub-only sign-in.
 
-## 4. Lemon Squeezy
+## 4. Billing
+The kit has two billing adapters, Lemon Squeezy and Polar. Both are a merchant of record:
+they charge the customer, handle sales tax and VAT, and pay you. `BILLING_PROVIDER` picks the
+one the buttons on `/pricing` use: `lemonsqueezy` (the default) or `polar`.
+
+**Polar:** follow `docs/polar.md` and skip the rest of this section.
+
+**Lemon Squeezy:**
 1. Create a product + variant for each paid plan; copy the variant ids into `LEMONSQUEEZY_VARIANT_PRO`
    and `LEMONSQUEEZY_VARIANT_TEAM` and re-run `npm run db:seed`.
 2. Settings → Webhooks → add `https://<your-domain>/api/webhooks/lemonsqueezy`, set a signing secret
@@ -35,6 +42,8 @@ The email form on `/login` appears automatically; leave the key empty to keep Gi
    can match the buyer. (Falls back to matching `user_email` against `users.email`.)
 
 Local testing: `npx lmsqueezy@latest` or any tunnel (e.g. `cloudflared tunnel --url http://localhost:3000`).
+Webhooks work through a tunnel as they are. To open the app itself through the tunnel in development,
+add the tunnel's hostname to `allowedDevOrigins` in `next.config.ts` (see `docs/next16.md`).
 
 ## 5. Deploy
 Vercel: import the repo, add the env vars, done (`maxDuration` is set to 300s on the agent route; lower it
