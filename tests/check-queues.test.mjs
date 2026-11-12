@@ -40,3 +40,11 @@ test("bsky: the quiet hours are an X rule only", () => {
   const r = checkQueue("bsky", { posts: [{ id: "a", at: "2026-11-13T04:00:00+09:00", text: "ok" }] }, NOW);
   assert.deepEqual(r.errors, []);
 });
+
+test("bsky: a link card to someone else's site is a warning (the worker may get a 403 and an empty card)", () => {
+  const ext = checkQueue("bsky", { posts: [{ id: "a", at: "2026-11-13T23:00:00+09:00", text: "ok", link: "https://www.producthunt.com/posts/x" }] }, NOW);
+  assert.equal(ext.warnings.length, 1);
+  assert.deepEqual(ext.errors, []);
+  const own = checkQueue("bsky", { posts: [{ id: "a", at: "2026-11-13T23:00:00+09:00", text: "ok", link: "https://agentwright.app/inside/" }] }, NOW);
+  assert.deepEqual(own.warnings, []);
+});
