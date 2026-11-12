@@ -249,7 +249,7 @@
     ]
   },
   "claude-agent-saas-architecture-request-path": {
-    "text": "Agentwright Starter is this request path in one Next.js codebase: auth in lib/auth/index.ts, the rate limit in lib/ratelimit/index.ts, the plan cap and metering in lib/billing/metering.ts, the loop in lib/agent/loop.ts, SSE in app/api/agent/route.ts and the Lemon Squeezy webhooks next to it. Its budget check is a monthly token cap, not a dollar limit.",
+    "text": "Agentwright Starter is this request path in one Next.js codebase: auth in lib/auth/index.ts, the rate limit in lib/ratelimit/index.ts, the plan cap and metering in lib/billing/metering.ts, the loop in lib/agent/loop.ts, SSE in app/api/agent/route.ts and the Lemon Squeezy and Polar webhooks next to it. Its budget check is a monthly token cap, not a dollar limit.",
     "files": [
       "lib/auth/index.ts",
       "lib/ratelimit/index.ts",

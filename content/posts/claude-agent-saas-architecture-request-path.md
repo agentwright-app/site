@@ -8,7 +8,7 @@ tags: [architecture, claude, nextjs, saas]
 
 <p class="lede">A month ago this blog started with one question: what does it take to charge money for an app built on the Claude API? Since then we have written about each piece separately. This post puts them in order. It follows a single chat message from the moment a user presses Enter until the answer is on screen and the cost is in the database, and links to the detailed post for each step.</p>
 
-The stack is the one we use: Next.js (App Router) on a serverless host, Postgres, the Anthropic TypeScript SDK, and Lemon Squeezy for payments. The ideas carry over to other stacks.
+The stack is the one we use: Next.js (App Router) on a serverless host, Postgres, the Anthropic TypeScript SDK, and Lemon Squeezy or Polar for payments. The ideas carry over to other stacks.
 
 ## The whole path on one screen
 
@@ -85,7 +85,7 @@ Vector databases, multi-agent orchestration, fine-tuning and a custom model gate
 
 <!-- site-only -->
 
-*Agentwright Starter is this architecture as a Next.js codebase: sign-in, rate limits and monthly token caps, the tool loop with MCP, SSE streaming, usage metering with price snapshots, Lemon Squeezy billing, evals and tests. Details and launch status are in the [FAQ](/faq/).*
+*Agentwright Starter is this architecture as a Next.js codebase: sign-in, rate limits and monthly token caps, the tool loop with MCP, SSE streaming, usage metering with price snapshots, Lemon Squeezy or Polar billing, evals and tests. Details and launch status are in the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 
