@@ -32,6 +32,7 @@ import {
   verifyStandardWebhookSignature,
 } from "../../../lib/license";
 import { type MailEnv, licenseMail, sendMail } from "../../../lib/mail";
+import { isFullRefund } from "../../../lib/refund";
 
 type Env = LicenseEnv &
   MailEnv & {
@@ -44,6 +45,7 @@ interface PolarOrder {
   id?: string;
   status?: string;
   paid?: boolean;
+  net_amount?: number;
   total_amount?: number;
   refunded_amount?: number;
   invoice_number?: string | null;
@@ -144,10 +146,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   if (type === "order.refunded") {
-    const full =
-      order.status === "refunded" ||
-      (order.total_amount != null && order.refunded_amount != null && order.refunded_amount >= order.total_amount);
-    if (!full) return json(200, { ok: true, result: "partial refund: license kept" });
+    if (!isFullRefund(order)) return json(200, { ok: true, result: "partial refund: license kept" });
     const key = await env.LICENSES.get(`order:${orderId}`);
     const record = key ? await getLicense(env.LICENSES, key) : null;
     if (!record) return json(200, { ok: true, result: "ignored: no license for order" });
