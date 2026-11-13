@@ -4,6 +4,13 @@ All notable changes to Agentwright Starter. Format: [Keep a Changelog](https://k
 
 ## [Unreleased]
 
+## [0.5.1] — 2026-11-13
+
+Documentation only. No code changed, and an install on 0.5.0 needs no action.
+
+### Docs
+- `docs/polar.md`, "What is tested": the Polar adapter was run against Polar's sandbox on 2026-11-13 (real Polar servers, test card, no real money) from checkout through plan change, cancellation and revocation, with Polar's own signed deliveries. No code changed. Not run live: a real-money payment, a renewal and a failed renewal.
+
 ## [0.5.0] — 2026-11-12
 
 Two things: a billing adapter for Polar next to Lemon Squeezy, and Next.js 16.

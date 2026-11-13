@@ -78,8 +78,9 @@ In the sandbox, pay with the test card `4242 4242 4242 4242`, any future date an
 
 ### Check it before you go live
 
-The adapter is tested against payloads (see "What is tested"), not against money moving.
-Walk through this once in the sandbox, and look at `users.plan` after each step:
+We ran these five steps with version 0.5.0 in Polar's sandbox (see "What is tested"). Your
+account, products and environment variables are your own, so walk through them once in the
+sandbox yourself, and look at `users.plan` after each step:
 
 | Step | Expected |
 | --- | --- |
@@ -256,8 +257,17 @@ subscription event. The signature check was compared, on 20,000 generated reques
 the one that has verified real Polar deliveries on agentwright.app since 2026-11-10, and
 the two agreed on every request.
 
-What has not been done: a real subscription has not been run from checkout to renewal
-through this adapter. That is what "Check it before you go live" is for.
+On 2026-11-13 version 0.5.0 was also run against Polar's sandbox: Polar's real servers, the
+test card, no real money. The app was a production build that received Polar's own signed
+deliveries through `polar webhook listen`. A subscription was bought with **Upgrade**
+(once as a new customer and once as a returning one), moved from one plan to the other in
+the customer portal opened by **Manage billing**, canceled in the portal and then revoked.
+`users.plan` was as the table in "Check it before you go live" says after every step, and
+the events of the purchase arrived out of order, as Polar says they can.
+
+What has not been done: a payment with real money through this adapter, and a live run of
+a renewal or a failed renewal, which come a month after the purchase. Those two are covered
+by the automated tests with Polar's sample events.
 
 ## Troubleshooting
 

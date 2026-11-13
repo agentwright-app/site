@@ -1,10 +1,10 @@
-> agentwright-starter@0.5.0 eval
+> agentwright-starter@0.5.1 eval
 > tsx evals/run.ts --model claude-haiku-5-5
 
 Running 3 case(s) on claude-haiku-5-5
 
-PASS  tool-use-time          turns=2 tools=[get_time] $0.0001 1205ms
-PASS  no-tool-arithmetic     turns=1 tools=[] $0.0001 557ms
-PASS  honest-limits          turns=1 tools=[] $0.0001 1098ms
+PASS  tool-use-time          turns=2 tools=[get_time] $0.0001 1555ms
+PASS  no-tool-arithmetic     turns=1 tools=[] $0.0001 644ms
+PASS  honest-limits          turns=1 tools=[] $0.0001 1097ms
 
-3/3 passed · 2057 tokens · $0.0003 total
+3/3 passed · 2060 tokens · $0.0003 total
