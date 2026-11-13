@@ -10,7 +10,7 @@ No. You pay once and keep the code. There is no monthly fee and no update plan t
 
 ### When can I buy it?
 
-Now. The Starter (version 0.5.0) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
+Now. The Starter (version 0.5.1) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
 
 ### Who handles the payment?
 
@@ -42,7 +42,7 @@ Yes. [What's inside](/inside/) lists every file in the kit with a one-line note 
 
 ### What is inside the Starter?
 
-One Next.js codebase (currently version 0.5.0) with these parts already wired together:
+One Next.js codebase (currently version 0.5.1) with these parts already wired together:
 
 - **Agent loop:** a streaming (SSE) route with parallel tool calls, a 12-turn guard and prompt caching on the system prompt and tools, plus a minimal chat UI.
 - **MCP tools:** connect stdio or Streamable HTTP MCP servers with one entry each in `MCP_SERVERS`; their tools become callable by the agent.

@@ -6,7 +6,7 @@
   "checked": "2026-11-11",
   "updated": "2026-11-12",
   "published": "2026-11-11",
-  "kitVersion": "0.5.0",
+  "kitVersion": "0.5.1",
   "recheckEvery": "month",
   "howChecked": "Each page was downloaded with curl on the check date and read as text. Only what the page says is used. 'Not mentioned on their page' means we did not find it on the linked pages, not that the kit lacks it.",
   "columns": [
@@ -177,7 +177,7 @@
     { "id": "opensaas", "text": "Pick Open SaaS if you want to pay nothing, want the code to be open source, and are happy with the Wasp framework instead of Next.js. It has tests and CI. Beyond the OpenAI demo app, you would add LLM metering and the agent parts yourself." }
   ],
   "weaker": [
-    "It is new. The first release was on 2026-11-01 and the current version is 0.5.0. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
+    "It is new. The first release was on 2026-11-01 and the current version is 0.5.1. There are no customers yet, so there are no reviews and no showcase of apps built with it.",
     "Claude only. The agent loop, metering and evals are built on the Anthropic SDK. If you need OpenAI or Gemini too, another kit fits better.",
     "No Stripe. Your app's billing is Lemon Squeezy or Polar. The Polar adapter is new in version 0.5.0: it has 49 automated tests, and on 2026-11-13 we ran a subscription through it in Polar's sandbox (Polar's real servers, a test card, no real money): checkout, plan change, cancellation and revocation each set the user's plan as documented. A renewal and a failed renewal come a month after a purchase, so those are covered by tests with Polar's sample events and not by a live run, and no real-money payment has gone through it. Its docs list the same five steps to check with your own Polar account before you take payments.",
     "No teams, organizations or seats. Each user has one plan; \"team\" is only a plan name.",
