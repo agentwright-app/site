@@ -50,6 +50,12 @@
       "community_id": "1493446837214187523"
     },
     {
+      "id": "t-20261113-1",
+      "at": "2026-11-14T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "The catch with Claude prompt caching: the default cache lasts 5 minutes.\n\n10,000-token prefix on Sonnet 5.5:\n5-min write $0.025\n1-hour write $0.04\nread $0.001\n\nOne pause over 5 minutes and you write twice: $0.05. With the 1-hour cache: $0.041. Slow users need the 1-hour one."
+    },
+    {
       "id": "mcp-pricing-1",
       "at": "2026-11-14T01:30:00+09:00",
       "text": "We made a free remote MCP server for Claude API pricing.\n\nAdd https://agentwright.app/mcp to Claude Code, Claude Desktop or Cursor and ask \"what does this workload cost on Sonnet vs Haiku?\" It knows caching and Batch API prices.\n\nNo sign-up, no key. Source is public."
@@ -71,9 +77,21 @@
       "text": "A 2M-token monthly cap can cost you $0.20 (all cache reads on Sonnet) or $40 (all output on Opus).\n\nCap each user's spend in dollars, not tokens, and reserve the worst case before the request so two parallel calls can't slip past.\n\nCode on our blog, link in profile."
     },
     {
+      "id": "t-20261113-2",
+      "at": "2026-11-16T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Reading the same 20,000 tokens of context on Opus 5.5:\n\nuncached: $0.08\nfrom cache: $0.004\n\nThat 20x gap is why how you split work between agents shows up on the bill. A helper that shares the main agent's exact prefix pays the cache price. One with its own prompt starts cold."
+    },
+    {
       "id": "x-agent-parts",
       "at": "2026-11-16T23:00:00+09:00",
       "text": "A SaaS boilerplate gives you sign-in, payments and a landing page.\n\nA product where an agent does the work needs more, because every request costs you money:\n\n- a tool loop with a turn limit\n- a usage row per model call, per user\n- plan caps checked before the call\n- evals in CI"
+    },
+    {
+      "id": "t-20261113-3",
+      "at": "2026-11-17T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Three days of posting from a brand-new X account that started with 0 followers. Real numbers:\n\n7 timeline posts: 9 impressions each on average\n2 posts in X Communities: 46 and 13\nLikes: 0\n\nSmall numbers, but communities are how a new account gets read by non-followers."
     },
     {
       "id": "sale-soft-1",
