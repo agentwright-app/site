@@ -5,8 +5,13 @@
 // - `link` (optional, https URL): shown as a link card under the post (title/description/image from the
 //   page's og: tags). URLs written inside `text` are made clickable with link facets.
 // - Bluesky limit: 300 graphemes per post; longer items are refused and reported, never cut.
-// Rules followed (atproto bot guide + Bluesky developer guidelines): scheduled posts only; no automated
-// follows, likes, reposts, replies or DMs. The profile carries the "bot" self-label (scripts/bsky-setup.mjs profile).
+// - `reply_to` (optional, at:// URI of someone's post): the item is posted as a reply to that post. The
+//   worker refuses it unless that post was written to us: a reply under one of our posts, a post that
+//   mentions us, or a quote of one of our posts (see `summoned`). Candidates: `node scripts/bsky-replies.mjs`.
+// Rules followed (atproto bot guide + Bluesky developer guidelines): scheduled posts, plus replies only to
+// people who wrote to us first (owner's request, 2026-11-13). No automated follows, likes, reposts or DMs,
+// and never a reply to someone who did not address us. The profile carries the "bot" self-label
+// (scripts/bsky-setup.mjs profile).
 //
 // Secrets: BLUESKY_HANDLE, BLUESKY_APP_PASSWORD (an App Password, never the account password).
 // KV STATE keys: bsky:<id> (posted/skipped/failed record), bskylow:<date> (low-queue alert once a day).
@@ -46,8 +51,8 @@ export const meta = (html, prop) => {
   return v.replace(/&quot;/g, '"').replace(/&(?:#39|#x27|apos);/gi, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 };
 
-async function xrpc(method, nsid, { token, body, headers = {}, raw } = {}) {
-  const res = await fetch(`${PDS}/xrpc/${nsid}`, {
+async function xrpc(method, nsid, { token, body, headers = {}, raw, query } = {}) {
+  const res = await fetch(`${PDS}/xrpc/${nsid}${query ? `?${new URLSearchParams(query)}` : ""}`, {
     method,
     headers: {
       ...(token ? { authorization: `Bearer ${token}` } : {}),
@@ -95,8 +100,39 @@ async function linkCard(session, url, ua) {
   return { $type: "app.bsky.embed.external", external };
 }
 
+/**
+ * Did the author of `post` (a postView from app.bsky.feed.getPosts) write to us first? True for a reply in a
+ * thread we started or to one of our posts, a post that mentions us, or a quote of one of our posts.
+ * We never reply to anything else: an unasked reply from an automated account is spam.
+ */
+export function summoned(post, did) {
+  if (!post?.record || !did || post.author?.did === did) return false;
+  const ours = (uri) => typeof uri === "string" && uri.startsWith(`at://${did}/`);
+  const { reply, facets, embed } = post.record;
+  if (ours(reply?.parent?.uri) || ours(reply?.root?.uri)) return true;
+  if ((facets ?? []).some((f) => (f.features ?? []).some((x) => x.$type === "app.bsky.richtext.facet#mention" && x.did === did))) return true;
+  return ours(embed?.record?.uri) || ours(embed?.record?.record?.uri);
+}
+
+/** The `reply` field for a reply to the post at `uri`, or a reason why we must not or cannot reply. */
+export async function replyRef(session, uri) {
+  const r = await xrpc("GET", "app.bsky.feed.getPosts", { token: session.token, query: { uris: uri } });
+  if (!r.ok) return { error: `getPosts ${r.status}` };
+  const post = r.data.posts?.[0];
+  if (!post) return { error: "the post no longer exists or cannot be seen" };
+  if (!summoned(post, session.did)) return { error: "that post was not written to us (not a reply to us, a mention or a quote)" };
+  if (post.viewer?.replyDisabled) return { error: "the author does not allow replies" };
+  const parent = { uri: post.uri, cid: post.cid };
+  return { reply: { root: post.record.reply?.root ?? parent, parent } };
+}
+
 export async function createPost(session, item, ua) {
   const record = { $type: "app.bsky.feed.post", text: item.text, createdAt: new Date().toISOString(), langs: ["en"] };
+  if (item.reply_to) {
+    const ref = await replyRef(session, item.reply_to);
+    if (ref.error) return { ok: false, status: 0, data: {}, text: `reply refused: ${ref.error}` };
+    record.reply = ref.reply;
+  }
   const facets = linkFacets(item.text);
   if (facets.length) record.facets = facets;
   if (item.link) record.embed = await linkCard(session, item.link, ua);

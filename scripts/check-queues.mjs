@@ -74,6 +74,16 @@ export function checkQueue(name, queue, now = Date.now()) {
     if (isX && kstHour(run) >= QUIET[0] && kstHour(run) < QUIET[1])
       errors.push(`${tag}: \`at\` ${kst(at)} KST really goes out at ${kst(run)} KST, inside 03:00-07:00 KST. Use 02:00 or earlier.`);
 
+    if (!isX && p.reply_to !== undefined) {
+      // A reply goes to one person, so the quiet hours apply to it too (posts on Bluesky are not bound by them).
+      if (!/^at:\/\/did:[a-z0-9:.%-]+\/app\.bsky\.feed\.post\/[a-z0-9]+$/i.test(p.reply_to))
+        errors.push(`${tag}: \`reply_to\` must be the at:// URI of a post, as scripts/bsky-replies.mjs prints it`);
+      if (kstHour(run) >= QUIET[0] && kstHour(run) < QUIET[1])
+        errors.push(`${tag}: a reply that really goes out at ${kst(run)} KST is inside 03:00-07:00 KST`);
+      if (p.link) warnings.push(`${tag}: a reply with a link card; link only when the answer needs one, and only to our own pages`);
+    }
+    if (isX && p.reply_to !== undefined) errors.push(`${tag}: \`reply_to\` is a Bluesky field; the X worker does not reply`);
+
     const m = (p.link ?? "").match(/^https:\/\/agentwright\.app\/blog\/([a-z0-9-]+)\/?$/);
     if (m) {
       const post = postDate(m[1]);
@@ -84,7 +94,7 @@ export function checkQueue(name, queue, now = Date.now()) {
     }
     if (p.link && !m && !/^https:\/\/agentwright\.app(\/|$)/.test(p.link))
       warnings.push(`${tag}: \`link\` is not one of our pages. If that site blocks bots (Product Hunt does), the card shows only the URL; put the URL at the end of \`text\` instead.`);
-    rows.push(`${p.id.padEnd(20)} at ${kst(at)}  really ${kst(run)} KST  ${String(len).padStart(3)}/${max}${p.link ? "  link" : ""}${p.community_id ? "  community" : ""}`);
+    rows.push(`${p.id.padEnd(20)} at ${kst(at)}  really ${kst(run)} KST  ${String(len).padStart(3)}/${max}${p.link ? "  link" : ""}${p.reply_to ? "  reply" : ""}${p.community_id ? "  community" : ""}`);
   }
   return { rows, errors, warnings };
 }

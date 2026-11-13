@@ -1,0 +1,4 @@
+{
+  "note": "Replies, mentions and quotes on Bluesky that we looked at and decided NOT to answer (spam, bots, nothing to add). scripts/bsky-replies.mjs stops listing a post once it is here, once we have replied under it, or once content/bsky-queue.json holds an item with that `reply_to`. One entry per post: uri, date (KST) and a few words on why.",
+  "seen": []
+}
