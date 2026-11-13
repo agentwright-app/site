@@ -77,7 +77,7 @@ An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. Th
 
 ### Can I use Polar, Stripe or Paddle instead of Lemon Squeezy?
 
-Polar: yes, since version 0.5.0. Set `BILLING_PROVIDER=polar` and follow the [Polar guide](/docs/polar/). The pricing page then creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it is tested with real and sample Polar webhook payloads, and the guide lists five steps to check in Polar's sandbox before you take payments.
+Polar: yes, since version 0.5.0. Set `BILLING_PROVIDER=polar` and follow the [Polar guide](/docs/polar/). The pricing page then creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it has automated tests with real and sample Polar webhook payloads, and on 2026-11-13 we ran a subscription through it in Polar's sandbox (Polar's real servers, a test card, no real money) from checkout to plan change and cancellation. The guide lists the same five steps to check with your own Polar account before you take payments.
 
 Stripe and Paddle: yes, but you do that part yourself. The provider-specific code sits in a few files: a webhook route (`app/api/webhooks/polar/route.ts`), the event handling and API calls in `lib/billing/`, and the mapping from products to plans. Metering, plan caps and the rest of the app read your own database, not the provider, so they stay the same. Adding a provider means writing those billing files for its checkout and webhooks; the two that ship are the examples to follow.
 
