@@ -121,7 +121,7 @@ export const USE_CASES = [
 
 // Kit lines for the footer box. The kit has no document upload or search, so the two
 // document workloads say so instead of implying it.
-const KIT_COST = `An estimate is a guess until you measure it. Agentwright Starter records the tokens and cost of every Claude call per user, and checks the user's monthly token cap before each model turn. <a href="/inside/">Read the code</a>.`;
+const KIT_COST = `An estimate is a guess until you measure it. <strong>Agentwright Starter</strong> records the tokens and cost of every Claude call per user, and checks the user's monthly token cap before each model turn.`;
 const KIT_NO_DOCS = "The kit does not include document upload or search; it gives you the agent loop, metering and billing those features build on.";
 const DOC_WORKLOADS = new Set(["rag-document-qa", "document-summarization"]);
 

@@ -13,6 +13,7 @@ import { buildKitPages, renderLanding } from "./lib/kit-pages.mjs";
 import { buildComparePages, compareLastmod } from "./lib/compare-page.mjs";
 import { buildAlternativePages, alternativeLastmod } from "./lib/alternative-pages.mjs";
 import { buildGuidePages, guideLastmod } from "./lib/guide-pages.mjs";
+import { BUY_URL, kitBox, KIT_ONE_LINE, NAVBUY, KITBOX_CSS, withNavBuy } from "./lib/kit-box.mjs";
 
 // Code blocks are highlighted at build time (spans only, no script on the page).
 marked.use(markedHighlight);
@@ -125,14 +126,14 @@ footer a{color:inherit}
 .faq h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:48px 0 4px}
 .faq h3{font-size:19px;margin:28px 0 6px}
 .faq p{margin:0 0 10px}
-${HL_CSS}`;
+${HL_CSS}
+${KITBOX_CSS}`;
 
 // Canonical header nav and footer for every page built here (static pages in tools/ and
 // thanks.html carry the same markup by hand). No GitHub link: the kit is not a public repo.
 const NAV = `<nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav>`;
 const FOOTER = `<footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/alternatives/">Alternatives</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>`;
-// The only checkout link (the visit beacon counts clicks on buy.polar.sh as buy_click).
-const BUY_URL = "https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n";
+// The checkout link (BUY_URL) lives in scripts/lib/kit-box.mjs; the visit beacon counts clicks on buy.polar.sh as buy_click.
 
 function page({ title, description, url, body, meta = "", type = "website", canonical = true }) {
   return `<!doctype html>
@@ -166,7 +167,7 @@ ${meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a>${NAV}</header>
+<header><a class="logo" href="/">agentwright</a>${NAV}${NAVBUY}</header>
 <main>
 ${body}
 </main>
@@ -267,7 +268,7 @@ const POST_CTA = JSON.parse(readFileSync(join(root, "content/post-cta.json"), "u
   const unknown = Object.keys(POST_CTA).filter((s) => !known.has(s));
   if (unknown.length) throw new Error(`content/post-cta.json: no post with slug ${unknown.map((s) => `"${s}"`).join(", ")} (typo?)`);
 }
-const CTA_FALLBACK = "<strong>Agentwright Starter</strong> is a Next.js codebase for Claude-powered SaaS with the agent loop, sign-in, billing through Lemon Squeezy or Polar, per-user cost metering, MCP connectors and evals already wired.";
+const CTA_FALLBACK = KIT_ONE_LINE;
 const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 function postCta(slug) {
   const entry = POST_CTA[slug];
@@ -277,7 +278,18 @@ function postCta(slug) {
     const files = [...(entry.files ?? [])].sort((a, b) => b.length - a.length).map((f) => reEsc(esc(f)));
     if (files.length) text = text.replace(new RegExp(`(?<![\\w/.-])(${files.join("|")})(?![\\w/-])`, "g"), "<code>$1</code>");
   }
-  return `<div class="cta"><p>${text}</p><a class="btn" href="/inside/">Read the code</a> <a class="cta-link" href="/#pricing">Price, refund and license</a><p class="cta-note">We write these posts while building the kit.</p></div>`;
+  return kitBox(text);
+}
+// Long posts (6+ min, 6+ sections) also get the box once in the middle: before the section
+// heading closest to the halfway point, never before the first two sections. Page only; the
+// RSS feed and the dev.to copy (built from the Markdown) never contain it.
+function withMidBox(p) {
+  const mins = parseInt(p.reading, 10);
+  const starts = [...p.html.matchAll(/^<h2[\s>]/gm)].map((m) => m.index);
+  if (mins < 6 || starts.length < 6) return p.html;
+  const half = p.html.length / 2;
+  const at = starts.slice(2, -1).reduce((best, i) => (Math.abs(i - half) < Math.abs(best - half) ? i : best));
+  return `${p.html.slice(0, at)}${kitBox()}\n${p.html.slice(at)}`;
 }
 const queued = built.filter((p) => !posts.includes(p)).sort((a, b) => (a.date < b.date ? -1 : 1));
 const futureDates = [...new Set(queued.map((p) => p.date))].sort();
@@ -300,7 +312,7 @@ for (const p of built) {
 <p class="meta"><a href="/blog/" style="color:inherit;text-decoration:none">← Blog</a></p>
 <h1>${esc(p.title)}</h1>
 <p class="meta"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${p.reading}</p>
-${p.html}
+${withMidBox(p)}
 </article>
 ${postCta(p.slug)}
 ${commentsBlock(p.slug)}`;
@@ -386,6 +398,11 @@ for (const t of tools) {
     catch { pricing = readFileSync(join(TOOLS_DIR, "claude-api-cost-calculator/pricing.json"), "utf8"); }
     html = html.replace("__PRICING_JSON__", JSON.stringify(JSON.parse(pricing)));
   } catch {}
+  // Shared header with the Buy button, and the tool's kit box in the one shared format.
+  html = withNavBuy(html, `tools/${t.slug}`);
+  const ctaRe = /<div class="cta"><p>([\s\S]*?)<\/p><a class="btn" href="\/inside\/">Read the code<\/a><\/div>/;
+  if (!ctaRe.test(html)) throw new Error(`tools/${t.slug}: kit box markup not found (<div class="cta"><p>…</p><a class="btn" href="/inside/">Read the code</a></div>)`);
+  html = html.replace(ctaRe, (_, text) => kitBox(text));
   writeFileSync(join(dir, "index.html"), html);
 }
 const toolList = tools
