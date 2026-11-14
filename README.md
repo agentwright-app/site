@@ -40,14 +40,22 @@ Every fact about another product carries its source URL, and `checked` is the da
 and used as the sitemap `lastmod`. Re-check the sources every month and update `checked`.
 
 ## Visit and click counts
-The build injects a small beacon into every page. It posts the path, the referrer and any
-`?utm_source=` to `/api/hit` (`functions/api/hit.ts`), which keeps only daily counters in the `STATS` KV
-namespace: page views, unique visitors, referrers, `utm` sources, and two click events per page,
-`buy_click` (a link to `buy.polar.sh`) and `preview_click` (a link whose `href` starts with `/inside/`).
-Use exactly those hrefs for buy and preview links, or the clicks are not counted. `?notrack=1` turns
-counting off in your own browser (`?notrack=0` turns it back on).
+The build injects a small beacon into every page except the 404 page. Three seconds after the page
+became visible it posts the path, the referrer and any `?utm_source=` to `/api/hit`
+(`functions/api/hit.ts`), which keeps only daily counters in the `STATS` KV namespace, one JSON
+document per day: page views, unique visitors, referrers, `utm` sources, network operators, and two
+click events per page, `buy_click` (a link to `buy.polar.sh`) and `preview_click` (a link whose `href`
+starts with `/inside/`). Use exactly those hrefs for buy and preview links, or the clicks are not
+counted. `?notrack=1` turns counting off in your own browser (`?notrack=0` turns it back on).
+
+Automated clients are not counted: automated browsers, requests that do not come from our own pages,
+bot user agents and cloud hosts. The counter also stops for the day after 400 KV writes
+(`DAILY_WRITE_CAP` in `lib/stats.ts`), because the free plan's 1,000 writes a day are shared with
+license issuing. A page view costs one write and a new visitor two, so a day holds about 130 to 200
+visitors before counting stops; the site and sales are not affected when it does.
+
 `node scripts/stats.mjs [since YYYY-MM-DD]` prints the totals (needs `CLOUDFLARE_API_TOKEN` and
-`CLOUDFLARE_ACCOUNT_ID`).
+`CLOUDFLARE_ACCOUNT_ID`), the writes the counter used per day, and a note on days known to be wrong.
 
 ## Launch-list signup
 `functions/api/subscribe.ts` is a Cloudflare Pages Function behind the form on the landing page.

@@ -2,7 +2,7 @@ This policy explains what personal data agentwright.app (the "site") and purchas
 
 ## What we collect
 
-**Visits.** We count visits without cookies and without ad trackers. Each page sends a small anonymous ping with the page path, the site you came from and the `utm_source` label of the link you followed, if it had one. We also count clicks on the checkout link and on links to the code preview, as daily totals per page that are not tied to you. To count unique visitors per day we keep a one-way hash of your IP address and browser name for at most two days, then it is deleted. We never store your raw IP address.
+**Visits.** We count visits without cookies and without ad trackers. Each page sends a small anonymous ping with the page path, the site you came from and the `utm_source` label of the link you followed, if it had one. We also count clicks on the checkout link and on links to the code preview, as daily totals per page that are not tied to you. To count unique visitors per day we keep a one-way hash of your IP address and browser name for at most two days, then it is deleted. To tell automated traffic from people we also keep a daily total of new visitors per network operator (for example an internet provider or a cloud host), which is not tied to you. We never store your raw IP address.
 
 **Email list.** If you leave your email address on the site, we store it with the page you signed up from, the referring page and your country (from your connection). We use it only to send the emails you signed up for: Agentwright updates such as new releases, or Claude API price change alerts. You can unsubscribe at any time by replying to any email or writing to us.
 
