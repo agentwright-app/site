@@ -70,6 +70,25 @@ const json = (status: number, body: Record<string, unknown>) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
+/** Where the note goes when an order could not be stored (our own inbox, read three times a day). */
+const ALERT_TO = "hello@agentwright.app";
+
+function storageFailureMail(type: string, polarOrderId: string | undefined, message: string) {
+  return {
+    subject: `[Agentwright 알림] Polar ${type} could not be stored`,
+    title: "A Polar order event could not be stored",
+    paragraphs: [
+      "The webhook answered 500, so Polar will deliver the event again. Nothing is needed if the license exists after the next delivery.",
+      "If the buyer still has no license email after 00:00 UTC (the daily KV write limit resets then), deliver the event again from Polar: Settings → Webhooks → the delivery → Redeliver.",
+    ],
+    rows: [
+      ["Event", type],
+      ["Polar order", polarOrderId ?? "(none)"],
+      ["Error", message.slice(0, 200)],
+    ] as [string, string][],
+  };
+}
+
 /** Emails the license to the buyer once; records the outcome on the KV record. */
 async function deliverLicense(env: Env, record: LicenseRecord): Promise<LicenseRecord> {
   if (record.emailSent || !record.email) return record;
@@ -107,6 +126,21 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!order.id) return json(400, { error: "Missing data.id" });
   const orderId = `polar:${order.id}`;
 
+  try {
+    return await handleOrder(env, type, order, orderId, new URL(request.url).origin);
+  } catch (err) {
+    // Most likely the account's daily KV write limit (free plan: 1,000 a day, back at 00:00 UTC).
+    // Answer 500 so Polar delivers the event again, and tell ourselves in case its retries run out first.
+    const message = (err as Error)?.message ?? String(err);
+    await sendMail(env, ALERT_TO, storageFailureMail(type, order.id, message), {
+      idempotencyKey: `license-storage-failed-${order.id}-${type}-${new Date().toISOString().slice(0, 10)}`,
+    });
+    return json(500, { error: "License storage failed, deliver again" });
+  }
+};
+
+async function handleOrder(env: Env, type: string, order: PolarOrder, orderId: string, origin: string): Promise<Response> {
+  if (!env.LICENSES || !env.LEMONSQUEEZY_WEBHOOK_SECRET) return json(503, { error: "License storage not configured" });
   if (type === "order.paid") {
     if (order.product_id !== (env.POLAR_PRODUCT_ID || STARTER_PRODUCT_ID)) {
       return json(200, { ok: true, result: `ignored: product ${order.product_id}` });
@@ -122,7 +156,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }
 
     const key = generateLicenseKey();
-    const origin = new URL(request.url).origin;
     const record: LicenseRecord = {
       key,
       status: "active",
@@ -157,7 +190,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   return json(200, { ok: true, result: `ignored: ${type}` });
-};
+}
 
 /** Health check: GET → whether the switch, secret and KV binding are set (never the values). */
 export const onRequestGet: PagesFunction<Env> = async ({ env }) =>

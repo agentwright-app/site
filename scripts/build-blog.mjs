@@ -556,12 +556,14 @@ writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/
 {
   // Owner opt-out: open any page once with ?notrack=1 (per browser/device) to stop counting your own visits; ?notrack=0 undoes it.
   // Also counts new visitors per ?utm_source= and clicks on checkout links (buy_click) and on the code preview (preview_click).
-  const BEACON = `<script>var n=0,u="";try{var s=new URLSearchParams(location.search),q=s.get("notrack");u=s.get("utm_source")||"";if(q==="1")localStorage.setItem("aw_notrack","1");if(q==="0")localStorage.removeItem("aw_notrack");n=localStorage.getItem("aw_notrack")}catch(e){}try{if(!n){navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer,u:u}));document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;var h=a.getAttribute("href")||"",ev=h.indexOf("buy.polar.sh")>=0?"buy_click":(h.indexOf("/inside/")===0?"preview_click":"");if(ev)navigator.sendBeacon("/api/hit",JSON.stringify({e:ev,p:location.pathname}))},true)}}catch(e){}</script>`;
+  // Not counted: automated browsers (navigator.webdriver), pages closed or left in the background before
+  // they were visible for three seconds, and the 404 page (crawlers guess addresses such as /login).
+  const BEACON = `<script>var n=0,u="";try{var s=new URLSearchParams(location.search),q=s.get("notrack");u=s.get("utm_source")||"";if(q==="1")localStorage.setItem("aw_notrack","1");if(q==="0")localStorage.removeItem("aw_notrack");n=localStorage.getItem("aw_notrack")}catch(e){}try{if(!n&&!navigator.webdriver){var d=0,t=0,v=function(){clearTimeout(t);if(!d&&document.visibilityState==="visible")t=setTimeout(function(){d=1;navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,r:document.referrer,u:u}))},3000)};document.addEventListener("visibilitychange",v);v();document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;var h=a.getAttribute("href")||"",ev=h.indexOf("buy.polar.sh")>=0?"buy_click":(h.indexOf("/inside/")===0?"preview_click":"");if(ev)navigator.sendBeacon("/api/hit",JSON.stringify({e:ev,p:location.pathname}))},true)}}catch(e){}</script>`;
   const walk = (d) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       const f = join(d, e.name);
       if (e.isDirectory()) walk(f);
-      else if (e.name.endsWith(".html")) {
+      else if (e.name.endsWith(".html") && e.name !== "404.html") {
         const html = readFileSync(f, "utf8");
         if (!html.includes("/api/hit") && html.includes("</body>")) writeFileSync(f, html.replace(/<\/body>(?![\s\S]*<\/body>)/, `${BEACON}\n</body>`));
       }
