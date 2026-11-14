@@ -68,10 +68,9 @@
       "text": "Not every Claude call has a user waiting: nightly digests, tagging, evals, backfills.\n\nSend those through the Message Batches API and they cost half the standard price. Most batches finish within an hour; requests not done in 24 hours expire."
     },
     {
-      "id": "b-sale-soft",
+      "id": "b-long-prompt",
       "at": "2026-11-18T23:00:00+09:00",
-      "text": "We opened sales for Agentwright Starter: the Next.js codebase behind these posts, with metering, billing, auth and the agent loop already wired.\n\nIf you build on the Claude API, tell us what a kit like this is still missing. Comments on our blog are the best place.",
-      "link": "https://agentwright.app/"
+      "text": "Claude Haiku 5.5 bills a prompt over 100,000 tokens at long-prompt prices, and it does so for the whole request.\n\n99,000 tokens in, 1,000 out: $0.0104\n101,000 tokens in, 1,000 out: $0.053\n\n2% more context, 5x the cost. If a retrieval step can overshoot, cap it below the line."
     },
     {
       "id": "b-expensive-users",
