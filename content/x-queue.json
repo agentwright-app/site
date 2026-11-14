@@ -107,6 +107,34 @@
       "id": "sale-soft-1",
       "at": "2026-11-17T02:00:00+09:00",
       "text": "We opened sales for Agentwright Starter this week: the Next.js codebase behind the posts on this account, with metering, billing, auth and the agent loop already wired.\n\nIf you build on the Claude API, we'd like to hear what a kit like this is still missing. Link in profile."
+    },
+    {
+      "id": "t-20261114-3",
+      "at": "2026-11-18T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "A Claude agent loop sends its prefix again on every turn. 8,000 tokens of system prompt and tools, 10 turns on Sonnet 5.5:\n\nno cache: $0.16\nwith cache: $0.027 (one write, nine reads)\n\nThat is the prefix alone. Put the cache breakpoint after the tools and keep their order fixed."
+    },
+    {
+      "id": "t-20261114-4",
+      "at": "2026-11-18T23:00:00+09:00",
+      "text": "10,000 document summaries, 2,000 tokens in and 300 out each:\n\nSonnet 5.5: $70\nSonnet 5.5, Batch API: $35\nHaiku 5.5: $3.50\nHaiku 5.5, Batch API: $1.75\n\nFor background work the model choice moves the bill 20x. Batching then halves what is left."
+    },
+    {
+      "id": "t-20261114-5",
+      "at": "2026-11-19T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Claude Haiku 5.5 bills a prompt over 100,000 tokens at long-prompt prices, for the whole request.\n\n99,000 tokens in, 1,000 out: $0.0104\n101,000 tokens in, 1,000 out: $0.053\n\n2% more context, 5x the cost. If your retrieval step can overshoot, cap it below the line."
+    },
+    {
+      "id": "t-20261114-6",
+      "at": "2026-11-19T23:00:00+09:00",
+      "text": "Before a Claude call, reserve the worst case against the user's budget: max_tokens times the output price.\n\nmax_tokens 4,096:\nOpus 5.5: $0.082\nSonnet 5.5: $0.041\nHaiku 5.5: $0.002\n\nSettle to real usage after the response. Lower max_tokens, more parallel calls under a cap."
+    },
+    {
+      "id": "t-20261114-7",
+      "at": "2026-11-20T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "How our posts go out at night with nobody awake: a JSON queue in the repo and a Cloudflare cron Worker that runs at :07 every hour and posts the next due item, one per run.\n\nBefore any queue change, a script checks real posting times, length, quiet hours and links."
     }
   ]
 }
