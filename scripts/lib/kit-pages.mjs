@@ -119,11 +119,21 @@ export function renderLanding({ template, root, esc, SITE, HL_CSS }) {
   const modelList = models.length > 1 ? `${models.slice(0, -1).join(", ")} and ${models.at(-1)}` : models.join("");
 
   let shots = "";
+  let heroDemo = "";
   const shotsFile = join(root, "public/shots/shots.json");
   if (existsSync(shotsFile)) {
     // { "version": "0.4.2", "items": [...] }, written by the capture script. The version is the one that was photographed.
     const shotsData = JSON.parse(readFileSync(shotsFile, "utf8"));
-    const figs = shotsData.items
+    // The demo video plays in the hero (HERO_DEMO), so the screenshots section shows only the stills.
+    const video = shotsData.items.find((s) => s.video);
+    if (video) {
+      heroDemo = `<figure class="demo"><video autoplay muted loop playsinline preload="auto" poster="/shots/${esc(video.poster)}" width="${esc(video.width)}" height="${esc(video.height)}" aria-label="${esc(video.caption)}"><source src="/shots/${esc(video.video)}" type="video/mp4"></video><figcaption>${esc(video.caption)}</figcaption></figure>`;
+    }
+    const stills = shotsData.items.filter((s) => !s.video);
+    // Two columns: a lone half-width still at the end would leave an empty cell, so it spans the row.
+    const halves = stills.filter((s) => !s.wide);
+    if (halves.length % 2 === 1) halves.at(-1).wide = true;
+    const figs = stills
       .map((s) =>
         s.video
           ? `<figure${s.wide ? ' class="wide"' : ""}><video controls muted playsinline preload="none" poster="/shots/${esc(s.poster)}" width="${esc(s.width)}" height="${esc(s.height)}"><source src="/shots/${esc(s.video)}" type="video/mp4"></video><figcaption>${esc(s.caption)}</figcaption></figure>`
@@ -198,6 +208,7 @@ ${figs}
     CHANGELOG_LATEST: latest,
     CODE_EXCERPT: hl(excerpt, "ts"),
     SHOTS: shots,
+    HERO_DEMO: heroDemo,
     HL_CSS,
     PRODUCT_JSONLD: JSON.stringify(jsonld).replace(/</g, "\\u003c"),
   };

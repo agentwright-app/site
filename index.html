@@ -43,6 +43,13 @@ a{color:var(--link)}
 .btn{display:inline-block;background:var(--primary);color:var(--bg);padding:14px 24px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1px solid var(--primary)}
 .btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .note{font-size:13px;color:var(--muted);margin-top:14px}
+.offer{font-size:15px;color:var(--muted);margin:0 auto 18px;max-width:700px}.offer b{color:var(--ink);font-size:22px;letter-spacing:-.02em}.offer s{margin:0 6px 0 4px}
+a.navbuy{color:var(--bg);background:var(--primary);padding:7px 13px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap}
+header nav{margin-left:auto}
+@media (max-width:560px){header{padding:14px 0}header nav{order:3;width:100%;margin-left:0}}
+.hero figure.demo{max-width:820px;margin:32px auto 0}
+.hero figure.demo video{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.hero figure.demo figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
 code{font-size:.9em}
 pre{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;overflow:auto;font-size:13.5px;line-height:1.55;text-align:left;margin:0}
@@ -84,19 +91,21 @@ input{padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-siz
 button.btn{cursor:pointer;font-family:inherit}
 footer{padding:40px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line);margin-top:8px}footer a{color:inherit}
 {{HL_CSS}}
-@media (max-width:560px){.hero{padding-top:36px}.btn{width:100%;text-align:center}pre{font-size:12px;padding:14px}ol.path code{white-space:normal}}
+@media (max-width:560px){.hero{padding:24px 0 32px}.eyebrow{margin-bottom:10px}.hero h1{font-size:28px;margin-bottom:14px}.hero p.sub{font-size:16px;margin-bottom:16px}.btn{width:100%;text-align:center}pre{font-size:12px;padding:14px}ol.path code{white-space:normal}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/tools/">Tools</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav></header>
+<header><a class="logo" href="/">agentwright</a><nav><a href="/inside/">What's inside</a><a href="/#pricing">Pricing</a><a href="/docs/">Docs</a><a href="/blog/">Blog</a><a href="/faq/">FAQ</a></nav><a class="navbuy" href="https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n">Buy — $99</a></header>
 
 <section class="hero">
-<p class="eyebrow">Next.js starter kit for Claude-powered SaaS · version {{KIT_VERSION}}</p>
+<p class="eyebrow">Source code · Next.js 16 + TypeScript · version {{KIT_VERSION}}</p>
 <h1>A Next.js starter kit for Claude agent SaaS that knows what every user costs you.</h1>
-<p class="sub">A streaming agent loop with tools, MCP connectors, per-request cost metering with price snapshots, plan caps, rate limits, sign-in, billing through Lemon Squeezy or Polar and an eval runner. One TypeScript codebase of {{KIT_CODE_LINES}} lines that you can read in an afternoon.</p>
+<p class="sub">Agent loop with tools and MCP, per-request cost metering, plan caps, rate limits, sign-in and billing, already wired together. {{KIT_CODE_LINES}} lines of TypeScript you can read in an afternoon.</p>
+<p class="offer"><b>$99</b><s>$149</s> launch price for the first 50 licenses · one-time payment · lifetime updates · 14-day refund, no questions asked</p>
 <div class="btns"><a class="btn" href="https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n">Buy now — $99</a><a class="btn alt" href="/inside/">Read the code first</a></div>
-<div class="note">One-time payment · 14-day refund, no questions asked · version {{KIT_VERSION}}, released {{KIT_RELEASED}}</div>
+<div class="note">Zip and license key by email right after payment · {{KIT_TESTS}} tests and a production build in CI on every release · version {{KIT_VERSION}}, released {{KIT_RELEASED}}</div>
+{{HERO_DEMO}}
 <pre><code>$ unzip agentwright-starter.zip &amp;&amp; cd agentwright-starter
 $ cp .env.example .env.local      <span class="c"># add your keys</span>
 $ npm install
@@ -150,6 +159,25 @@ $ npm run dev                     <span class="c"># http://localhost:3000</span>
 </div>
 </section>
 
+<section class="block" id="pricing">
+<div class="price">
+<div style="font-weight:600;color:var(--muted)">Launch price for the first 50 licenses</div>
+<div class="n">$99 <s>$149</s></div>
+<div id="proof-launch" class="note" style="display:none;font-weight:600;color:var(--link)"></div>
+<ul><li>Full source code, version {{KIT_VERSION}}, and lifetime updates: every future version is included</li><li>One person or one team at the same company or client</li><li>Unlimited projects, including commercial SaaS</li><li>Zip download and license key by email. No activation, no phone-home</li><li>Email support</li></ul>
+<a class="btn" id="buy" href="https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n">Buy now — $99</a>
+<div class="guar"><b>14-day refund, no questions asked.</b> Email your order number to <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> within 14 days and you get all of it back.</div>
+<div class="note">Paid once, no subscription. The code <b>LAUNCH</b> is applied for you at checkout; the price is $149 after the first 50 licenses. Payment, tax and invoices are handled by Polar, our merchant of record. Tax for your country is calculated at checkout.</div>
+<div id="proof-buyers" class="note" style="display:none"></div>
+<div class="note"><a href="/legal/" style="color:inherit">Refund policy &amp; license terms</a> · <a href="/faq/" style="color:inherit">FAQ</a></div>
+</div>
+</section>
+
+<section class="block" id="who">
+<h2>Who is behind this</h2>
+<p class="lead" style="margin-bottom:0">Agentwright is a small independent business with one product. Most of the code and docs are written with Claude, the way the kit expects you to work. What keeps that honest: every release passes a type check, unit tests, a Postgres integration test and a production build in CI, every change is in the <a href="/changelog/">changelog</a>, and you can <a href="/inside/">read the code</a> before you pay. Support is by email at <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>. We usually answer within one business day.</p>
+</section>
+
 <section class="block" id="scope">
 <div class="two">
 <div>
@@ -179,38 +207,6 @@ $ npm run dev                     <span class="c"># http://localhost:3000</span>
 {{CHANGELOG_LATEST}}
 </ul>
 <p class="note" style="font-size:14px"><a href="/changelog/">Full changelog</a></p>
-</section>
-
-<section class="block" id="free">
-<h2>Free tools and writing</h2>
-<p class="lead">No sign-up. Use them whether or not you buy the kit.</p>
-<div class="grid">
-<div class="card"><h3><a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a></h3><p>Cost per request, per user and per month for every current model, with caching.</p></div>
-<div class="card"><h3><a href="/tools/prompt-caching-savings-calculator/">Prompt caching savings calculator</a></h3><p>Monthly cost with and without caching, and the break-even number of calls.</p></div>
-<div class="card"><h3><a href="/tools/ai-saas-margin-calculator/">AI SaaS margin calculator</a></h3><p>Check a plan price against model costs to see gross margin per user.</p></div>
-<div class="card"><h3><a href="/tools/claude-pricing-mcp/">Claude pricing MCP server</a></h3><p>A free remote MCP server with current Claude prices, listed in the official MCP Registry.</p></div>
-<div class="card"><h3><a href="/pricing/claude/">Claude API pricing pages</a></h3><p>Price per million tokens for every model, model-vs-model comparisons and worked monthly costs.</p></div>
-<div class="card"><h3><a href="/blog/">The blog</a></h3><p>Practical guides with code: metering, caching, SSE streaming, webhooks, rate limits, evals, MCP.</p></div>
-</div>
-</section>
-
-<section class="block" id="who">
-<h2>Who is behind this</h2>
-<p class="lead" style="margin-bottom:0">Agentwright is a small independent business with one product. Most of the code and docs are written with Claude, the way the kit expects you to work. What keeps that honest: every release passes a type check, unit tests, a Postgres integration test and a production build in CI, every change is in the <a href="/changelog/">changelog</a>, and you can <a href="/inside/">read the code</a> before you pay. Support is by email at <a href="mailto:hello@agentwright.app">hello@agentwright.app</a>. We usually answer within one business day.</p>
-</section>
-
-<section class="block" id="pricing">
-<div class="price">
-<div style="font-weight:600;color:var(--muted)">Launch price for the first 50 licenses</div>
-<div class="n">$99 <s>$149</s></div>
-<div id="proof-launch" class="note" style="display:none;font-weight:600;color:var(--link)"></div>
-<ul><li>Full source code, version {{KIT_VERSION}}, and every future version</li><li>One person or one team at the same company or client</li><li>Unlimited projects, including commercial SaaS</li><li>Zip download and license key by email. No activation, no phone-home</li><li>Email support</li></ul>
-<a class="btn" id="buy" href="https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n">Buy now — $99</a>
-<div class="guar"><b>14-day refund, no questions asked.</b> Email your order number to <a href="mailto:hello@agentwright.app">hello@agentwright.app</a> within 14 days and you get all of it back.</div>
-<div class="note">Paid once, no subscription. The code <b>LAUNCH</b> is applied for you at checkout; the price is $149 after the first 50 licenses. Payment, tax and invoices are handled by Polar, our merchant of record. Tax for your country is calculated at checkout.</div>
-<div id="proof-buyers" class="note" style="display:none"></div>
-<div class="note"><a href="/legal/" style="color:inherit">Refund policy &amp; license terms</a> · <a href="/faq/" style="color:inherit">FAQ</a></div>
-</div>
 </section>
 
 <section class="block" id="faq">
@@ -262,8 +258,26 @@ f.addEventListener('submit',function(e){
 </script>
 </section>
 
+
+<section class="block" id="free">
+<h2>Free tools and writing</h2>
+<p class="lead">No sign-up. Use them whether or not you buy the kit.</p>
+<div class="grid">
+<div class="card"><h3><a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a></h3><p>Cost per request, per user and per month for every current model, with caching.</p></div>
+<div class="card"><h3><a href="/tools/prompt-caching-savings-calculator/">Prompt caching savings calculator</a></h3><p>Monthly cost with and without caching, and the break-even number of calls.</p></div>
+<div class="card"><h3><a href="/tools/ai-saas-margin-calculator/">AI SaaS margin calculator</a></h3><p>Check a plan price against model costs to see gross margin per user.</p></div>
+<div class="card"><h3><a href="/tools/claude-pricing-mcp/">Claude pricing MCP server</a></h3><p>A free remote MCP server with current Claude prices, listed in the official MCP Registry.</p></div>
+<div class="card"><h3><a href="/pricing/claude/">Claude API pricing pages</a></h3><p>Price per million tokens for every model, model-vs-model comparisons and worked monthly costs.</p></div>
+<div class="card"><h3><a href="/blog/">The blog</a></h3><p>Practical guides with code: metering, caching, SSE streaming, webhooks, rate limits, evals, MCP.</p></div>
+</div>
+</section>
+
 <footer>© 2026 Agentwright · <a href="/inside/">What's inside</a> · <a href="/docs/">Docs</a> · <a href="/changelog/">Changelog</a> · <a href="/compare/ai-saas-boilerplates/">Compare kits</a> · <a href="/alternatives/">Alternatives</a> · <a href="/tools/">Tools</a> · <a href="/blog/">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/faq/">FAQ</a> · <a href="/legal/">Refunds &amp; license</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a> · <a href="mailto:hello@agentwright.app">hello@agentwright.app</a></footer>
 </div>
+<script>
+// The hero demo plays on its own; respect a reduced-motion setting and offer controls instead.
+(function(){var v=document.querySelector('.hero figure.demo video');if(v&&window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();v.controls=true;}})();
+</script>
 <script>
 // Real numbers only (functions/api/proof.ts); each line stays hidden until its threshold is met.
 (function(){
