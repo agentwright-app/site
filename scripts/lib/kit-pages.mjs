@@ -7,8 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { marked } from "marked";
 import { hl } from "./highlight.mjs";
-
-const BUY = "https://buy.polar.sh/polar_cl_kQukgRtnij2xiJ4WBLHlzBTAmNE8IS6LpGyeg4cFW6n";
+import { BUY_URL as BUY, KIT_TERMS } from "./kit-box.mjs";
 
 // Why each previewed file is worth reading. Keep these true to the code.
 const PREVIEW_NOTES = {
@@ -53,6 +52,23 @@ export function loadKit(root) {
       return m ? { path: m[1].trim(), note: m[2].trim() } : { path: l.trim(), note: "" };
     });
   return { dir, meta, layout };
+}
+
+// /inside/: the offer right after the three files, for people who have just read the code.
+// Same facts as the pricing card on the landing page; no deadline, no counters.
+export function offerBlock(version) {
+  return `<section class="kitbox offer" id="buy" aria-label="Buy Agentwright Starter">
+<h2>Get Agentwright Starter</h2>
+<p><b style="font-size:26px;letter-spacing:-.02em">$99</b> <s style="color:var(--muted)">$149</s> launch price for the first 50 licenses. The code LAUNCH is applied for you at checkout.</p>
+<ul>
+<li>Full source code, version ${version}, and lifetime updates: every future version is included</li>
+<li>One-time payment, no subscription; unlimited projects, including commercial SaaS</li>
+<li>Zip download and license key by email right after payment</li>
+<li><b>14-day refund, no questions asked:</b> email your order number within 14 days and you get all of it back</li>
+</ul>
+<div class="kitbox-btns"><a class="kb-btn" href="${BUY}">Buy — $99</a><a class="kb-btn kb-alt" href="/legal/">Refund policy &amp; license</a></div>
+<p class="kitbox-terms" style="margin:12px 0 0">Payment, tax and invoices are handled by Polar, our merchant of record.</p>
+</section>`;
 }
 
 export function buyBox(esc, note = "") {
@@ -281,6 +297,7 @@ export function buildKitPages({ page, esc, SITE, OUT, root }) {
       body: `<article>
 <h1>What's inside</h1>
 <p class="lede">Read the code before you buy. This page lists every file in Agentwright Starter ${esc(meta.version)} and shows three of them in full, exactly as they ship.</p>
+<p class="kit-pointer">This is the code of <strong>Agentwright Starter</strong>: ${KIT_TERMS}. <a href="#buy">Price and terms</a> · <a href="${BUY}">Buy — $99</a></p>
 <p><strong>${c.codeFiles} TypeScript files, ${n(c.codeLines)} lines, ${c.tests} tests, ${c.migrations} database migrations.</strong> It is small on purpose: you can read all of it in an afternoon, and after that it is your code. There is no framework of ours to learn and no package of ours to keep installing.</p>
 <p>On this page: <a href="#files">every file</a> · <a href="#code">three files in full</a> · <a href="#tests">tests and CI</a> · <a href="#docs">docs</a> · <a href="#not">what is not included</a></p>
 
@@ -299,6 +316,7 @@ ${allFiles}
 <h2 id="code">Three files in full</h2>
 <p>These are the unmodified files from version ${esc(meta.version)}. They are the parts people most often get wrong when they write this themselves.</p>
 ${previews}
+${offerBlock(esc(meta.version))}
 
 <h2 id="tests">Tests and CI</h2>
 <p><code>npm test</code> runs ${c.tests} tests in ${c.testFiles} files: price selection and cost math, the tool registry (including the regression test for the 4-cache-breakpoint limit), the Polar adapter (signature check, payloads and API calls), and metering and Polar billing events against a real Postgres database. The GitHub Actions workflow that ships with the kit runs the type check, the tests with a Postgres service, and <code>next build</code> on every pull request:</p>

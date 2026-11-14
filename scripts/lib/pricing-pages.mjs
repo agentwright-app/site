@@ -6,6 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildCostPages } from "./cost-pages.mjs";
+import { kitBox } from "./kit-box.mjs";
 
 const fmt = (n) => (n >= 1 ? `$${n.toFixed(2)}` : n >= 0.01 ? `$${n.toFixed(3)}` : `$${n.toPrecision(2)}`);
 const per = (tokens, rate) => (tokens * rate) / 1e6;
@@ -26,12 +27,12 @@ export function buildPricingPages({ page, esc, SITE, OUT, pricing }) {
   const models = pricing.models;
   const asOf = month(pricing.updated);
   const urls = [];
-  // Footer box: the free tools first, then one line about the kit (neutral unless a page passes its own).
-  const KIT_NEUTRAL = `Building a Claude-powered SaaS? Agentwright Starter records every request's tokens and cost per user, together with the price version used, and shows it on a /usage page. <a href="/inside/">Read the code</a>.`;
-  const footerLinks = (kitHtml = KIT_NEUTRAL) => `<div class="cta"><p><strong>Run your own numbers.</strong> The free <a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a> works out cost per request, per user and per month, and the <a href="/tools/claude-pricing-mcp/">Claude Pricing MCP server</a> lets Claude, Cursor or any MCP client answer the same questions inside your editor.</p><p>${kitHtml}</p></div>`;
+  // Footer: the free tools first, then the shared kit box (scripts/lib/kit-box.mjs) with a neutral line unless a page passes its own.
+  const KIT_NEUTRAL = `Building a Claude-powered SaaS? <strong>Agentwright Starter</strong> records every request's tokens and cost per user, together with the price version used, and shows it on a /usage page.`;
+  const footerLinks = (kitHtml = KIT_NEUTRAL) => `<div class="cta"><p><strong>Run your own numbers.</strong> The free <a href="/tools/claude-api-cost-calculator/">Claude API cost calculator</a> works out cost per request, per user and per month, and the <a href="/tools/claude-pricing-mcp/">Claude Pricing MCP server</a> lets Claude, Cursor or any MCP client answer the same questions inside your editor.</p></div>${kitBox(kitHtml)}`;
   const kitModelLine = (m) =>
     kitModels.has(m.id)
-      ? `Building on ${esc(m.name)}? Agentwright Starter takes the model as a setting (<code>AGENT_MODEL</code>) and charges each usage row at that model's rate from a versioned price table (<code>model_prices</code>, seeded from <code>lib/billing/pricing.ts</code>). <a href="/inside/">Read the code</a>.`
+      ? `Building on ${esc(m.name)}? <strong>Agentwright Starter</strong> takes the model as a setting (<code>AGENT_MODEL</code>) and charges each usage row at that model's rate from a versioned price table (<code>model_prices</code>, seeded from <code>lib/billing/pricing.ts</code>).`
       : KIT_NEUTRAL;
   const src = `<p class="meta">Prices in USD per million tokens, checked against the <a href="${esc(pricing.source)}">official Claude pricing page</a> on ${esc(pricing.updated)}.</p>`;
 
