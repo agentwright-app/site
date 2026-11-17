@@ -169,11 +169,12 @@
       "app/api/agent/route.ts"
     ]
   },
-  "sync-lemon-squeezy-subscriptions-to-plans": {
-    "text": "Agentwright Starter has the simpler version this post improves on: lib/billing/lemonsqueezy.ts verifies the webhook, maps variants to plans, checks the subscription status and keeps access after a cancellation until the period ends, but it stores the plan on users and has no subscriptions table, updated_at ordering or nightly reconciliation. The webhook_events log is what you replay when you add them.",
+  "sync-polar-subscriptions-to-plans": {
+    "text": "Agentwright Starter ships this pattern for Polar: lib/billing/polar-events.ts stores each subscription in polar_subscriptions, lets only a newer event change the row, works the plan out from the stored rows and matches the user by checkout metadata first and email last. Plan changes go through Polar's customer portal. It has no nightly reconcile job; redelivering an event from Polar's dashboard repairs a plan.",
     "files": [
-      "lib/billing/lemonsqueezy.ts",
-      "app/api/webhooks/lemonsqueezy/route.ts",
+      "lib/billing/polar-events.ts",
+      "lib/billing/polar.ts",
+      "app/api/webhooks/polar/route.ts",
       "lib/db/schema.ts"
     ]
   },

@@ -71,7 +71,7 @@ Messages are appended, never edited in place, so you can always rebuild exactly 
 
 ## And on the side: billing
 
-Payments happen outside the request path. The payment provider calls a webhook when someone subscribes, renews, cancels or gets a refund; the webhook updates the user's plan, and the plan sets the limits that steps 2 and 3 check. Verify every webhook's signature first: [verifying Lemon Squeezy webhooks](/blog/verify-lemon-squeezy-webhooks-nextjs/), then [sync subscriptions to plans](/blog/sync-lemon-squeezy-subscriptions-to-plans/). If you sell a download instead of a subscription, [license keys on Cloudflare](/blog/license-keys-lemon-squeezy-cloudflare/) covers delivery.
+Payments happen outside the request path. The payment provider calls a webhook when someone subscribes, renews, cancels or gets a refund; the webhook updates the user's plan, and the plan sets the limits that steps 2 and 3 check. Verify every webhook's signature first: [verifying Lemon Squeezy webhooks](/blog/verify-lemon-squeezy-webhooks-nextjs/), then [sync subscriptions to plans](/blog/sync-polar-subscriptions-to-plans/). If you sell a download instead of a subscription, [license keys on Cloudflare](/blog/license-keys-lemon-squeezy-cloudflare/) covers delivery.
 
 How much to charge depends on your cost per user; the [pricing and margins post](/blog/price-ai-saas-plan-margins/) and the free [margin calculator](/tools/ai-saas-margin-calculator/) help with the numbers.
 
