@@ -125,6 +125,108 @@
       "at": "2026-11-27T23:00:00+09:00",
       "text": "Starting from a free chat template? Before you charge for the product, you add four things: billing webhooks that set each user's plan, a usage row per model call, caps that belong to a plan, and evals.\n\nVercel's free Chatbot template next to our paid kit, and when the free one is the better start.",
       "link": "https://agentwright.app/alternatives/vercel-chatbot-template/"
+    },
+    {
+      "id": "b-approval-1128",
+      "at": "2026-11-28T23:00:00+09:00",
+      "text": "Human approval for agent tool calls: classify tools, stop the Claude loop on a gated call, store the pending action, show the exact arguments, execute once, and resume with the right tool_result. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/approval-gates-for-agent-tool-calls/"
+    },
+    {
+      "id": "b-postgres-1129",
+      "at": "2026-11-29T23:00:00+09:00",
+      "text": "Row-level security as a second lock behind WHERE user_id = ...: policies, a non-owner app role, set_config per transaction, agent tools in the same scope, connection poolers, and what to test.",
+      "link": "https://agentwright.app/blog/postgres-row-level-security-multi-tenant-agent-saas/"
+    },
+    {
+      "id": "b-test-1130",
+      "at": "2026-11-30T23:00:00+09:00",
+      "text": "Fast, free tests for a Claude agent: tools as plain functions, input schema tests, and a scripted fake client for the loop. The checks that need the real model stay in a separate eval suite. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/test-agent-tools-without-calling-claude/"
+    },
+    {
+      "id": "b-claude-1201",
+      "at": "2026-12-01T23:00:00+09:00",
+      "text": "The architecture of a Claude agent SaaS, following one request: auth, rate limits, spend limits, model choice, the tool loop, streaming, metering and storage, with a detailed post for each step.",
+      "link": "https://agentwright.app/blog/claude-agent-saas-architecture-request-path/"
+    },
+    {
+      "id": "b-cancel-1202",
+      "at": "2026-12-02T23:00:00+09:00",
+      "text": "A Stop button for a Claude agent with AbortController: cancel the stream and the tools, keep the conversation valid, and still record the tokens you paid for when a stream ends early. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/cancel-claude-agent-runs-abortcontroller/"
+    },
+    {
+      "id": "b-spend-1203",
+      "at": "2026-12-03T23:00:00+09:00",
+      "text": "Catch a runaway AI bill before the invoice: a daily total against a budget, a per-user spike against that user's own history, an hourly burn-rate check, and the provider-side limit as the last safety net.",
+      "link": "https://agentwright.app/blog/spend-anomaly-alerts-llm-costs-sql/"
+    },
+    {
+      "id": "b-onboarding-1204",
+      "at": "2026-12-04T23:00:00+09:00",
+      "text": "Onboarding emails for an AI SaaS, triggered by what users did: welcome, first success, 80% of the plan, limit reached, a quiet check-in. A Postgres jobs table, idempotency keys and one-click unsubscribe. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/onboarding-emails-ai-saas-resend/"
+    },
+    {
+      "id": "b-postgres-1205",
+      "at": "2026-12-05T23:00:00+09:00",
+      "text": "A document search tool for a Claude agent on plain Postgres: a generated tsvector column, a GIN index, websearch_to_tsquery for model-written queries, ranked short results, and the signs it is time to add vectors.",
+      "link": "https://agentwright.app/blog/postgres-full-text-search-tool-for-agents/"
+    },
+    {
+      "id": "b-trace-1206",
+      "at": "2026-12-06T23:00:00+09:00",
+      "text": "Trace every Claude agent run in two Postgres tables: runs and steps, with timings, tokens, stop reasons, errors and the API request id. Then p95 latency and failing tools are one query each. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/trace-claude-agent-runs-postgres/"
+    },
+    {
+      "id": "b-message-1207",
+      "at": "2026-12-07T23:00:00+09:00",
+      "text": "Half-price Claude calls for work nobody waits for: which jobs fit the Message Batches API, a table to track them, a cron job that submits and collects by custom_id, and per-user metering.",
+      "link": "https://agentwright.app/blog/message-batches-claude-background-jobs/"
+    },
+    {
+      "id": "b-pgvector-1208",
+      "at": "2026-12-08T23:00:00+09:00",
+      "text": "Hybrid keyword and vector search for an agent's tool in one Postgres query: pgvector next to the tsvector, an HNSW index, reciprocal rank fusion, and a small test set to prove it helped. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/pgvector-hybrid-search-agent-tool/"
+    },
+    {
+      "id": "b-pdf-1209",
+      "at": "2026-12-09T23:00:00+09:00",
+      "text": "PDF uploads in a Claude agent: base64 or the Files API, the limits for your upload form, the token cost before you send, file ids scoped per user, and deleting files when users delete their data.",
+      "link": "https://agentwright.app/blog/pdf-uploads-claude-agent-files-api/"
+    },
+    {
+      "id": "b-idempotent-1210",
+      "at": "2026-12-10T23:00:00+09:00",
+      "text": "One click, one agent run: a client-generated idempotency key, a unique constraint in Postgres, and a reattach path that replays the stored answer instead of paying for a second run. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/idempotent-agent-requests-double-submit/"
+    },
+    {
+      "id": "b-claude-1211",
+      "at": "2026-12-11T23:00:00+09:00",
+      "text": "Web search for a Claude agent: the server tool, max_uses and domain filters, citations, pause_turn, sending encrypted results back unchanged, and metering the $10 per 1,000 searches per user.",
+      "link": "https://agentwright.app/blog/claude-web-search-tool-agent-saas/"
+    },
+    {
+      "id": "b-write-1212",
+      "at": "2026-12-12T23:00:00+09:00",
+      "text": "Most agent bugs that look like model mistakes are tool definition mistakes. Names, descriptions that say when to call a tool, strict schemas, useful results and error messages, with before/after examples. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/write-tool-descriptions-claude-uses-well/"
+    },
+    {
+      "id": "b-export-1213",
+      "at": "2026-12-13T23:00:00+09:00",
+      "text": "Export my data, delete my account: one written map of where user data lives in an AI product (Postgres, files at Anthropic, email and payment providers, logs), an export job, a deletion job, and a test.",
+      "link": "https://agentwright.app/blog/export-delete-user-data-ai-saas/"
+    },
+    {
+      "id": "b-kill-1214",
+      "at": "2026-12-14T23:00:00+09:00",
+      "text": "Kill switches for an AI agent: turn off a tool, change a model, lower limits or pause one user in seconds, without a deploy. A config table, a short cache, an audit log and a runbook. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/kill-switches-ai-agent-models-tools/"
     }
   ]
 }

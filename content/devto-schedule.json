@@ -7,5 +7,7 @@
   {"slug": "remote-mcp-server-cloudflare-without-sdk", "date": "2026-11-24", "tags": ["mcp", "cloudflare", "typescript", "ai"]},
   {"slug": "mcp-servers-as-tools-in-your-agent", "date": "2026-11-27", "tags": ["mcp", "ai", "typescript", "llm"]},
   {"slug": "rate-limit-llm-endpoints-postgres", "date": "2026-12-01", "tags": ["postgres", "nextjs", "ai", "webdev"]},
-  {"slug": "verify-lemon-squeezy-webhooks-nextjs", "date": "2026-12-04", "tags": ["nextjs", "webdev", "typescript", "security"]}
+  {"slug": "claude-api-errors-retries-agent-loop", "date": "2026-12-04", "tags": ["ai", "typescript", "llm", "webdev"]},
+  {"slug": "structured-outputs-claude-typescript", "date": "2026-12-08", "tags": ["ai", "typescript", "llm", "json"]},
+  {"slug": "background-agent-jobs-postgres-skip-locked", "date": "2026-12-11", "tags": ["postgres", "ai", "typescript", "architecture"]}
 ]
