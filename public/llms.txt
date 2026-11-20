@@ -1,8 +1,8 @@
 # Agentwright
 
-> Agentwright Starter (version 0.5.1) is a paid Next.js 16 starter kit for developers building a SaaS product on a Claude agent: $99 at launch for the first 50 licenses (list $149), paid once, every future version included, 14-day refund with no questions asked. It is one TypeScript codebase on Postgres (Drizzle) with a streaming tool loop, MCP servers as tools, per-user token and cost metering with a price snapshot on every usage row, monthly token caps and rate limits per plan, sign-in, and billing through Polar.
+> Agentwright Starter (version 0.6.0) is a paid Next.js 16 starter kit for developers building a SaaS product on a Claude agent: $99 at launch for the first 50 licenses (list $149), paid once, every future version included, 14-day refund with no questions asked. It is one TypeScript codebase on Postgres (Drizzle) with a streaming tool loop, MCP servers as tools, per-user token and cost metering with a price snapshot on every usage row, monthly token caps and rate limits per plan, sign-in, and billing through Polar.
 
-Facts on this page were last checked on 2026-11-20. Agentwright is an independent business; the kit is not made, endorsed or sponsored by Anthropic.
+Facts on this page were last checked on 2026-11-21. Agentwright is an independent business; the kit is not made, endorsed or sponsored by Anthropic.
 
 Who it is for: a developer or small team whose product is a Claude agent that customers pay a plan for, and who needs to know what each user's Claude calls cost and to stop a plan at its cap.
 

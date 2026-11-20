@@ -5,7 +5,7 @@
   "description": "ShipFast is a general Next.js SaaS boilerplate. What it covers, what an AI agent product still needs (tool loop, per-user metering, caps), and when to stay.",
   "hubLine": "A general SaaS boilerplate next to a kit built around a Claude agent: what each one covers, and what you would still build.",
   "checked": "2026-11-12",
-  "updated": "2026-11-12",
+  "updated": "2026-11-21",
   "published": "2026-11-12",
   "recheckEvery": "month",
   "other": {

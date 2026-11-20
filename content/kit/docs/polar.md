@@ -1,11 +1,13 @@
 # Billing with Polar
 
-The kit has two billing adapters: Lemon Squeezy (the default) and [Polar](https://polar.sh).
-Both are a merchant of record: they charge the customer, handle sales tax and VAT, and pay
-you. This page covers Polar: setup, what each webhook does to your data, how to test it,
-and the limits you should know before you take money with it.
+[Polar](https://polar.sh) is the kit's billing provider. It is a merchant of record: it
+charges the customer, handles sales tax and VAT, and pays you. This page covers setup, what
+each webhook does to your data, how to test it, and the limits you should know before you
+take money with it.
 
-With `BILLING_PROVIDER=polar`:
+Polar is what the kit uses when `BILLING_PROVIDER` is empty or `polar`. (The other value,
+`lemonsqueezy`, is for an app that already has a Lemon Squeezy store: `docs/lemonsqueezy.md`.)
+With Polar:
 
 - **Upgrade** on `/pricing` creates a Polar checkout for the signed-in user and sends them
   to it.
@@ -49,9 +51,10 @@ live.
      sell license keys
 4. **Environment.**
    ```bash
-   BILLING_PROVIDER=polar
    POLAR_SERVER=sandbox        # remove this line (or set production) when you go live
    ```
+   `BILLING_PROVIDER` can stay empty: Polar is the default. If your env file sets it to
+   `lemonsqueezy`, change it to `polar` or remove the line.
    Optional: `POLAR_PORTAL_URL=https://polar.sh/<your-slug>/portal` (in the sandbox:
    `https://sandbox.polar.sh/<your-slug>/portal`), see "Customer portal" below.
 5. Run `npm run db:migrate`. Migration `0003_polar` adds the `polar_subscriptions` table
@@ -193,8 +196,7 @@ this: it applies to Polar's own benefits, and the kit follows the subscription's
 
 `POLAR_PRODUCT_LICENSE` lists the one-time products that issue a license key, and
 `POLAR_CHECKOUT_LICENSE` is the Checkout Link shown on `/pricing`. The flow, the email and
-the admin page are the same as with Lemon Squeezy and are described in `docs/licensing.md`.
-Two things are specific to Polar:
+the admin page are described in `docs/licensing.md`. Two things to know:
 
 - If the license email cannot be sent, the webhook answers 500. Polar then delivers the
   event again (up to ten attempts in all, within about an hour), and the next attempt sends
@@ -234,7 +236,8 @@ for `[polar]`.
 - **Seats and metered prices** are not handled. A subscription gives its plan to one user.
 - **Deleting a user** does not cancel their subscription at Polar.
 - **Two providers at once.** Both webhooks work whenever their secrets are set, so you can
-  move from Lemon Squeezy to Polar while old subscriptions keep running. While a Polar
+  move from Lemon Squeezy to Polar while old subscriptions keep running
+  (`docs/lemonsqueezy.md`, "Moving a live app to Polar"). While a Polar
   subscription gives a user the plan, Polar decides it, and no Lemon Squeezy event changes
   it. A user should not hold a subscription at both, because the kit does not remember the
   Lemon Squeezy plan under the Polar one: when the Polar subscription ends, the user is on

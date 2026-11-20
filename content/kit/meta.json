@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.6.0",
   "models": [
     "claude-fable-5-2",
     "claude-fable-5-1",
@@ -10,8 +10,8 @@
   "longContextModels": [
     "claude-haiku-5-5"
   ],
-  "commit": "6ed80db",
-  "commitDate": "2026-11-13",
+  "commit": "4fdc122",
+  "commitDate": "2026-11-20",
   "dependencies": {
     "@anthropic-ai/sdk": "1.3.0",
     "@auth/drizzle-adapter": "1.11.3",
@@ -45,20 +45,21 @@
     "deploy.md",
     "pricing.md",
     "licensing.md",
-    "polar.md"
+    "polar.md",
+    "lemonsqueezy.md"
   ],
   "counts": {
-    "files": 87,
-    "codeFiles": 48,
-    "codeLines": 5776,
-    "testFiles": 5,
-    "tests": 64,
+    "files": 89,
+    "codeFiles": 49,
+    "codeLines": 5906,
+    "testFiles": 6,
+    "tests": 69,
     "migrations": 4
   },
   "files": [
     {
       "path": ".env.example",
-      "lines": 89
+      "lines": 92
     },
     {
       "path": ".github/workflows/ci.yml",
@@ -70,11 +71,11 @@
     },
     {
       "path": "AGENTS.md",
-      "lines": 75
+      "lines": 76
     },
     {
       "path": "CHANGELOG.md",
-      "lines": 136
+      "lines": 168
     },
     {
       "path": "CLAUDE.md",
@@ -86,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "lines": 96
+      "lines": 112
     },
     {
       "path": "app/admin/licenses/actions.tsx",
@@ -146,7 +147,7 @@
     },
     {
       "path": "app/pricing/page.tsx",
-      "lines": 160
+      "lines": 164
     },
     {
       "path": "app/usage/page.tsx",
@@ -162,15 +163,19 @@
     },
     {
       "path": "docs/customizing.md",
-      "lines": 111
+      "lines": 112
     },
     {
       "path": "docs/deploy.md",
-      "lines": 98
+      "lines": 87
+    },
+    {
+      "path": "docs/lemonsqueezy.md",
+      "lines": 118
     },
     {
       "path": "docs/licensing.md",
-      "lines": 66
+      "lines": 67
     },
     {
       "path": "docs/next16.md",
@@ -178,7 +183,7 @@
     },
     {
       "path": "docs/polar.md",
-      "lines": 289
+      "lines": 292
     },
     {
       "path": "docs/pricing.md",
@@ -186,7 +191,7 @@
     },
     {
       "path": "docs/setup.md",
-      "lines": 62
+      "lines": 71
     },
     {
       "path": "drizzle.config.ts",
@@ -242,7 +247,7 @@
     },
     {
       "path": "lib/billing/checkout.ts",
-      "lines": 46
+      "lines": 86
     },
     {
       "path": "lib/billing/lemonsqueezy.ts",
@@ -310,11 +315,15 @@
     },
     {
       "path": "scripts/seed.ts",
-      "lines": 54
+      "lines": 59
     },
     {
       "path": "scripts/smoke-agent.ts",
       "lines": 35
+    },
+    {
+      "path": "tests/checkout.test.ts",
+      "lines": 81
     },
     {
       "path": "tests/fixtures/polar/README.md",

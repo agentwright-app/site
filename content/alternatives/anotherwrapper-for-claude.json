@@ -5,7 +5,7 @@
   "description": "AnotherWrapper is a multi-provider AI kit with demo apps. Agentwright Starter is one Claude agent with per-user cost metering, caps, MCP and evals. Side by side.",
   "hubLine": "A wide AI kit with demo apps on six model providers next to a narrow one for a single Claude agent.",
   "checked": "2026-11-12",
-  "updated": "2026-11-12",
+  "updated": "2026-11-21",
   "published": "2026-11-12",
   "recheckEvery": "month",
   "other": {

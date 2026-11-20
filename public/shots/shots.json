@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "items": [
     {
       "file": "usage.webp",
@@ -15,7 +15,7 @@
       "poster": "demo-poster.webp",
       "width": 1280,
       "height": 800,
-      "caption": "18 seconds, no sound: a question, a tool call, the streamed answer, then the usage page. A real response from Claude Sonnet 5.5, the kit's default model."
+      "caption": "17 seconds, no sound: a question, a tool call, the streamed answer, then the usage page. A real response from Claude Sonnet 5.5, the kit's default model."
     },
     {
       "file": "licenses.webp",

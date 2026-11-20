@@ -32,26 +32,20 @@ Next.js runs. This guide covers the zero-ops path: **Vercel** for the app and
    | `AUTH_RESEND_KEY` / `AUTH_EMAIL_FROM` | optional magic-link sign-in |
    | `MCP_SERVERS` | optional, JSON (HTTP servers only on Vercel — see below) |
 
-   Billing with Lemon Squeezy (the default):
-
-   | Variable | Notes |
-   | --- | --- |
-   | `LEMONSQUEEZY_WEBHOOK_SECRET` | from the webhook you create in step 3 |
-   | `LEMONSQUEEZY_VARIANT_PRO` | optional, links the Pro plan to a variant |
-   | `LEMONSQUEEZY_VARIANT_TEAM` | optional, links the Team plan to a variant |
-   | `NEXT_PUBLIC_LS_CHECKOUT_PRO` / `_TEAM` | hosted checkout URLs for /pricing. Read when the app is built, so deploy again after you change them |
-
    Billing with Polar (`docs/polar.md`):
 
    | Variable | Notes |
    | --- | --- |
-   | `BILLING_PROVIDER` | `polar` |
+   | `BILLING_PROVIDER` | leave it out, or `polar` |
    | `POLAR_ACCESS_TOKEN` | organization access token with the scopes `checkouts:write` and `customer_sessions:write` |
    | `POLAR_WEBHOOK_SECRET` | from the webhook you create in step 3 |
    | `POLAR_PRODUCT_PRO` / `POLAR_PRODUCT_TEAM` | product ids that sell each plan, comma-separated |
    | `POLAR_SERVER` | `sandbox` while you test; leave it out for production |
    | `POLAR_PORTAL_URL` | optional but recommended, `https://polar.sh/<your-slug>/portal` |
    | `APP_URL` | optional, `https://<domain>`. Where Polar sends the buyer after checkout; without it the address of the request is used |
+
+   An app that already has a Lemon Squeezy store sets `BILLING_PROVIDER=lemonsqueezy` and
+   the variables in `docs/lemonsqueezy.md` instead.
 
 3. Deploy. Add your domain under Settings → Domains and update the GitHub OAuth callback URL.
 
@@ -66,14 +60,7 @@ HTTP (`{"url": …}`) servers in production, or run the app on a long-lived host
 
 ## 3. Billing webhook
 
-**Lemon Squeezy.** Settings → Webhooks → `+`:
-- URL: `https://<domain>/api/webhooks/lemonsqueezy`
-- Signing secret: paste the same value into `LEMONSQUEEZY_WEBHOOK_SECRET`
-- Events: `order_created`, `order_refunded`, `subscription_*`
-
-Send a test event from the Lemon Squeezy dashboard; it appears in the `webhook_events` table.
-
-**Polar.** Settings → Webhooks → Add Endpoint:
+In Polar: Settings → Webhooks → Add Endpoint:
 - URL: `https://<domain>/api/webhooks/polar`
 - Format: Raw
 - Secret: paste the same value into `POLAR_WEBHOOK_SECRET`
@@ -83,11 +70,13 @@ Polar's sandbox and production are separate servers: each has its own products, 
 webhook endpoint, so production needs its own values for every `POLAR_*` variable
 (`docs/polar.md`). Every delivery appears in the `webhook_events` table with its `outcome`.
 
+The webhook of an existing Lemon Squeezy store: `docs/lemonsqueezy.md`.
+
 ## 4. Post-deploy checklist
 
 - [ ] Sign in with GitHub on the production URL
 - [ ] Send a message on `/chat` and confirm a row appears in `usage_events` (and on `/usage`)
-- [ ] Buy the Pro plan in Lemon Squeezy **test mode** (or in Polar's **sandbox**, with the steps in `docs/polar.md`, "Check it before you go live") and confirm `users.plan` flips to `pro`
+- [ ] Buy the Pro plan in Polar's **sandbox** (the steps in `docs/polar.md`, "Check it before you go live") and confirm `users.plan` flips to `pro`
 - [ ] Set a spend limit on your Anthropic console workspace
 
 ## Other hosts
