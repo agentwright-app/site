@@ -34,6 +34,7 @@ const DOC_TITLES = {
   "pricing.md": ["price-snapshots", "Model prices and price snapshots", "How every usage row stores its cost and the price version used, and how to add a price change without rewriting history."],
   "licensing.md": ["license-delivery", "License key delivery", "If you sell a digital product yourself: issuing license keys on purchase, signed download links, and the admin page."],
   "polar.md": ["polar", "Billing with Polar", "Polar as the billing provider: setup, what each webhook event does to a user's plan, the customer portal, failed payments, limits, and what is and is not tested."],
+  "lemonsqueezy.md": ["lemonsqueezy", "Billing with Lemon Squeezy (existing stores only)", "For apps that already sell through a Lemon Squeezy store (it accepts no new stores and closes on 2027-03-31): setup, and moving a live app to Polar."],
 };
 
 const n = (x) => x.toLocaleString("en-US");

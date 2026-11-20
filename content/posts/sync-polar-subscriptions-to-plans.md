@@ -8,7 +8,7 @@ tags: [polar, billing, saas, postgres]
 
 <p class="lede">Receiving a billing webhook safely is the first half of the job: verify the signature, log the event, survive retries. This post is about the second half, which is where most billing bugs actually live: after the webhook arrives, what does your app store, and how does it decide whether this user can use the paid features right now?</p>
 
-The examples use [Polar](https://polar.sh), a merchant of record. Lemon Squeezy, which many SaaS starters were built on, no longer accepts new stores and stops processing payments on March 31, 2027, so new projects need another provider. The pattern is the same for any provider that sends the whole subscription with each event. The Polar fields and API behaviour below were checked against the Polar API reference on 2026-11-17.
+The examples use [Polar](https://polar.sh), a merchant of record. Lemon Squeezy, which many SaaS starters were built on, accepts no new stores and closes on 2027-03-31, so new projects need another provider. The pattern is the same for any provider that sends the whole subscription with each event. The Polar fields and API behaviour below were checked against the Polar API reference on 2026-11-17.
 
 ## The mistake: a `plan` column driven by event names
 

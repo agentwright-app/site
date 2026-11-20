@@ -73,11 +73,11 @@ The default is Claude Sonnet 5.5. The metering price table ships with Claude Fab
 
 ### What do I need to run it?
 
-An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Polar account is only needed when you start charging your own users. Your API and hosting costs are your own.
+An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Polar account is only needed when you start charging your own users; until then the app runs, and the pricing page shows the plans with "Coming soon" on the paid ones. Your API and hosting costs are your own.
 
 ### Which billing providers does it support?
 
-Polar is the default. A Lemon Squeezy adapter is also included, for developers who already have a Lemon Squeezy store: Lemon Squeezy accepts no new stores and closes on 2027-03-31. The `BILLING_PROVIDER` setting picks the adapter. Stripe and Paddle are not included, and you would add them yourself (below).
+Polar is the default: with `BILLING_PROVIDER` empty or unset, the kit bills through Polar. A Lemon Squeezy adapter is also included, only for apps that already sell through a Lemon Squeezy store: Lemon Squeezy accepts no new stores and closes on 2027-03-31. Such an app sets `BILLING_PROVIDER=lemonsqueezy`. Stripe and Paddle are not included, and you would add them yourself (below).
 
 Polar: in the kit since version 0.5.0. Follow the [Polar guide](/docs/polar/). The pricing page creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it has automated tests with real and sample Polar webhook payloads, and on 2026-11-13 we ran a subscription through it in Polar's sandbox (Polar's real servers, a test card, no real money) from checkout to plan change and cancellation. The guide lists the same five steps to check with your own Polar account before you take payments.
 

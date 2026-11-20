@@ -21,7 +21,7 @@ const OUT = join(root, "content/kit");
 // Source files shown in full on /inside/ ("read the code before you buy").
 const PREVIEW_FILES = ["lib/agent/loop.ts", "lib/billing/metering.ts", "evals/cases.ts"];
 // Docs published under /docs/. The other files in docs/ ship with the kit only.
-const DOCS = ["setup.md", "deploy.md", "pricing.md", "licensing.md", "polar.md"];
+const DOCS = ["setup.md", "deploy.md", "pricing.md", "licensing.md", "polar.md", "lemonsqueezy.md"];
 
 const git = (...args) => execFileSync("git", ["-C", src, ...args], { encoding: "utf8" }).trim();
 // Files are copied from the working tree and labelled with HEAD, so the tree must be clean.

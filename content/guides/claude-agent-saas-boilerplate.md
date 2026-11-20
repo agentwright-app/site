@@ -2,7 +2,7 @@
 slug: claude-agent-saas-boilerplate
 title: "A Claude agent SaaS boilerplate for Next.js: what it has to cover"
 description: "What a Next.js boilerplate for a Claude agent SaaS must cover beyond login and payments: tool loop, per-user token metering, plan caps, MCP and evals."
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 <div class="gd-note"><p><strong>Who wrote this.</strong> We make Agentwright Starter, a paid starter kit, and this page describes it. The list of parts is useful whichever kit you choose, and also if you build everything yourself: each part links to a post with the code.</p></div>
