@@ -22,7 +22,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
 // Change FAQ_UPDATED whenever content/pages/faq.md changes: it is the visible "Last updated" line,
 // the FAQPage dateModified and the sitemap lastmod.
-const FAQ_UPDATED = "2026-11-20";
+const FAQ_UPDATED = "2026-11-21";
 const KIT_VERSION = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../content/kit/meta.json"), "utf8")).version;
 const POSTS_DIR = join(root, "content/posts");
 // BLOG_OUT builds into another folder (used for side-by-side test builds); the deploy uses dist/.
@@ -463,7 +463,7 @@ const urls = [
   ...guideUrls.map((loc) => ({ loc, lastmod: guideUpdated[loc], priority: "0.8" })),
   { loc: `${SITE}/faq/`, lastmod: FAQ_UPDATED, priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
-  { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },
+  { loc: `${SITE}/terms/`, lastmod: "2026-11-21", priority: "0.3" },
   { loc: `${SITE}/privacy/`, lastmod: "2026-11-12", priority: "0.3" },
   { loc: `${SITE}/blog/`, lastmod: posts[0]?.date ?? "2026-11-01", priority: "0.8" },
   ...posts.map((p) => ({ loc: p.url, lastmod: p.date, priority: "0.7" })),

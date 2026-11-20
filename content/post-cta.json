@@ -36,8 +36,9 @@
     ]
   },
   "verify-lemon-squeezy-webhooks-nextjs": {
-    "text": "Agentwright Starter ships this handler as app/api/webhooks/lemonsqueezy/route.ts with lib/billing/lemonsqueezy.ts: HMAC-SHA256 over the raw body with a timing-safe compare, a webhook_events log written before processing, and a 500 on failure so Lemon Squeezy retries. It also maps subscription variants to your plans and issues license keys for one-time orders.",
+    "text": "Agentwright Starter bills through Polar by default (app/api/webhooks/polar/route.ts). For developers who already have a Lemon Squeezy store it keeps this handler as app/api/webhooks/lemonsqueezy/route.ts with lib/billing/lemonsqueezy.ts: HMAC-SHA256 over the raw body with a timing-safe compare, a webhook_events log written before processing, and a 500 on failure so Lemon Squeezy retries. It maps subscription variants to your plans and issues license keys for one-time orders.",
     "files": [
+      "app/api/webhooks/polar/route.ts",
       "app/api/webhooks/lemonsqueezy/route.ts",
       "lib/billing/lemonsqueezy.ts",
       "lib/db/schema.ts"
@@ -250,14 +251,14 @@
     ]
   },
   "claude-agent-saas-architecture-request-path": {
-    "text": "Agentwright Starter is this request path in one Next.js codebase: auth in lib/auth/index.ts, the rate limit in lib/ratelimit/index.ts, the plan cap and metering in lib/billing/metering.ts, the loop in lib/agent/loop.ts, SSE in app/api/agent/route.ts and the Lemon Squeezy and Polar webhooks next to it. Its budget check is a monthly token cap, not a dollar limit.",
+    "text": "Agentwright Starter is this request path in one Next.js codebase: auth in lib/auth/index.ts, the rate limit in lib/ratelimit/index.ts, the plan cap and metering in lib/billing/metering.ts, the loop in lib/agent/loop.ts, SSE in app/api/agent/route.ts and the Polar webhook in app/api/webhooks/polar/route.ts (a Lemon Squeezy adapter is included for existing Lemon Squeezy stores). Its budget check is a monthly token cap, not a dollar limit.",
     "files": [
       "lib/auth/index.ts",
       "lib/ratelimit/index.ts",
       "lib/billing/metering.ts",
       "lib/agent/loop.ts",
       "app/api/agent/route.ts",
-      "app/api/webhooks/lemonsqueezy/route.ts"
+      "app/api/webhooks/polar/route.ts"
     ]
   },
   "cancel-claude-agent-runs-abortcontroller": {
@@ -335,8 +336,9 @@
     ]
   },
   "prepaid-credits-ai-saas-postgres-ledger": {
-    "text": "Agentwright Starter bills with plans and monthly token caps, not credits, and has no ledger. It does include two pieces a credit ledger builds on: a verified Lemon Squeezy webhook with an event log (app/api/webhooks/lemonsqueezy/route.ts) and per-user usage rows with their cost (lib/billing/metering.ts).",
+    "text": "Agentwright Starter bills with plans and monthly token caps, not credits, and has no ledger. It does include two pieces a credit ledger builds on: verified billing webhooks with an event log (Polar by default in app/api/webhooks/polar/route.ts, and app/api/webhooks/lemonsqueezy/route.ts for an existing Lemon Squeezy store) and per-user usage rows with their cost (lib/billing/metering.ts).",
     "files": [
+      "app/api/webhooks/polar/route.ts",
       "app/api/webhooks/lemonsqueezy/route.ts",
       "lib/billing/lemonsqueezy.ts",
       "lib/billing/metering.ts"

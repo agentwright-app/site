@@ -2,12 +2,12 @@
 slug: claude-agent-saas-boilerplate
 title: "A Claude agent SaaS boilerplate for Next.js: what it has to cover"
 description: "What a Next.js boilerplate for a Claude agent SaaS must cover beyond login and payments: tool loop, per-user token metering, plan caps, MCP and evals."
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 <div class="gd-note"><p><strong>Who wrote this.</strong> We make Agentwright Starter, a paid starter kit, and this page describes it. The list of parts is useful whichever kit you choose, and also if you build everything yourself: each part links to a post with the code.</p></div>
 
-<div class="gd-note"><p><strong>Short answer.</strong> A boilerplate for a Claude agent SaaS needs, beyond login and payments, a tool loop with a turn limit, a record of what each user's Claude calls cost, a cap per plan checked before each call, rate limits, billing webhooks that set the plan, and evals. Agentwright Starter (version {{kit_version}}, Next.js 16, billing through Lemon Squeezy or Polar) ships all of these for $99 at launch for the first 50 licenses (list $149), paid once, with a 14-day refund. It has no teams or seats, no Stripe and no other model providers; the full list of what it leaves out is in the section on where the kit is weak, below.</p></div>
+<div class="gd-note"><p><strong>Short answer.</strong> A boilerplate for a Claude agent SaaS needs, beyond login and payments, a tool loop with a turn limit, a record of what each user's Claude calls cost, a cap per plan checked before each call, rate limits, billing webhooks that set the plan, and evals. Agentwright Starter (version {{kit_version}}, Next.js 16, billing through Polar) ships all of these for $99 at launch for the first 50 licenses (list $149), paid once, with a 14-day refund. It has no teams or seats, no Stripe and no other model providers; the full list of what it leaves out is in the section on where the kit is weak, below.</p></div>
 
 <p class="lede">Most Next.js SaaS boilerplates cover sign-in, payments and a landing page. A product where a Claude agent does the work needs more, because every request costs you money and the model decides how many requests there are.</p>
 
@@ -22,7 +22,7 @@ This page lists the parts such a boilerplate has to cover, shows where each one 
 | Price snapshots | Model prices change. Each usage row keeps the price it was charged with, so past totals stay the same. | `lib/billing/pricing.ts` | [Snapshot prices on every usage row](/blog/snapshot-llm-prices-per-request/) |
 | Plan caps and rate limits | A monthly cap checked before each model call, and a requests-per-minute limit that answers 429. | `lib/billing/metering.ts`<br>`lib/ratelimit/index.ts` | [Rate limiting an LLM endpoint with Postgres](/blog/rate-limit-llm-endpoints-postgres/) |
 | Prompt caching | The system prompt and the tool list are sent on every turn. Read from the cache, they cost a fraction of the normal input price. | `lib/agent/loop.ts`<br>`lib/agent/system-prompt.ts` | [Prompt caching in an agent loop](/blog/prompt-caching-claude-agent-loop/) |
-| Billing webhooks | A subscription changes a user's plan through a signed webhook. | `lib/billing/lemonsqueezy.ts`, `lib/billing/polar-events.ts` | [Verify Lemon Squeezy webhooks](/blog/verify-lemon-squeezy-webhooks-nextjs/) |
+| Billing webhooks | A subscription changes a user's plan through a signed webhook. | `lib/billing/polar.ts`, `lib/billing/polar-events.ts` | [Sync Polar subscriptions to plans](/blog/sync-polar-subscriptions-to-plans/) |
 | MCP servers as tools | Tools that already exist as MCP servers become callable next to your own. | `lib/agent/mcp.ts` | [MCP servers as tools in your own loop](/blog/mcp-servers-as-tools-in-your-agent/) |
 | Evals | Golden cases run through the real loop, so a prompt change that breaks behaviour fails CI. | `evals/run.ts`<br>`evals/cases.ts` | [Evals in 140 lines of TypeScript](/blog/evals-for-claude-agents-typescript/) |
 
@@ -44,7 +44,7 @@ The phrase can mean two things, and the kit does one of them.
 
 **Metering: yes.** Every model turn writes one row to `usage_events`: input, output, cache read and cache write tokens, the cost in micro-dollars, and the id of the price row that was used. The `/usage` page shows each user their tokens, cost and plan cap. Totals are sums of stored costs, so a price change does not rewrite history. A model without a price row is refused before the API is called, so no call goes unrecorded.
 
-**Charging per token: no.** Plans are flat subscriptions through Lemon Squeezy or Polar, and each plan has a monthly token cap. The seeded plans are Free (200,000 tokens a month), Pro (5 million) and Team (25 million). A plan can be allowed to run past its cap, as the seeded Team plan is. That usage is recorded, but the kit does not create a charge for it.
+**Charging per token: no.** Plans are flat subscriptions through Polar, and each plan has a monthly token cap. The seeded plans are Free (200,000 tokens a month), Pro (5 million) and Team (25 million). A plan can be allowed to run past its cap, as the seeded Team plan is. That usage is recorded, but the kit does not create a charge for it.
 
 The numbers are yours to change: plans and caps are rows in your database.
 
@@ -88,7 +88,7 @@ No. The loop, the metering and the evals are written for Claude and the Anthropi
 
 ### Does it work with Stripe?
 
-Not out of the box. The kit has billing code for Lemon Squeezy and for Polar, and none for Stripe. The provider code sits in a few files, and metering and plan caps read your own database, so they stay the same if you add another provider. The [FAQ](/faq/) names the files.
+Not out of the box. The kit's billing code is for Polar, the default, plus a Lemon Squeezy adapter for developers who already have a Lemon Squeezy store (Lemon Squeezy accepts no new stores and closes on 2027-03-31). There is none for Stripe. The provider code sits in a few files, and metering and plan caps read your own database, so they stay the same if you add another provider. The [FAQ](/faq/) names the files.
 
 ### Which Next.js version does it use?
 

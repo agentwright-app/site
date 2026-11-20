@@ -2,12 +2,12 @@ app/page.tsx                        landing stub → /login or /chat
 app/login/page.tsx                  GitHub sign-in (+ magic link when AUTH_RESEND_KEY is set)
 app/chat/page.tsx + components/chat.tsx   minimal streaming chat UI (SSE client)
 app/usage/page.tsx                  usage dashboard: tokens, cost, plan cap, per-model, 30 days
-app/pricing/page.tsx                pricing cards → Lemon Squeezy checkout links, or Polar checkout and billing portal
+app/pricing/page.tsx                pricing cards → Polar checkout and billing portal (or Lemon Squeezy checkout links)
 app/pricing/actions.ts              Server Actions for Polar: open a checkout, open the customer portal
 app/api/agent/route.ts              streaming agent endpoint (SSE) + conversation persistence
 app/api/auth/[...nextauth]/route.ts Auth.js handlers
-app/api/webhooks/lemonsqueezy/      signature-verified webhooks → plan changes / license keys (+ event log)
-app/api/webhooks/polar/             the same for Polar
+app/api/webhooks/polar/             signature-verified webhooks → plan changes / license keys (+ event log)
+app/api/webhooks/lemonsqueezy/      the same for Lemon Squeezy (existing stores)
 app/api/download/route.ts           signed download link for license buyers
 app/admin/licenses/                 admin: licenses, delivery status, resend / revoke
 app/api/admin/licenses/route.ts     admin actions (issue / resend / revoke)
@@ -19,10 +19,10 @@ lib/agent/system-prompt.ts          stable, cacheable system prompt
 lib/billing/pricing.ts              versioned price catalog, price selection, cost in micro-USD (pure)
 lib/billing/metering.ts             per-user metering with a price snapshot (price_id) per row, plan caps
 lib/billing/usage.ts                usage_events aggregation for /usage
-lib/billing/checkout.ts             BILLING_PROVIDER switch; Lemon Squeezy checkout URLs with user id as custom data
-lib/billing/lemonsqueezy.ts         webhook verify + event → plan mapping / license orders
+lib/billing/checkout.ts             BILLING_PROVIDER switch (default polar); Lemon Squeezy checkout URLs with user id as custom data
 lib/billing/polar.ts                Polar: configuration, webhook verify, payload schemas, checkout and portal API calls
 lib/billing/polar-events.ts         Polar: subscription events → plan, orders → license keys
+lib/billing/lemonsqueezy.ts         Lemon Squeezy (existing stores): webhook verify + event → plan mapping / license orders
 lib/licensing/index.ts              license keys, delivery (GitHub invite + email), signed download tokens
 lib/ratelimit/index.ts              DB-backed sliding-window rate limit, per-plan requests/minute
 lib/email/index.ts                  Resend sender with logging fallback
@@ -39,6 +39,7 @@ docs/deploy.md                      Vercel + Neon, other hosts
 docs/pricing.md                     price table, price snapshots, changing a price
 docs/licensing.md                   selling license keys for a one-time product
 docs/polar.md                       billing with Polar: setup, what each event does, customer portal, limits, what is tested
+docs/lemonsqueezy.md                billing with Lemon Squeezy, for apps that already have a store; moving to Polar
 docs/next16.md                      Next.js 16: what changed, upgrading a 0.4.x project, troubleshooting
 docs/ROADMAP.md                     what is planned and what is not in this kit
 AGENTS.md, CLAUDE.md                notes for coding agents: commands and the rules that keep metering correct

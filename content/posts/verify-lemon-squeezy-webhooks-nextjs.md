@@ -8,6 +8,8 @@ tags: [lemonsqueezy, nextjs, billing, typescript]
 
 <p class="lede">The webhook handler is the most important 50 lines in a paid SaaS. If it is wrong, people pay and get nothing, or cancel and keep their plan. This post builds one for Lemon Squeezy in the Next.js App Router, step by step, with the failure modes each step prevents.</p>
 
+*Update, 2026-11-20: Lemon Squeezy accepts no new stores and closes on 2027-03-31. The steps in this post (verify the signature on the raw body, log the event, process it once, and return the status codes that make retries work) carry over to any provider that signs its webhooks.*
+
 Everything here is plain TypeScript on Node.js: `node:crypto`, zod for the payload, Drizzle for the two tables. The same structure works for Stripe or Paddle; only the signature scheme changes.
 
 ## What Lemon Squeezy sends
@@ -195,7 +197,7 @@ Then change one character of the body without re-signing and confirm you get a 4
 
 <!-- site-only -->
 
-*This is the webhook handler that ships in Agentwright Starter, a Next.js starter kit for Claude-powered SaaS with auth, Lemon Squeezy or Polar billing, metering and an agent loop already wired together. Launch price $99; the [FAQ](/faq/) has the details.*
+*This is the webhook handler that ships in Agentwright Starter, a Next.js starter kit for Claude-powered SaaS with auth, metering and an agent loop already wired together. Its billing goes through Polar by default; this Lemon Squeezy handler is included for developers who already have a Lemon Squeezy store. Launch price $99; the [FAQ](/faq/) has the details.*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

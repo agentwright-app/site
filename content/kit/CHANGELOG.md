@@ -4,6 +4,38 @@ All notable changes to Agentwright Starter. Format: [Keep a Changelog](https://k
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-11-20
+
+Polar is now the default billing provider. Lemon Squeezy accepts no new stores and closes on
+2027-03-31, so a kit that starts on Lemon Squeezy is a dead end for a new app. The Lemon
+Squeezy adapter stays, for apps that already have a store there. Nothing else changed: no
+new feature, no dependency update, no migration.
+
+**Existing installs:** an app that stays on Lemon Squeezy must set
+`BILLING_PROVIDER=lemonsqueezy` before it upgrades. Until 0.5.1 an empty `BILLING_PROVIDER`
+meant Lemon Squeezy; from 0.6.0 it means Polar, and the Pro and Team buttons on `/pricing`
+would say "Coming soon" instead of opening your Lemon Squeezy checkout. The Lemon Squeezy
+webhook is not affected either way, so plans of paying customers keep following their
+subscriptions. An app that already sets `BILLING_PROVIDER=polar` needs no action. There is
+no migration.
+
+### Changed
+- **`BILLING_PROVIDER` defaults to `polar`** (`billingProvider()` in `lib/billing/checkout.ts`). Empty or not set: Polar (was Lemon Squeezy). `polar`: Polar, as before. `lemonsqueezy`: Lemon Squeezy, with the same behaviour as before. Upper case and spaces around the value are accepted, as before.
+- **Any other value of `BILLING_PROVIDER` is now an error.** Before, every value other than `polar` (a typing mistake such as `lemon-squeezy`, or `stripe`) silently meant Lemon Squeezy. Now `/pricing` fails with `BILLING_PROVIDER must be "polar" or "lemonsqueezy", not "…"`, shown in the browser during `npm run dev` and written to the server log in production. The rest of the app and both webhooks keep working.
+- An app with no billing account set up runs as before: `/pricing` shows the three plans, "Sign in to upgrade" to a visitor and "Coming soon" on the paid plans to a signed-in user. The line under the plans now names Polar.
+- When `BILLING_PROVIDER` is empty, Lemon Squeezy checkout links are set and `POLAR_ACCESS_TOKEN` is not, the server log says once that `/pricing` uses Polar and that `BILLING_PROVIDER=lemonsqueezy` keeps the Lemon Squeezy buttons.
+- `.env.example`: the Polar block comes first, and the Lemon Squeezy block says that it is for an existing store and needs `BILLING_PROVIDER=lemonsqueezy`. No variable was added, removed or renamed.
+- `/admin/licenses`: the two hints that name both providers name Polar first.
+
+### Docs
+- `README.md`, `docs/setup.md` and `docs/deploy.md` describe Polar as the billing provider. `README.md` has a new "Billing" section, and `docs/setup.md` has the short path through the Polar setup and a table of what each value of `BILLING_PROVIDER` does.
+- `docs/lemonsqueezy.md` is new. It starts with the notice that Lemon Squeezy accepts no new stores and closes on 2027-03-31, holds the Lemon Squeezy setup and deploy steps that were in `docs/setup.md` and `docs/deploy.md`, and has "Moving a live app to Polar": both webhooks work side by side (since 0.5.0), so new sales go to Polar while existing Lemon Squeezy subscriptions keep setting plans until they end. The kit does not move a subscription from one provider to the other.
+- `docs/polar.md`: Polar is described as the default, and `BILLING_PROVIDER=polar` is no longer a setup step. "What is tested" is unchanged: the sandbox run of 2026-11-13 was done with version 0.5.0, and a real-money payment, a renewal and a failed renewal have still not been run live.
+- `docs/licensing.md`, `docs/customizing.md` and `AGENTS.md` name Polar first.
+
+### Tests
+- `tests/checkout.test.ts` (5 tests, no database): an empty, missing or blank `BILLING_PROVIDER` means Polar; `polar` and `lemonsqueezy` in any case; seven other values are refused with the error above; the warning for an app that looks set up for Lemon Squeezy; the Lemon Squeezy checkout link still carries the user's id and email.
+
 ## [0.5.1] — 2026-11-13
 
 Documentation only. No code changed, and an install on 0.5.0 needs no action.

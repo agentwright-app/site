@@ -34,6 +34,7 @@ const DOC_TITLES = {
   "pricing.md": ["price-snapshots", "Model prices and price snapshots", "How every usage row stores its cost and the price version used, and how to add a price change without rewriting history."],
   "licensing.md": ["license-delivery", "License key delivery", "If you sell a digital product yourself: issuing license keys on purchase, signed download links, and the admin page."],
   "polar.md": ["polar", "Billing with Polar", "Polar as the billing provider: setup, what each webhook event does to a user's plan, the customer portal, failed payments, limits, and what is and is not tested."],
+  "lemonsqueezy.md": ["lemonsqueezy", "Billing with Lemon Squeezy (existing stores only)", "For apps that already sell through a Lemon Squeezy store (it accepts no new stores and closes on 2027-03-31): setup, and moving a live app to Polar."],
 };
 
 const n = (x) => x.toLocaleString("en-US");
@@ -177,7 +178,7 @@ ${figs}
         "@id": `${SITE}/#product`,
         name: "Agentwright Starter",
         description:
-          "Next.js 16 + TypeScript starter kit (source code) for Claude-powered agent SaaS: streaming agent loop with tools, MCP connectors, per-user token metering with price snapshots, plan caps, rate limiting, sign-in, billing through Lemon Squeezy or Polar and an eval runner.",
+          "Next.js 16 + TypeScript starter kit (source code) for Claude-powered agent SaaS: streaming agent loop with tools, MCP connectors, per-user token metering with price snapshots, plan caps, rate limiting, sign-in, billing through Polar (with a Lemon Squeezy adapter for existing stores) and an eval runner.",
         url: `${SITE}/`,
         image: `${SITE}/og.png?v=3`,
         brand: { "@type": "Brand", name: "Agentwright" },
@@ -334,7 +335,7 @@ ${docLinks}
 <p>So you can decide quickly whether it fits:</p>
 <ul>
 <li><strong>Organizations, teams and seats.</strong> Accounts are single users. If you sell to companies that need invites and roles, you build that part.</li>
-<li><strong>Other payment providers.</strong> Lemon Squeezy and Polar are wired in. Stripe or Paddle means writing a webhook route and checkout calls for it; metering and plan caps do not depend on the provider.</li>
+<li><strong>Other payment providers.</strong> Polar is wired in as the default, plus a Lemon Squeezy adapter for developers who already have a Lemon Squeezy store (no new stores; it closes on 2027-03-31). Stripe or Paddle means writing a webhook route and checkout calls for it; metering and plan caps do not depend on the provider.</li>
 <li><strong>A marketing site or component library.</strong> The UI is deliberately plain: sign-in, chat, usage dashboard, pricing and an admin page, styled with Tailwind. You bring your own design.</li>
 <li><strong>Other model providers.</strong> It is built on the Anthropic SDK and Claude's features (prompt caching, tool use, stop reasons). It is not a multi-provider abstraction.</li>
 <li><strong>A hosted service.</strong> You get source code. You run it on your own Vercel, Neon and Anthropic accounts.</li>

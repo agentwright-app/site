@@ -30,7 +30,7 @@ Do not use the Starter or the site to break the law, to infringe anyone's rights
 
 ## 7. Third-party services
 
-The Starter integrates with services we do not control, such as Anthropic, Lemon Squeezy, your database and your hosting provider. Their prices, APIs and terms can change. We update the Starter to follow important changes, but we are not responsible for those services or for the costs you incur with them.
+The Starter integrates with services we do not control, such as Anthropic, Polar, your database and your hosting provider. Their prices, APIs and terms can change. We update the Starter to follow important changes, but we are not responsible for those services or for the costs you incur with them.
 
 ## 8. Warranty and liability
 
@@ -40,4 +40,4 @@ The Starter and the site are provided "as is", without warranty of any kind. To 
 
 We may update these terms for future purchases and for future use of the site. The version in place on the day you bought applies to your license. The date below shows the latest change.
 
-*Last updated: November 10, 2026.*
+*Last updated: November 21, 2026.*

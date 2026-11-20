@@ -26,24 +26,33 @@ Set `AUTH_RESEND_KEY` and `AUTH_EMAIL_FROM` (e.g. `Agentwright <login@yourdomain
 The email form on `/login` appears automatically; leave the key empty to keep GitHub-only sign-in.
 
 ## 4. Billing
-The kit has two billing adapters, Lemon Squeezy and Polar. Both are a merchant of record:
-they charge the customer, handle sales tax and VAT, and pay you. `BILLING_PROVIDER` picks the
-one the buttons on `/pricing` use: `lemonsqueezy` (the default) or `polar`.
+You can skip this section at first: without it the app runs, and the paid plans on `/pricing`
+say "Coming soon".
 
-**Polar:** follow `docs/polar.md` and skip the rest of this section.
+Billing is [Polar](https://polar.sh), a merchant of record: it charges the customer, handles
+sales tax and VAT, and pays you. The short version (every step in full: `docs/polar.md`):
 
-**Lemon Squeezy:**
-1. Create a product + variant for each paid plan; copy the variant ids into `LEMONSQUEEZY_VARIANT_PRO`
-   and `LEMONSQUEEZY_VARIANT_TEAM` and re-run `npm run db:seed`.
-2. Settings → Webhooks → add `https://<your-domain>/api/webhooks/lemonsqueezy`, set a signing secret
-   (`LEMONSQUEEZY_WEBHOOK_SECRET`) and enable `order_*` and `subscription_*` events.
-3. Create hosted checkout links (Products → Share) and put them in `NEXT_PUBLIC_LS_CHECKOUT_PRO` /
-   `NEXT_PUBLIC_LS_CHECKOUT_TEAM`. `/pricing` appends `checkout[custom][user_id]=<users.id>` so the webhook
-   can match the buyer. (Falls back to matching `user_email` against `users.email`.)
+1. In Polar's sandbox (https://sandbox.polar.sh), create one subscription product for each
+   paid plan and copy the product ids into `POLAR_PRODUCT_PRO` and `POLAR_PRODUCT_TEAM`.
+2. Create an access token with the scopes `checkouts:write` and `customer_sessions:write`
+   → `POLAR_ACCESS_TOKEN`. Set `POLAR_SERVER=sandbox` while you test.
+3. Add a webhook endpoint `https://<your-domain>/api/webhooks/polar` (format Raw, every
+   `subscription.*` event) and put its secret in `POLAR_WEBHOOK_SECRET`. On your own machine,
+   `polar webhook listen` or a tunnel brings the events to `localhost`.
+4. Sign in, click **Upgrade to Pro** on `/pricing` and pay with the test card.
 
-Local testing: `npx lmsqueezy@latest` or any tunnel (e.g. `cloudflared tunnel --url http://localhost:3000`).
-Webhooks work through a tunnel as they are. To open the app itself through the tunnel in development,
-add the tunnel's hostname to `allowedDevOrigins` in `next.config.ts` (see `docs/next16.md`).
+`BILLING_PROVIDER` picks the provider that the buttons on `/pricing` use:
+
+| `BILLING_PROVIDER` | Buttons on `/pricing` |
+| --- | --- |
+| empty or not set | Polar |
+| `polar` | Polar |
+| `lemonsqueezy` | Lemon Squeezy |
+| anything else | `/pricing` fails with an error that names the variable, in the browser during `npm run dev` and in the server log in production |
+
+**Lemon Squeezy** accepts no new stores and closes on 2027-03-31. Its adapter is kept only
+for apps that already have a Lemon Squeezy store: `docs/lemonsqueezy.md` has the setup and
+how to move a live app to Polar.
 
 ## 5. Deploy
 Vercel: import the repo, add the env vars, done (`maxDuration` is set to 300s on the agent route; lower it

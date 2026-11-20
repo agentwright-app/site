@@ -10,7 +10,7 @@ No. You pay once and keep the code. There is no monthly fee and no update plan t
 
 ### When can I buy it?
 
-Now. The Starter (version 0.5.1) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
+Now. The Starter (version 0.6.0) is on sale: use the [Buy now button](/#pricing). The launch price of $99 is applied automatically for the first 50 licenses. Your license key and download link are emailed to you right after payment.
 
 ### Who handles the payment?
 
@@ -42,12 +42,12 @@ Yes. [What's inside](/inside/) lists every file in the kit with a one-line note 
 
 ### What is inside the Starter?
 
-One Next.js codebase (currently version 0.5.1) with these parts already wired together:
+One Next.js codebase (currently version 0.6.0) with these parts already wired together:
 
 - **Agent loop:** a streaming (SSE) route with parallel tool calls, a 12-turn guard and prompt caching on the system prompt and tools, plus a minimal chat UI.
 - **MCP tools:** connect stdio or Streamable HTTP MCP servers with one entry each in `MCP_SERVERS`; their tools become callable by the agent.
 - **Per-user metering:** every Claude call is recorded with tokens, cost and the exact price version used, checked against the plan's monthly token cap, and shown on a `/usage` dashboard. Prices are versioned, so past totals stay the same when model prices change.
-- **Billing:** Lemon Squeezy or Polar, chosen with one setting: checkout from the pricing page and subscription webhooks that set each user's plan. With Polar, the pricing page also opens the customer's billing portal.
+- **Billing:** Polar by default: checkout from the pricing page, subscription webhooks that set each user's plan, and Polar's billing portal for customers. A Lemon Squeezy adapter is included for developers who already have a Lemon Squeezy store.
 - **Auth:** GitHub sign-in, plus optional email magic links through Resend.
 - **Rate limiting:** per-plan requests per minute, with proper `429` responses.
 - **Evals:** a small runner with golden test cases and a cost report per case.
@@ -57,7 +57,7 @@ One Next.js codebase (currently version 0.5.1) with these parts already wired to
 
 ### What is not included?
 
-No Stripe or Paddle integration (billing is Lemon Squeezy or Polar). No teams, organizations or seats: each user has one plan. No other model providers, only Claude. No charging for overage: a plan can be allowed to go past its cap, but nothing bills for it. Caps are monthly token counts, not dollar limits. No job queue, no RAG or search, no file uploads, no MCP server of its own (it connects to MCP servers as a client), and the chat UI shows plain text, without Markdown rendering.
+No Stripe or Paddle integration (billing is Polar, with a Lemon Squeezy adapter for existing Lemon Squeezy stores). No teams, organizations or seats: each user has one plan. No other model providers, only Claude. No charging for overage: a plan can be allowed to go past its cap, but nothing bills for it. Caps are monthly token counts, not dollar limits. No job queue, no RAG or search, no file uploads, no MCP server of its own (it connects to MCP servers as a client), and the chat UI shows plain text, without Markdown rendering.
 
 ### What is the tech stack?
 
@@ -73,13 +73,13 @@ The default is Claude Sonnet 5.5. The metering price table ships with Claude Fab
 
 ### What do I need to run it?
 
-An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Lemon Squeezy or Polar account is only needed when you start charging your own users. Your API and hosting costs are your own.
+An Anthropic API key, a Postgres database and a GitHub OAuth app for sign-in. The setup docs name the free tiers of Neon and Supabase, and the deploy guide uses Neon. The code needs no provider-specific Postgres features, so any Postgres should work, but we have not tested each provider (CI runs on Postgres 16). A Polar account is only needed when you start charging your own users; until then the app runs, and the pricing page shows the plans with "Coming soon" on the paid ones. Your API and hosting costs are your own.
 
 ### Which billing providers does it support?
 
-Lemon Squeezy and Polar ship in the kit; you pick one with the `BILLING_PROVIDER` setting. Stripe and Paddle are not included, and you would add them yourself (below).
+Polar is the default: with `BILLING_PROVIDER` empty or unset, the kit bills through Polar. A Lemon Squeezy adapter is also included, only for apps that already sell through a Lemon Squeezy store: Lemon Squeezy accepts no new stores and closes on 2027-03-31. Such an app sets `BILLING_PROVIDER=lemonsqueezy`. Stripe and Paddle are not included, and you would add them yourself (below).
 
-Polar: since version 0.5.0. Set `BILLING_PROVIDER=polar` and follow the [Polar guide](/docs/polar/). The pricing page then creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it has automated tests with real and sample Polar webhook payloads, and on 2026-11-13 we ran a subscription through it in Polar's sandbox (Polar's real servers, a test card, no real money) from checkout to plan change and cancellation. The guide lists the same five steps to check with your own Polar account before you take payments.
+Polar: in the kit since version 0.5.0. Follow the [Polar guide](/docs/polar/). The pricing page creates a Polar checkout for the signed-in user, the webhook keeps each user's plan in step with their subscription, and customers manage their subscription in Polar's portal. The adapter is new: it has automated tests with real and sample Polar webhook payloads, and on 2026-11-13 we ran a subscription through it in Polar's sandbox (Polar's real servers, a test card, no real money) from checkout to plan change and cancellation. The guide lists the same five steps to check with your own Polar account before you take payments.
 
 Stripe and Paddle: yes, but you do that part yourself. The provider-specific code sits in a few files: a webhook route (`app/api/webhooks/polar/route.ts`), the event handling and API calls in `lib/billing/`, and the mapping from products to plans. Metering, plan caps and the rest of the app read your own database, not the provider, so they stay the same. Adding a provider means writing those billing files for its checkout and webhooks; the two that ship are the examples to follow.
 
@@ -103,11 +103,11 @@ Yes, Agentwright Starter meters every Claude call per user. Each model turn writ
 
 ### How do I bill users for Claude API usage in a Next.js app?
 
-Anthropic bills you, so you charge your users through your own billing provider and keep your own record of what each user's calls cost. Two common models: flat plans with a usage cap, or charging for the usage itself (credits or per-token prices). Agentwright Starter does the first: subscriptions through Lemon Squeezy or Polar set each user's plan, every Claude call is recorded with its cost, and a monthly token cap per plan is checked before each model turn. It does not charge for usage or overage; if you want that, the usage rows are the data you would report to your billing provider. [Price AI SaaS plans against model costs](/blog/price-ai-saas-plan-margins/) works through the numbers, and the [AI SaaS margin calculator](/tools/ai-saas-margin-calculator/) checks a plan price against model costs.
+Anthropic bills you, so you charge your users through your own billing provider and keep your own record of what each user's calls cost. Two common models: flat plans with a usage cap, or charging for the usage itself (credits or per-token prices). Agentwright Starter does the first: subscriptions through Polar set each user's plan, every Claude call is recorded with its cost, and a monthly token cap per plan is checked before each model turn. It does not charge for usage or overage; if you want that, the usage rows are the data you would report to your billing provider. [Price AI SaaS plans against model costs](/blog/price-ai-saas-plan-margins/) works through the numbers, and the [AI SaaS margin calculator](/tools/ai-saas-margin-calculator/) checks a plan price against model costs.
 
 ### Does it support Polar billing and usage caps?
 
-Yes. Set `BILLING_PROVIDER=polar`: the pricing page creates a Polar checkout and the webhook sets each user's plan ([Polar guide](/docs/polar/)). Caps are monthly token counts per plan, stored in your database and checked before each model turn, plus a requests-per-minute limit per plan that answers `429`. Caps are tokens, not dollars, and Polar's metered (usage-based) prices are not handled: the Polar guide lists this under its limits.
+Yes. Polar is the kit's default billing provider: the pricing page creates a Polar checkout and the webhook sets each user's plan ([Polar guide](/docs/polar/)). Caps are monthly token counts per plan, stored in your database and checked before each model turn, plus a requests-per-minute limit per plan that answers `429`. Caps are tokens, not dollars, and Polar's metered (usage-based) prices are not handled: the Polar guide lists this under its limits.
 
 ### Is it a ShipFast alternative for AI agent apps?
 
