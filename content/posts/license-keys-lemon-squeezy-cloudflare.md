@@ -8,6 +8,8 @@ tags: [cloudflare, lemonsqueezy, typescript, indiehackers]
 
 <p class="lede">If you sell a code template, an ebook or a desktop app, you need three things after the payment: a license key, a download only paying customers can use, and a way to switch both off when someone gets a refund. This post walks through how we do it for our own product, on Cloudflare Pages Functions and Workers KV, in about 200 lines with no database and no extra service.</p>
 
+*Update, 2026-11-20: Lemon Squeezy accepts no new stores and closes on 2027-03-31. We now sell through Polar, and the design below is the same there: a signed order webhook issues the key, download links are signed and checked against the key, and a full refund revokes it. Only the signature check and the event names differ.*
+
 The payment side is Lemon Squeezy, which acts as merchant of record (it handles sales tax and VAT). The same design works with any provider that sends signed webhooks.
 
 ## The flow

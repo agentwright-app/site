@@ -8,6 +8,8 @@ tags: [postgres, billing, lemonsqueezy, pricing]
 
 <p class="lede">A flat monthly plan works until usage varies a lot between users: one runs ten requests a month, another runs ten thousand. Prepaid credits fix the mismatch. Users buy a pack, each agent run spends some of it, and you never carry the cost of a heavy user who has not paid for it. This post builds the part that has to be right: a ledger where the balance always matches what users bought and spent.</p>
 
+*Note, 2026-11-20: the examples use Lemon Squeezy, which accepts no new stores and closes on 2027-03-31. The ledger, the reservations and the refund rules do not depend on it: with another provider, you add and remove credits from its signed order and refund webhooks in the same way.*
+
 ## When credits are the right model
 
 Credits fit when:
@@ -137,7 +139,7 @@ ON CONFLICT (kind, ref) DO NOTHING;
 
 <!-- site-only -->
 
-*Agentwright Starter includes a Lemon Squeezy webhook handler with an event log and per-user usage metering with price snapshots, two of the pieces a credit ledger builds on. Details and launch status are in the [FAQ](/faq/).*
+*Agentwright Starter includes verified billing webhooks with an event log (Polar by default, and a Lemon Squeezy adapter for developers who already have a Lemon Squeezy store) and per-user usage metering with price snapshots, two of the pieces a credit ledger builds on. Details and launch status are in the [FAQ](/faq/).*
 
 **Questions or corrections?** Please leave them in the comments below. We check them every day and answer there.
 

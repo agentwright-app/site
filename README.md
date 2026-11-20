@@ -61,7 +61,8 @@ A complete, working Cloudflare Pages site that sells a digital product:
 
 The kit itself is not in this repository. It is a Next.js and TypeScript starter for a Claude agent
 SaaS: a streaming agent loop with tools and MCP clients, per-user cost metering with price
-snapshots, plan caps, rate limits, auth, and billing through Polar or Lemon Squeezy, on Postgres.
+snapshots, plan caps, rate limits, auth, and billing through Polar (a Lemon Squeezy adapter is
+included for developers who already have a Lemon Squeezy store), on Postgres.
 You can read its file map, three source files in full, and its docs and changelog before buying, at
 [agentwright.app/inside](https://agentwright.app/inside/?utm_source=github-readme). It is $99 for
 the first 50 licenses, then $149, with a 14-day refund.

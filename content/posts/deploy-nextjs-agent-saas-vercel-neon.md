@@ -76,7 +76,7 @@ In **Settings → Environment Variables**, each variable can be set for Producti
 |---|---|---|
 | `DATABASE_URL` | production branch, pooled | preview branch, pooled |
 | `ANTHROPIC_API_KEY` | production key | a separate key with a low spend limit |
-| `LEMONSQUEEZY_*` | live mode | test mode |
+| `POLAR_*` | production | sandbox (its own token and webhook secret) |
 | `AUTH_SECRET` | its own value | its own value |
 
 A separate Anthropic key for previews means a runaway test loop cannot spend production money, and the usage page shows the two apart. Set a monthly spend limit in the Anthropic Console for both.
@@ -86,7 +86,7 @@ A separate Anthropic key for previews means a runaway test loop cannot spend pro
 Preview URLs change with every deploy, which breaks two things:
 
 - **OAuth callbacks.** A GitHub OAuth app accepts one callback URL. Register one app for production (`https://yourdomain.com/api/auth/callback/github`) and, if you need sign-in on previews, a second app pointed at a fixed preview domain that you assign to the preview branch. Magic-link sign-in works on any URL, which makes it handy for previews. Set `AUTH_TRUST_HOST=true` so Auth.js accepts the host Vercel forwards.
-- **Webhooks.** Point Lemon Squeezy's live webhook at the production domain only. Vercel's deployment protection puts previews behind a login, so a webhook sent to a preview URL is rejected anyway. To test webhooks, use test mode with a tunnel to your machine, or a stable preview domain with protection bypass configured.
+- **Webhooks.** Point your billing provider's live webhook (Polar's, for example) at the production domain only. Vercel's deployment protection puts previews behind a login, so a webhook sent to a preview URL is rejected anyway. To test webhooks, use the provider's test mode (Polar's sandbox) with a tunnel to your machine, or a stable preview domain with protection bypass configured.
 
 ## 8. Things that do not work on serverless
 
@@ -101,7 +101,7 @@ Run this once on the production URL before you announce anything:
 - [ ] Sign in (GitHub and magic link).
 - [ ] Send a chat message and watch it stream; a row appears in your usage table.
 - [ ] Ask the agent something that needs several tool calls; the stream completes.
-- [ ] Buy the paid plan in Lemon Squeezy test mode; the plan changes after the webhook.
+- [ ] Buy the paid plan in your provider's test mode (Polar's sandbox and its test card); the plan changes after the webhook.
 - [ ] Open a pull request; its preview uses the preview database, not production.
 - [ ] Spend limits are set on both Anthropic keys.
 

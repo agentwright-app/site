@@ -111,7 +111,7 @@ $ cp .env.example .env.local      <span class="c"># add your keys</span>
 $ npm install
 $ npm run db:migrate &amp;&amp; npm run db:seed
 $ npm run dev                     <span class="c"># http://localhost:3000</span></code></pre>
-<div class="note">Next.js 16 · TypeScript · Anthropic TypeScript SDK · MCP SDK · Drizzle + Postgres · Auth.js v5 · Tailwind v4 · Lemon Squeezy or Polar</div>
+<div class="note">Next.js 16 · TypeScript · Anthropic TypeScript SDK · MCP SDK · Drizzle + Postgres · Auth.js v5 · Tailwind v4 · Polar</div>
 </section>
 
 {{SHOTS}}
@@ -150,7 +150,7 @@ $ npm run dev                     <span class="c"># http://localhost:3000</span>
 <div class="card"><h3>MCP servers as tools</h3><p>Connect stdio or Streamable HTTP MCP servers with one entry in <code>MCP_SERVERS</code>. Their tools become callable by the agent, with a per-server allow list.</p><span class="f">lib/agent/mcp.ts</span><span class="how">How it works: <a href="/blog/mcp-servers-as-tools-in-your-agent/">MCP servers as tools</a></span></div>
 <div class="card"><h3>Tool registry</h3><p>Define a tool with a zod schema in a few lines. The model's input is validated before your code runs.</p><span class="f">lib/agent/tools.ts</span></div>
 <div class="card"><h3>Rate limiting</h3><p>Requests per minute by plan (10 / 60 / 200 by default) with proper <code>429</code> responses. One Postgres table, no extra service.</p><span class="f">lib/ratelimit/index.ts</span><span class="how">How it works: <a href="/blog/rate-limit-llm-endpoints-postgres/">rate limits in Postgres</a></span></div>
-<div class="card"><h3>Billing with Lemon Squeezy or Polar</h3><p>Checkout for your plans, signature-verified webhooks that switch plans, and a log of every webhook event with what it did. With Polar, customers manage their subscription in a billing portal.</p><span class="f">lib/billing/lemonsqueezy.ts · lib/billing/polar.ts · app/api/webhooks/</span><span class="how">How it works: <a href="/blog/verify-lemon-squeezy-webhooks-nextjs/">verifying webhooks</a>, <a href="/docs/polar/">the Polar guide</a></span></div>
+<div class="card"><h3>Billing with Polar</h3><p>Checkout for your plans, signature-verified webhooks that switch plans, a billing portal where customers manage their subscription, and a log of every webhook event with what it did. A Lemon Squeezy adapter is included for developers who already have a Lemon Squeezy store (Lemon Squeezy accepts no new stores and closes on 2027-03-31).</p><span class="f">lib/billing/polar.ts · lib/billing/polar-events.ts · app/api/webhooks/</span><span class="how">How it works: <a href="/docs/polar/">the Polar guide</a>, <a href="/blog/verify-lemon-squeezy-webhooks-nextjs/">verifying webhooks</a></span></div>
 <div class="card"><h3>Sign-in</h3><p>GitHub sign-in through Auth.js, with optional email magic links through Resend. Sessions live in your database.</p><span class="f">lib/auth/index.ts · app/login/page.tsx</span></div>
 <div class="card"><h3>Evals</h3><p>Golden cases run through the real agent loop and print the token cost per case. The runner exits non-zero on failure, so it can gate a release.</p><span class="f">evals/run.ts · evals/cases.ts</span><span class="how">How it works: <a href="/blog/evals-for-claude-agents-typescript/">evals in TypeScript</a></span></div>
 <div class="card"><h3>License delivery</h3><p>Selling a digital product yourself? License keys on purchase, signed download links, refund revocation and an admin page are included.</p><span class="f">lib/licensing/index.ts · app/admin/licenses/</span></div>
@@ -184,7 +184,7 @@ $ npm run dev                     <span class="c"># http://localhost:3000</span>
 <h2 style="font-size:24px;letter-spacing:-.02em;margin:0 0 14px">What is not included</h2>
 <ul class="plain">
 <li><b>Organizations, teams and seats.</b> Accounts are single users.</li>
-<li><b>Stripe or Paddle.</b> Billing is wired for Lemon Squeezy and Polar. Another provider means writing its webhook route and checkout calls; metering and caps read your own database.</li>
+<li><b>Stripe or Paddle.</b> Billing is wired for Polar, with a Lemon Squeezy adapter for existing Lemon Squeezy stores. Another provider means writing its webhook route and checkout calls; metering and caps read your own database.</li>
 <li><b>Charging for overage.</b> A plan can be allowed past its cap. Creating the charge is yours.</li>
 <li><b>A conversation list.</b> The API resumes a conversation by id; the chat UI does not list past ones yet.</li>
 <li><b>A marketing site or component library.</b> The UI is plain on purpose.</li>
@@ -211,9 +211,9 @@ $ npm run dev                     <span class="c"># http://localhost:3000</span>
 
 <section class="block" id="faq">
 <h2>Questions before you buy</h2>
-<details><summary>What do I need to run it?</summary><p>An Anthropic API key, a Postgres database (Neon's free tier is covered in the deploy guide; any Postgres works) and a GitHub OAuth app for sign-in. A Lemon Squeezy or Polar account is only needed once you charge your own users. Your API and hosting costs are your own.</p></details>
+<details><summary>What do I need to run it?</summary><p>An Anthropic API key, a Postgres database (Neon's free tier is covered in the deploy guide; any Postgres works) and a GitHub OAuth app for sign-in. A Polar account is only needed once you charge your own users. Your API and hosting costs are your own.</p></details>
 <details><summary>How is it delivered? Do I get a GitHub repository?</summary><p>Right after payment you get an email from hello@agentwright.app with your license key and a download link for the source as a zip file. There is no repository access: you put the code in your own private repository. If the email has not arrived after a few minutes, check spam or write to us.</p></details>
-<details><summary>Which billing providers does it support?</summary><p>Lemon Squeezy and Polar ship in the kit, chosen with one setting (Polar since version 0.5.0, <a href="/docs/polar/">the Polar guide</a>). Stripe or Paddle: you write that part. The provider-specific code is a webhook route and a few files in <code>lib/billing/</code>. Metering, plan caps and the rest of the app read your own database, so they stay the same.</p></details>
+<details><summary>Which billing providers does it support?</summary><p>Polar is the default (in the kit since version 0.5.0, <a href="/docs/polar/">the Polar guide</a>). A Lemon Squeezy adapter is included for developers who already have a Lemon Squeezy store; Lemon Squeezy accepts no new stores and closes on 2027-03-31. Stripe or Paddle: you write that part. The provider-specific code is a webhook route and a few files in <code>lib/billing/</code>. Metering, plan caps and the rest of the app read your own database, so they stay the same.</p></details>
 <details><summary>Which Claude models are priced?</summary><p>{{KIT_MODELS}}. Switching models is one environment variable; a model that is not in the price table needs one new row.</p></details>
 <details><summary>What does one license cover?</summary><p>One person, or one team working for the same company or client. You can build as many products as you like with it, including commercial SaaS. You can't resell or republish the kit's source.</p></details>
 <details><summary>How do updates arrive?</summary><p>Every new version is free for license holders. The <a href="/changelog/">changelog</a> lists each release, and your download link serves the current version.</p></details>

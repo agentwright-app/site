@@ -88,7 +88,7 @@
     {
       "title": "Checkout and webhooks that set each user's plan",
       "text": "A payment provider tells your app about subscriptions through webhooks. The route has to check the signature on the raw request body, survive retries, and map the product to a plan in your database.",
-      "files": ["app/api/webhooks/lemonsqueezy/route.ts", "lib/billing/lemonsqueezy.ts", "app/api/webhooks/polar/route.ts", "lib/billing/polar-events.ts"],
+      "files": ["app/api/webhooks/polar/route.ts", "lib/billing/polar-events.ts", "app/api/webhooks/lemonsqueezy/route.ts", "lib/billing/lemonsqueezy.ts"],
       "posts": [
         { "href": "/blog/verify-lemon-squeezy-webhooks-nextjs/", "title": "Lemon Squeezy webhooks in Next.js: verify the signature, log the event, survive retries" }
       ]
