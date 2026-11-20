@@ -79,6 +79,12 @@
       "link": "https://agentwright.app/blog/find-most-expensive-users-sql/"
     },
     {
+      "id": "r-20261120-1",
+      "at": "2026-11-20T16:00:00+09:00",
+      "text": "Thanks, useful numbers. It matches how we use batches: fine for jobs with a deadline of hours, never for anything a user waits on. If about 1 in 20 batches takes over an hour, a job with a 1-hour deadline needs a fallback to the standard API at full price.",
+      "reply_to": "at://did:plc:nm6kyc6z5r6bme5stn55gahw/app.bsky.feed.post/3n2jqs7f44v2z"
+    },
+    {
       "id": "b-stop-reasons",
       "at": "2026-11-20T23:00:00+09:00",
       "text": "A 200 from the Claude API is not always a finished answer.\n\nend_turn, tool_use, max_tokens, stop_sequence, pause_turn, refusal: what a production agent loop should do with each, including truncated tool calls. Questions go in the comments on the post; we answer there.",

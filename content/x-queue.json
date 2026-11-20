@@ -153,6 +153,17 @@
       "text": "A turn limit is also a spend limit.\n\nWorst case for the output of one agent run, 12 turns at max_tokens 4,096:\n\nOpus 5.5: $0.98\nSonnet 5.5: $0.49\nHaiku 5.5: $0.025\n\nWithout a turn limit a run has no worst case, and nothing to check against a user's budget before it starts."
     },
     {
+      "id": "t-20261120-1",
+      "at": "2026-11-21T23:00:00+09:00",
+      "text": "Every turn of an agent conversation sends the whole history again.\n\nOpus 5.5, input per turn:\n400,000 tokens: $1.60, or $0.08 read from cache\n40,000 after compaction: $0.16, or $0.008 from cache\n\nCaching cuts the price per token. Compaction cuts the tokens. You want both."
+    },
+    {
+      "id": "t-20261120-2",
+      "at": "2026-11-22T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Our recent posts as a 2-follower account, by where they went:\n\nshared into a community: 13 to 41 views each\ntimeline only: most got 0 to 4\n\nWith no audience yet, the timeline reaches almost nobody. So we write for the communities first and make each post useful on its own."
+    },
+    {
       "id": "t-20261122-b",
       "at": "2026-11-22T23:00:00+09:00",
       "text": "Magic-link sign-in breaks in a way testing won't show: corporate mail scanners open every link in the email, the token is used up, the real click fails.\n\nThe fix: link to your own page with a button, and let the button go to the real callback.\n\nOn our blog, link in profile."
@@ -162,6 +173,11 @@
       "at": "2026-11-23T01:00:00+09:00",
       "community_id": "1670204079619055616",
       "text": "A 200 from the Claude API is not always a finished answer. Check stop_reason first.\n\nIf it says max_tokens, the response was cut off, and the last tool call can be incomplete. Don't run a tool on input that was truncated; raise max_tokens or retry."
+    },
+    {
+      "id": "t-20261120-3",
+      "at": "2026-11-23T02:00:00+09:00",
+      "text": "Price per token is the number people compare. Cost per finished task is the one you pay.\n\nOpus 5.5, 20,000 tokens in, 2,000 out:\nno cache: $0.12\n18,000 of the input read from cache: $0.052\n\nSame model, less than half the cost. Measure cost per task from your usage table."
     },
     {
       "id": "t-20261123-b",
