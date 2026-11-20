@@ -1,10 +1,18 @@
 # Agentwright
 
-> Agentwright Starter (version 0.5.0) is a paid Next.js 16 starter kit for developers building SaaS products on Claude agents. One TypeScript codebase with Postgres (Drizzle): a streaming (SSE) agent loop with parallel tool calls, a 12-turn guard and prompt caching; MCP servers (stdio or Streamable HTTP) as tool sources; per-user token and cost metering with a price snapshot on every usage row; monthly token caps and per-plan rate limits; GitHub sign-in with optional Resend magic links; billing through Lemon Squeezy or Polar (checkout and subscription webhooks that set each user's plan); an eval runner with cost per case; license-key delivery with an admin page; tests and CI. Price rows ship for Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5.
+> Agentwright Starter (version 0.5.1) is a paid Next.js 16 starter kit for developers building a SaaS product on a Claude agent: $99 at launch for the first 50 licenses (list $149), paid once, every future version included, 14-day refund with no questions asked. It is one TypeScript codebase on Postgres (Drizzle) with a streaming tool loop, MCP servers as tools, per-user token and cost metering with a price snapshot on every usage row, monthly token caps and rate limits per plan, sign-in, and billing through Lemon Squeezy or Polar.
 
-Price: $99 at launch for the first 50 licenses (list $149; the code LAUNCH is applied at checkout), paid once, every future version included. 14-day refund, no questions asked. Sold through Polar (merchant of record). Delivery is a zip download and a license key by email; there is no GitHub repository access.
+Facts on this page were last checked on 2026-11-20. Agentwright is an independent business; the kit is not made, endorsed or sponsored by Anthropic.
 
-Not included: Stripe billing (billing is Lemon Squeezy or Polar), teams, organizations or seats, other model providers, charging for overage, dollar spend caps (the cap is monthly tokens), a job queue, RAG or search, file uploads, an MCP server of its own, Markdown rendering in the chat UI.
+Who it is for: a developer or small team whose product is a Claude agent that customers pay a plan for, and who needs to know what each user's Claude calls cost and to stop a plan at its cap.
+
+What it includes: a streaming (SSE) agent loop with parallel tool calls, a 12-turn guard and prompt caching; MCP servers (stdio or Streamable HTTP) as tool sources; one usage row per model call with input, output, cache-read and cache-write tokens, the cost in integer micro-dollars and the price row used, shown to each user on a /usage page; a model without a price row is refused before the API is called; monthly token caps per plan and requests-per-minute limits per plan (429); GitHub sign-in with optional Resend magic links; checkout and signed subscription webhooks for Lemon Squeezy or Polar (one setting, BILLING_PROVIDER); an eval runner with cost per case; license-key delivery with an admin page; unit and Postgres tests and a CI workflow. Stack: Next.js 16 (App Router), TypeScript, the Anthropic TypeScript SDK, the MCP TypeScript SDK, Drizzle ORM with Postgres, Auth.js v5, Tailwind CSS v4, Zod. Price rows ship for Claude Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5.
+
+Not included: Stripe or Paddle billing (billing is Lemon Squeezy or Polar), teams, organizations or seats, other model providers, charging for usage or overage, dollar spend caps (caps are monthly tokens), a job queue, RAG or search, file uploads, an MCP server of its own, a landing page or blog for your product, Markdown rendering in the chat UI. It does not use the Claude Agent SDK: it runs its own loop on the Messages API through the Anthropic TypeScript SDK.
+
+Pick something else if you need teams and seats, Stripe out of the box, several model providers, a finished UI and marketing site, or a coding agent (the Claude Agent SDK fits that better). The comparison pages below say which kit lists each of these, with a source and check date for every fact about another product.
+
+Terms: one license covers one person, or one team working for the same company or client, for unlimited products, including commercial SaaS. The kit's source may not be resold or republished as a starter kit, template or library. Sold through Polar (merchant of record); the code LAUNCH is applied at checkout. Delivery is a zip download and a license key by email; there is no GitHub repository access. Support by email at hello@agentwright.app.
 
 ## Product
 - [Agentwright Starter](https://agentwright.app/): what the kit does, pricing, delivery and the questions buyers ask
@@ -22,7 +30,7 @@ Not included: Stripe billing (billing is Lemon Squeezy or Polar), teams, organiz
 - [AnotherWrapper alternative for a Claude-only agent product](https://agentwright.app/alternatives/anotherwrapper-for-claude/): a multi-provider kit with demo apps next to a kit for one Claude agent with per-user cost metering
 - [Vercel's free Chatbot template or a paid Claude starter kit?](https://agentwright.app/alternatives/vercel-chatbot-template/): what the free template's repository includes, and what you add before you charge for a product built on it
 - [Claude agent SaaS boilerplate for Next.js: what it has to cover](https://agentwright.app/claude-agent-saas-boilerplate/): the parts beyond login and payments, with the file in the kit and a post with the code for each; the kit uses its own loop on the Anthropic TypeScript SDK, not the Claude Agent SDK
-- [FAQ](https://agentwright.app/faq/): price, refunds, license, stack, hosting, models, delivery, what is not included
+- [FAQ](https://agentwright.app/faq/): price, refunds, license, stack, hosting, models, billing providers, delivery, what is not included, and the questions developers ask when choosing a kit (per-user Claude cost metering, billing users for Claude usage, Polar and usage caps, ShipFast alternative, Claude Agent SDK, when to pick another kit)
 - [Refunds and license](https://agentwright.app/legal/): refund policy and license terms
 
 ## Free tools

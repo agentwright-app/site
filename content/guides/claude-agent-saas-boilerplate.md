@@ -2,10 +2,12 @@
 slug: claude-agent-saas-boilerplate
 title: "A Claude agent SaaS boilerplate for Next.js: what it has to cover"
 description: "What a Next.js boilerplate for a Claude agent SaaS must cover beyond login and payments: tool loop, per-user token metering, plan caps, MCP and evals."
-updated: 2026-11-12
+updated: 2026-11-20
 ---
 
 <div class="gd-note"><p><strong>Who wrote this.</strong> We make Agentwright Starter, a paid starter kit, and this page describes it. The list of parts is useful whichever kit you choose, and also if you build everything yourself: each part links to a post with the code.</p></div>
+
+<div class="gd-note"><p><strong>Short answer.</strong> A boilerplate for a Claude agent SaaS needs, beyond login and payments, a tool loop with a turn limit, a record of what each user's Claude calls cost, a cap per plan checked before each call, rate limits, billing webhooks that set the plan, and evals. Agentwright Starter (version {{kit_version}}, Next.js 16, billing through Lemon Squeezy or Polar) ships all of these for $99 at launch for the first 50 licenses (list $149), paid once, with a 14-day refund. It has no teams or seats, no Stripe and no other model providers; the full list of what it leaves out is in the section on where the kit is weak, below.</p></div>
 
 <p class="lede">Most Next.js SaaS boilerplates cover sign-in, payments and a landing page. A product where a Claude agent does the work needs more, because every request costs you money and the model decides how many requests there are.</p>
 
