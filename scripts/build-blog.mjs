@@ -20,6 +20,10 @@ marked.use(markedHighlight);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://agentwright.app";
+// Change FAQ_UPDATED whenever content/pages/faq.md changes: it is the visible "Last updated" line,
+// the FAQPage dateModified and the sitemap lastmod.
+const FAQ_UPDATED = "2026-11-20";
+const KIT_VERSION = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../content/kit/meta.json"), "utf8")).version;
 const POSTS_DIR = join(root, "content/posts");
 // BLOG_OUT builds into another folder (used for side-by-side test builds); the deploy uses dist/.
 const OUT = process.env.BLOG_OUT ? resolve(process.env.BLOG_OUT) : join(root, "dist");
@@ -457,7 +461,7 @@ const urls = [
   ...compareUrls.map((loc) => ({ loc, lastmod: compareChecked[loc], priority: "0.8" })),
   ...altUrls.map((loc) => ({ loc, lastmod: altChecked[loc], priority: loc.endsWith("/alternatives/") ? "0.6" : "0.8" })),
   ...guideUrls.map((loc) => ({ loc, lastmod: guideUpdated[loc], priority: "0.8" })),
-  { loc: `${SITE}/faq/`, lastmod: "2026-11-12", priority: "0.6" },
+  { loc: `${SITE}/faq/`, lastmod: FAQ_UPDATED, priority: "0.6" },
   { loc: `${SITE}/legal/`, lastmod: "2026-11-03", priority: "0.3" },
   { loc: `${SITE}/terms/`, lastmod: "2026-11-10", priority: "0.3" },
   { loc: `${SITE}/privacy/`, lastmod: "2026-11-12", priority: "0.3" },
@@ -533,6 +537,7 @@ for (const [slug, title, description] of [
   const jsonld = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    dateModified: FAQ_UPDATED,
     mainEntity: qa.map(({ q, a }) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.trim() } })),
   };
   const dir = join(OUT, "faq");
@@ -544,7 +549,7 @@ for (const [slug, title, description] of [
       description: "Price, refunds, license, what's inside, tech stack and updates for Agentwright Starter, the Claude agent SaaS starter kit.",
       url: `${SITE}/faq/`,
       meta: `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>\n`,
-      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Agentwright Starter, $99 launch price</strong> (list $149, first 50 licenses). The code LAUNCH is applied at checkout. 14-day refund, no questions asked.</p><a class="btn" href="${BUY_URL}">Buy now</a> <a class="cta-link" href="/inside/">Read the code first</a></div>`,
+      body: `<h1>Frequently asked questions</h1>\n<p class="lede">Everything about buying and using Agentwright Starter. Not answered here? Email <a href="mailto:hello@agentwright.app" style="color:inherit">hello@agentwright.app</a>.</p>\n<p class="meta">Last updated ${fmtDate(FAQ_UPDATED)}, for version ${KIT_VERSION} of the kit.</p>\n<article class="faq">\n${marked.parse(md)}</article>\n<div class="cta"><p><strong>Agentwright Starter, $99 launch price</strong> (list $149, first 50 licenses). The code LAUNCH is applied at checkout. 14-day refund, no questions asked.</p><a class="btn" href="${BUY_URL}">Buy now</a> <a class="cta-link" href="/inside/">Read the code first</a></div>`,
     }),
   );
 }
