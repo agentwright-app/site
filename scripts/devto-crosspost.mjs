@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SITE, parse, toDevto } from "./lib/devto-format.mjs";
+import { SITE, DEVTO_ORG, devtoOrgId, parse, toDevto } from "./lib/devto-format.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DRY = process.argv.includes("--dry-run");
@@ -68,6 +68,9 @@ async function main() {
     for (const d of next) writeFileSync(join(root, "dist-devto", `${d.item.slug}.md`), toDevto(d.body, `${SITE}/blog/${d.item.slug}/`));
     return console.log(`[dry-run] would publish "${meta.title}" (tags: ${article.tags.join(", ")}); ${next.length - 1} more due after it; bodies in dist-devto/`);
   }
+  const orgId = await devtoOrgId((path) => devto(path));
+  if (orgId) article.organization_id = orgId;
+  else console.warn(`organization ${DEVTO_ORG} not found; publishing as the user account`);
   const res = await devto("/articles", { method: "POST", body: JSON.stringify({ article }) });
   console.log(`published "${meta.title}" → ${res.url} (id ${res.id}); ${next.length - 1} more due after it`);
 }

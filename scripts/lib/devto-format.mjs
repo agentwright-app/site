@@ -2,6 +2,22 @@
 // Pure string functions: no Node or Workers APIs, so both runtimes can import this file.
 export const SITE = "https://agentwright.app";
 
+// DEV Organization the cross-posts are published under (created 2026-11-21, https://dev.to/agentwrightapp).
+// dev.to's AI-article guidelines allow a backlink to a company blog only when the post is shared
+// under that company's organization on DEV.
+export const DEVTO_ORG = "agentwrightapp";
+
+// Organization id, or null when the lookup fails, so the caller still posts as the user (the
+// behaviour before the organization existed) instead of skipping the scheduled post.
+export async function devtoOrgId(fetchJson) {
+  try {
+    const org = await fetchJson(`/organizations/${DEVTO_ORG}`);
+    return Number.isInteger(org?.id) ? org.id : null;
+  } catch {
+    return null;
+  }
+}
+
 export function parse(src) {
   const m = src.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) throw new Error("missing frontmatter");
