@@ -16,7 +16,7 @@
 // Secrets (worker secrets, never in code): DEVTO_API_KEY, RESEND_API_KEY, X_API_KEY, X_API_SECRET,
 // X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET, optional BLUESKY_HANDLE + BLUESKY_APP_PASSWORD. KV binding STATE (agentwright-cron-state) remembers posted X ids.
 // No fetch handler: not reachable over HTTP.
-import { SITE, parse, toDevto } from "./devto-format.mjs";
+import { SITE, DEVTO_ORG, devtoOrgId, parse, toDevto } from "./devto-format.mjs";
 import { render } from "./render-mail.mjs";
 import { runBsky } from "./bsky.mjs";
 
@@ -79,8 +79,11 @@ async function crosspost(env, today) {
     const live = await get(url);
     if (live.status !== 200) throw new Error(`${url} 응답 ${live.status}라서 dev.to 게시를 미뤘습니다`);
     const article = { title: meta.title, body_markdown: toDevto(body, url), published: true, canonical_url: url, description: meta.description, tags: (item.tags ?? []).slice(0, 4) };
+    const orgId = await devtoOrgId((path) => devto(env, path));
+    if (orgId) article.organization_id = orgId;
     const res = await devto(env, "/articles", { method: "POST", body: JSON.stringify({ article }) });
-    return `dev.to: published ${item.slug} → ${res.url}`; // one per run, oldest first
+    const as = orgId ? `organization ${DEVTO_ORG}` : `user account (organization ${DEVTO_ORG} not found)`;
+    return `dev.to: published ${item.slug} as ${as} → ${res.url}`; // one per run, oldest first
   }
   return "dev.to: 예정된 글은 모두 게시됨";
 }
