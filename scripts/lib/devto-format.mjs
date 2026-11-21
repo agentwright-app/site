@@ -6,16 +6,20 @@ export const SITE = "https://agentwright.app";
 // dev.to's AI-article guidelines allow a backlink to a company blog only when the post is shared
 // under that company's organization on DEV.
 export const DEVTO_ORG = "agentwrightapp";
+// Its id, read from the organization page (data-org-id) on 2026-11-21. Hard-coded because the public
+// GET /api/organizations/agentwrightapp still answered 404 after the organization existed, while
+// PUT/POST /api/articles with this organization_id worked (all six older posts were moved with it).
+export const DEVTO_ORG_ID = 16328;
 
-// Organization id, or null when the lookup fails, so the caller still posts as the user (the
-// behaviour before the organization existed) instead of skipping the scheduled post.
+// Organization id from the lookup when it answers, otherwise DEVTO_ORG_ID.
 export async function devtoOrgId(fetchJson) {
   try {
     const org = await fetchJson(`/organizations/${DEVTO_ORG}`);
-    return Number.isInteger(org?.id) ? org.id : null;
+    if (Number.isInteger(org?.id)) return org.id;
   } catch {
-    return null;
+    // fall through to the known id
   }
+  return DEVTO_ORG_ID;
 }
 
 export function parse(src) {
