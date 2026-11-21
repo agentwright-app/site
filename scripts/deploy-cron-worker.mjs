@@ -40,8 +40,9 @@ const api = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFL
 const auth = { authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}` };
 
 const mail = readFileSync(MAIL, "utf8")
-  .replace(/^import .*node:fs.*\n/m, "")
-  .replace(/\nif \(import\.meta\.url[\s\S]*$/, "\n");
+  .replace(/^import .*['"]node:(fs|url)['"].*\n/gm, "")
+  // CLI part: since 2026-11-18 it starts with "const isMain = ..."; older copies used "if (import.meta.url ...".
+  .replace(/\n(\/\/ Run as a command\?[^\n]*\n(\/\/[^\n]*\n)*)?(const isMain|if \(import\.meta\.url)[\s\S]*$/, "\n");
 if (/readFileSync|process\./.test(mail)) throw new Error("render-mail.mjs still uses Node APIs after stripping; update this script");
 
 const modules = {
