@@ -229,9 +229,21 @@
       "text": "Prompt injection in a Claude agent with tools: a threat model, and the defences that hold in code.\n\nCapabilities decided per run, authorization outside the model, closed exfiltration paths, and approval for side effects.\n\nOn our blog, link in profile."
     },
     {
+      "id": "t-20261128-a",
+      "at": "2026-11-28T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Pick an agent's model by cost per passed task, not per token.\n\nReplay 50 real tasks, check each result, divide spend by passes. At 40k in / 4k out:\n- Opus 5.5: $0.24 a run, say 45 pass: $0.27 each\n- Sonnet 5.5: $0.12 a run, say 30 pass: $0.20 each\n\nThen price the 20 failures."
+    },
+    {
       "id": "t-20261128-b",
       "at": "2026-11-28T23:00:00+09:00",
       "text": "Letting users approve an agent's risky actions before they run: stop the loop on a gated tool call, store the pending action, show the exact arguments, execute once, then resume with the right tool_result.\n\nParallel calls and denials included. On our blog, link in profile."
+    },
+    {
+      "id": "t-20261129-a",
+      "at": "2026-11-29T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Fable 5.2 as the planner, a cheaper model as the worker. One task at list prices:\nplanner 20k in / 2k out, 10 worker calls of 15k in / 1.5k out.\n\n- all Fable 5.2: $2.04\n- Sonnet 5.5 workers: $0.69\n- Haiku 5.5 workers: $0.26\n\nMost of the bill is the workers. Test them first."
     },
     {
       "id": "t-20261129-b",

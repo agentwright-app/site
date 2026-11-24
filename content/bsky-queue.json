@@ -109,6 +109,12 @@
       "link": "https://agentwright.app/tools/claude-pricing-mcp/"
     },
     {
+      "id": "r-20261124-1",
+      "at": "2026-11-24T16:00:00+09:00",
+      "text": "Yes, it has a section on that. The SDK only retries before a response starts. Once a stream is under way the error reaches your code: discard the partial turn and resend the same request, or stop and mark it incomplete. Never store a half-finished turn or run a partial tool_use block.",
+      "reply_to": "at://did:plc:f4m4v2ffzkfpnww34o3a6ppa/app.bsky.feed.post/3n2w3nde4ir2b"
+    },
+    {
       "id": "b-count-tokens",
       "at": "2026-11-24T23:00:00+09:00",
       "text": "Claude's token counting endpoint is free and takes the same input as a real request.\n\nWorth the extra round trip for uploads, budgets and routing. For a chat turn, the previous response's usage is often the better estimate. Questions go in the comments on the post; we answer there.",
