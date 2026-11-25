@@ -48,3 +48,14 @@ test("bsky: a link card to someone else's site is a warning (the worker may get 
   const own = checkQueue("bsky", { posts: [{ id: "a", at: "2026-11-13T23:00:00+09:00", text: "ok", link: "https://agentwright.app/inside/" }] }, NOW);
   assert.deepEqual(own.warnings, []);
 });
+
+test("x: two posts to the same community on one KST day, or the same text twice, are errors", () => {
+  const C = "1670204079619055616";
+  const r = checkQueue("x", { posts: [
+    { id: "a", at: "2026-11-13T01:00:00+09:00", community_id: C, text: "one" },
+    { id: "b", at: "2026-11-13T23:00:00+09:00", community_id: C, text: "two" },
+    { id: "c", at: "2026-11-14T01:00:00+09:00", community_id: C, text: "three" },
+    { id: "d", at: "2026-11-14T23:00:00+09:00", community_id: "1838763245567369450", text: "three" },
+  ] }, NOW);
+  assert.equal(r.errors.length, 2); // b: same community and day as a; d: same text as c
+});

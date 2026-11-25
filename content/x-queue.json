@@ -1,5 +1,5 @@
 {
-  "note": "X posts for the agentwright-cron worker. Each item is posted once at or after `at` (within 3 hours; later than that it is skipped and reported). The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at` (`at` 02:30 goes out at 03:07). No post may really go out between 03:00 and 07:00 KST, so never set `at` between 02:08 and 06:07 KST; night slots are 23:00, 01:00 and 02:00 KST, one item per slot (two items due in the same hour go out an hour apart). No links unless the item is a click-now item (max 1 link post/day). Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Optional per item: community_id (numeric X Community id the account has joined; posted with share_with_followers, falls back to a normal post + alert if refused; max 1 community post/day, never the same text in two communities). Top-level \"paused\": true stops all posting (emergency stop for policy changes).",
+  "note": "X posts for the agentwright-cron worker. Each item is posted once at or after `at` (within 3 hours; later than that it is skipped and reported). The worker runs at :07 every hour, so the real posting time is the first :07 at or after `at` (`at` 02:30 goes out at 03:07). No post may really go out between 03:00 and 07:00 KST, so never set `at` between 02:08 and 06:07 KST; night slots are 23:00, 01:00 and 02:00 KST, one item per slot (two items due in the same hour go out an hour apart). No links unless the item is a click-now item (max 1 link post/day). Edit on main; no redeploy needed. Before merging a change to this file run `npm run check:queues` (real posting times, length limits, links to posts that are not open yet). Optional per item: community_id (numeric X Community id the account has joined; posted with share_with_followers, falls back to a normal post + alert if refused; max 1 post per community per KST day, never the same text in two communities). Top-level \"paused\": true stops all posting (emergency stop for policy changes).",
   "posts": [
     {
       "id": "d1-2",
@@ -202,194 +202,214 @@
       "text": "The Anthropic TypeScript SDK already retries 429, 5xx and connection errors for you, with backoff.\n\nIt cannot know whether the tool that ran before the failure already sent an email or charged a card. Store each tool result before the next model call, and never run it twice."
     },
     {
-      "id": "t-20261125-b",
+      "id": "h-20261125-b",
       "at": "2026-11-25T23:00:00+09:00",
-      "text": "Long Claude agent conversations get expensive. Two ways to keep them small:\n\n- context editing: clear old tool results\n- compaction: replace old turns with a summary at a token threshold\n\nHow each one interacts with prompt caching and billing. On our blog, link in profile."
+      "community_id": "1493446837214187523",
+      "text": "Our X account has 3 followers. In the past week, its 5 posts on the plain timeline got 0 views. Every one.\n\nIts 4 posts shared into X Communities got 50, 37, 31 and 11.\n\nOn a new account the timeline reaches nobody. So from today, every post goes to a community first."
     },
     {
-      "id": "t-20261126-a",
+      "id": "h-20261126-a",
       "at": "2026-11-26T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Most agent bugs that look like model mistakes are tool definition mistakes.\n\n- the description says when to call the tool, not only what it does\n- enums instead of free strings\n- error messages that tell the model how to fix the call"
+      "text": "Many \"model mistakes\" in agents are tool definition bugs.\n\nBefore: \"search\", \"Searches the database.\"\nAfter: \"search_orders\", \"Use for the user's own past orders. Not for product questions.\"\n\nSay when to call it, not only what it does.\n\nMore on our blog, link in profile."
     },
     {
-      "id": "t-20261126-b",
+      "id": "h-20261126-b",
       "at": "2026-11-26T23:00:00+09:00",
-      "text": "How to write tool definitions Claude uses correctly: a verb-and-object name, a description that says when to call it, a schema that rules out wrong inputs, short results, and errors that lead to a correct retry.\n\nBefore/after examples in TypeScript. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261127-a",
-      "at": "2026-11-27T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "The risky combination in an agent: it can read private data, it reads text written by someone else (web pages, emails, documents), and it can send data out.\n\nA better system prompt doesn't fix that. Take one of the three away for each run, in code."
+      "text": "A 2M-token monthly cap can cost you $0.20 or $40.\n\nAll cache reads on Sonnet 5.5: $0.20\nAll output on Opus 5.5: $40\n\nSame cap, 200x apart. Cap each user's spend in dollars, not tokens.\n\nMore on our blog, link in profile."
     },
     {
-      "id": "t-20261127-b",
+      "id": "h-20261127-a",
+      "at": "2026-11-27T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "We built our kit's billing on Lemon Squeezy first. Then Lemon Squeezy told us it takes no new stores and closes in March 2027.\n\nWe made Polar the default 3 days later. It was quick because plans live in our own table; the payment provider only sends events."
+    },
+    {
+      "id": "h-20261127-b",
       "at": "2026-11-27T23:00:00+09:00",
-      "text": "Prompt injection in a Claude agent with tools: a threat model, and the defences that hold in code.\n\nCapabilities decided per run, authorization outside the model, closed exfiltration paths, and approval for side effects.\n\nOn our blog, link in profile."
-    },
-    {
-      "id": "t-20261128-a",
-      "at": "2026-11-28T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Pick an agent's model by cost per passed task, not per token.\n\nReplay 50 real tasks, check each result, divide spend by passes. At 40k in / 4k out:\n- Opus 5.5: $0.24 a run, say 45 pass: $0.27 each\n- Sonnet 5.5: $0.12 a run, say 30 pass: $0.20 each\n\nThen price the 20 failures."
+      "text": "10,000 document summaries, 2,000 tokens in and 300 out each:\n\nSonnet 5.5: $70\nHaiku 5.5: $3.50\nHaiku 5.5 via the Batch API: $1.75\n\nFor work nobody waits for, the model choice moves the bill 20x. Batching halves what is left."
     },
     {
-      "id": "t-20261128-b",
+      "id": "h-20261128-a",
+      "at": "2026-11-28T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "A better system prompt won't stop prompt injection.\n\nThe danger is three things in one run:\n- the agent reads private data\n- it reads text someone else wrote\n- it can send data out\n\nTake one of the three away for each run, in code.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "h-20261128-b",
       "at": "2026-11-28T23:00:00+09:00",
-      "text": "Letting users approve an agent's risky actions before they run: stop the loop on a gated tool call, store the pending action, show the exact arguments, execute once, then resume with the right tool_result.\n\nParallel calls and denials included. On our blog, link in profile."
+      "community_id": "1838763245567369450",
+      "text": "The model that costs 2x per token can be cheaper per finished task.\n\n50 tasks, 40k in / 4k out each:\nOpus 5.5: $12, 45 pass = $0.27 a pass\nSonnet 5.5: $6, 20 pass = $0.30 a pass\n\nPass rates here are made up. Measure yours, then divide."
     },
     {
-      "id": "t-20261129-a",
+      "id": "h-20261129-a",
       "at": "2026-11-29T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "Fable 5.2 as the planner, a cheaper model as the worker. One task at list prices:\nplanner 20k in / 2k out, 10 worker calls of 15k in / 1.5k out.\n\n- all Fable 5.2: $2.04\n- Sonnet 5.5 workers: $0.69\n- Haiku 5.5 workers: $0.26\n\nMost of the bill is the workers. Test them first."
+      "text": "Same agent task, three bills: $2.04, $0.69, $0.26.\n\nFable 5.2 plans in all three (20k in / 2k out). Only the 10 worker calls change model (15k in / 1.5k out each): Fable, Sonnet 5.5, Haiku 5.5.\n\nThe workers are 88% of the all-Fable bill. Test cheaper ones first."
     },
     {
-      "id": "t-20261129-b",
+      "id": "h-20261129-b",
       "at": "2026-11-29T23:00:00+09:00",
-      "text": "WHERE user_id = $1 is one lock. Postgres row-level security is a second one, for the day a query or an agent tool forgets it.\n\nPolicies, a non-owner app role, set_config inside a transaction, poolers, and what to test. On our blog, link in profile."
+      "community_id": "1493446837214187523",
+      "text": "Our kit stores every AI cost as an integer: micro-dollars. 1 = $0.000001.\n\nA Haiku 5.5 call, 3,000 tokens in and 400 out, is 500.\n\nIntegers add up exactly. A month of float sums would not, and you would not know which user the missing cents belong to."
     },
     {
-      "id": "t-20261130-a",
+      "id": "h-20261130-a",
       "at": "2026-11-30T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Testing an agent tool is ordinary unit testing: a tool is a function.\n\nFor the loop, use a scripted fake client that returns a tool_use block and then end_turn. Fast, free, deterministic. Keep the checks that need the real model in a separate eval suite."
+      "text": "Test an agent loop without paying for a single API call.\n\nA tool is a function: unit test it. For the loop, a fake client returns a tool_use block, then end_turn. Fast, free, repeatable.\n\nReal-model checks go in a separate eval suite.\n\nMore on our blog, link in profile."
     },
     {
-      "id": "t-20261130-b",
+      "id": "h-20261130-b",
       "at": "2026-11-30T23:00:00+09:00",
-      "text": "Tests for a Claude agent that never call Claude:\n\n- tools as plain functions\n- input schema tests\n- a scripted fake client for the loop: tool_use / tool_result handling, errors, turn limits\n\nReal-model checks stay in evals. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261201-a",
-      "at": "2026-12-01T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "Postgres row-level security has a catch: the table owner skips the policies unless you add FORCE ROW LEVEL SECURITY, and superusers always skip them.\n\nConnect the app as a separate role that does not own the tables, or the policies do nothing."
+      "text": "Turn 50 of an agent chat costs far more than turn 5, because every turn sends the whole history again.\n\nOne turn on Opus 5.5:\n400k tokens: $1.60 ($0.08 from cache)\n40k after compaction: $0.16 ($0.008 from cache)\n\nCaching makes tokens cheaper. Compaction makes fewer."
     },
     {
-      "id": "t-20261201-b",
-      "at": "2026-12-01T23:00:00+09:00",
-      "text": "One request through a Claude agent SaaS, in order:\n\nwho is this, too many requests, budget left, which model, the tool loop, streaming, recording the cost, storing the conversation.\n\nOne map, with a detailed post for each step. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261202-a",
-      "at": "2026-12-02T01:00:00+09:00",
+      "id": "h-20261201-a",
+      "at": "2026-12-01T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Schema-valid JSON from Claude is not the same as a correct answer.\n\nCheck stop_reason before you parse: max_tokens can cut the JSON off, and a refusal may not follow your schema. And a valid category can still be the wrong one. That part needs evals."
+      "text": "Postgres row-level security can silently do nothing.\n\nThe table owner skips the policies unless you add FORCE ROW LEVEL SECURITY. Superusers always skip them.\n\nConnect the app as a role that does not own the tables.\n\nMore on our blog, link in profile."
     },
     {
-      "id": "t-20261202-b",
+      "id": "h-20261201-b",
+      "at": "2026-12-01T23:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Polar's sandbox sent us subscription.updated before subscription.created.\n\nWebhooks arrive at least once and in no fixed order. Our rule: every event re-reads the subscription and recomputes the plan, and an older event never overwrites a newer one. The plan came out right."
+    },
+    {
+      "id": "h-20261202-a",
+      "at": "2026-12-02T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Valid JSON from Claude can still be broken JSON.\n\nCheck stop_reason before you parse. max_tokens means the output was cut off. A refusal may not follow your schema.\n\nAnd a valid category can still be the wrong category. Only evals catch that one."
+    },
+    {
+      "id": "h-20261202-b",
       "at": "2026-12-02T23:00:00+09:00",
-      "text": "A Stop button for a Claude agent: pass the request's abort signal to the SDK and to your tools.\n\nThe tokens of a request that already started are still billed, so record the usage even when the stream ends early, and leave the conversation valid. On our blog, link in profile."
+      "community_id": "1838763245567369450",
+      "text": "Two parallel requests can both pass \"budget left?\" and overspend together.\n\nReserve the worst case before the call: max_tokens times the output price. 4,096 on Opus 5.5 is $0.082. Settle to real usage after.\n\nLower max_tokens = more parallel calls under the same cap."
     },
     {
-      "id": "t-20261203-a",
+      "id": "h-20261203-a",
       "at": "2026-12-03T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "Store the Anthropic request id on every model call you log. The TypeScript SDK exposes it on the returned message as _request_id.\n\nIf you ever ask Anthropic support about one failed call, that id is the first thing they ask for."
+      "text": "Log one extra field on every Claude call: the request id.\n\nThe TypeScript SDK puts it on the returned message as _request_id.\n\nThe day one call misbehaves, it is the first thing Anthropic support asks for."
     },
     {
-      "id": "t-20261203-b",
+      "id": "h-20261203-b",
       "at": "2026-12-03T23:00:00+09:00",
-      "text": "Three cheap alerts before an AI bill surprises you, all from your own usage table:\n\n- daily total against a budget\n- one user far above their own normal\n- burn rate in the last hour\n\nPlus the provider-side spending limit as the last net. On our blog, link in profile."
+      "community_id": "1493446837214187523",
+      "text": "The whole agent loop in our kit is 104 lines of TypeScript.\n\nIt streams, runs tool calls in parallel, stops at 12 turns, caches the system prompt and checks the user's plan before every model turn.\n\nWe kept it short on purpose: you should be able to read where the money goes."
     },
     {
-      "id": "t-20261204-a",
+      "id": "h-20261204-a",
       "at": "2026-12-04T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Message Batches API results come back in any order.\n\nUse your own job row's id as the custom_id, and match each result by it. Never rely on position. Results stay available for 29 days."
+      "text": "The Batch API is half price. The catch: results come back in any order.\n\nSet custom_id to your own job row id and match each result by it. Never by position.\n\nResults stay downloadable for 29 days, so a crashed collector can pick them up later."
     },
     {
-      "id": "t-20261204-b",
+      "id": "h-20261204-b",
       "at": "2026-12-04T23:00:00+09:00",
-      "text": "Five onboarding emails worth sending in an AI SaaS, each triggered by what the user did: welcome, first-success nudge, 80% of the plan used, limit reached, a quiet check-in.\n\nA Postgres jobs table instead of a drip tool. On our blog, link in profile."
+      "community_id": "1670204079619055616",
+      "text": "Your first AI bill surprise will most likely be one user or one runaway loop, not your average.\n\nThree cheap alerts from your own usage table:\n- daily total vs budget\n- one user far above their own normal\n- spend in the last hour\n\nThe provider spend limit is the last net."
     },
     {
-      "id": "t-20261205-b",
+      "id": "h-20261205-b",
       "at": "2026-12-05T23:00:00+09:00",
-      "text": "Before you add a vector database, give your agent a search tool on plain Postgres full-text search: a generated tsvector column, a GIN index, websearch_to_tsquery for model-written queries, short ranked results.\n\nOn our blog, link in profile."
+      "community_id": "1838763245567369450",
+      "text": "Your agent may not need a vector database yet.\n\nPostgres full-text search: a generated tsvector column, a GIN index, websearch_to_tsquery for model-written queries.\n\nFor names, ids and exact terms, keyword search is often the better tool. Add vectors when a test set says so."
     },
     {
-      "id": "t-20261206-b",
+      "id": "h-20261206-b",
       "at": "2026-12-06T23:00:00+09:00",
-      "text": "Tracing Claude agent runs without an observability vendor: one row per run, one per step (model call or tool call), with timings, tokens, stop reasons and errors.\n\nThen p95 latency, slow tools and failing tools are a SQL query each. On our blog, link in profile."
+      "community_id": "1493446837214187523",
+      "text": "Our site has a new post every day, and search engines still send us almost no one. New domain, slow indexing.\n\nSo in the first weeks, readers come from places where people already are: X Communities, dev.to, newsletters.\n\nSEO is the long game. Communities are this month."
     },
     {
-      "id": "t-20261207-a",
+      "id": "h-20261207-a",
       "at": "2026-12-07T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "Use websearch_to_tsquery, not to_tsquery, when an agent writes the search query.\n\nIt accepts quotes, or, and a leading minus, and it never throws a syntax error. to_tsquery raises an error on bad syntax, and model-written queries will hit it."
+      "text": "Never let the model tell your tool who the user is.\n\nIf get_invoices takes user_id as an argument, one sentence hidden in an uploaded PDF can ask for someone else's.\n\nTake the user id from the server session. The model can be fooled; your auth check can't."
     },
     {
-      "id": "t-20261207-b",
+      "id": "h-20261207-b",
       "at": "2026-12-07T23:00:00+09:00",
-      "text": "Claude calls that nobody waits for (nightly digests, tagging, backfills) cost half the standard price through the Message Batches API.\n\nA Postgres table to track them, a cron job that submits and collects, and per-user metering. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261208-a",
-      "at": "2026-12-08T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Combining keyword and vector search results: reciprocal rank fusion.\n\nscore = 1/(60 + keyword rank) + 1/(60 + vector rank)\n\nIt uses ranks only, so you never have to make ts_rank and cosine distance comparable. One SQL query does both."
+      "text": "One-word fix for an agent's Postgres search tool: websearch_to_tsquery instead of to_tsquery.\n\nto_tsquery throws on bad syntax, and model-written queries will hit it. websearch_to_tsquery accepts quotes, or and a leading minus, and never throws."
     },
     {
-      "id": "t-20261208-b",
-      "at": "2026-12-08T23:00:00+09:00",
-      "text": "Adding pgvector to an agent's Postgres search tool: an embedding column next to the tsvector, an HNSW index, keyword and vector results combined in one query, embeddings kept in sync.\n\nAnd a small test set to prove it helped. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261209-a",
-      "at": "2026-12-09T01:00:00+09:00",
+      "id": "h-20261208-a",
+      "at": "2026-12-08T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "A user who uploads one PDF and asks five questions about it: with base64 you send the whole file five times.\n\nUpload it once with the Files API and send the file id instead. Then keep a table of which user owns which file id."
+      "text": "A Stop button does not stop the bill.\n\nWhen a user cancels a Claude stream, the tokens already processed are still charged.\n\nPass the abort signal to the SDK and to your tools, then record the usage anyway. Otherwise your cost table says the run was free."
     },
     {
-      "id": "t-20261209-b",
+      "id": "h-20261208-b",
+      "at": "2026-12-08T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Combining keyword and vector search without tuning weights: reciprocal rank fusion.\n\nscore = 1/(60 + keyword rank) + 1/(60 + vector rank)\n\nRanks only, so ts_rank and cosine distance never need to be comparable. One SQL query does both."
+    },
+    {
+      "id": "h-20261209-a",
+      "at": "2026-12-09T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "We never edit a price in our kit. A price change is a new row with a start date.\n\nEvery usage row points at the price it was billed with, so last month's totals don't move when a model gets cheaper, and every charge can still be explained."
+    },
+    {
+      "id": "h-20261209-b",
       "at": "2026-12-09T23:00:00+09:00",
-      "text": "PDF uploads in a Claude agent SaaS: base64 or the Files API, the request and page limits for your upload form, estimating the token cost before you send, and file ids scoped per user.\n\nOn our blog, link in profile."
+      "community_id": "1670204079619055616",
+      "text": "A user uploads one 50-page PDF and asks five questions. With base64 you upload the PDF five times.\n\nWith the Files API you upload it once and send a file id. The PDF's tokens are still billed per request, so cache it too.\n\nAnd store which user owns which file id."
     },
     {
-      "id": "t-20261210-a",
+      "id": "h-20261210-a",
       "at": "2026-12-10T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Onboarding mail rule: check the condition when the mail is sent, not when it was scheduled.\n\nA day-3 \"try your first task\" nudge must not go to someone who already did it on day 1."
+      "text": "A double click can start the same agent run twice, and you pay for both.\n\nThe client sends an idempotency key, Postgres has a unique constraint on it, and the second request replays the stored answer instead of calling Claude again."
     },
     {
-      "id": "t-20261210-b",
+      "id": "h-20261210-b",
       "at": "2026-12-10T23:00:00+09:00",
-      "text": "A double click, a mobile retry or a reconnecting stream can start the same Claude agent run twice, and you pay twice.\n\nA client-generated idempotency key, a unique constraint in Postgres, and a path that replays the stored answer. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261211-a",
-      "at": "2026-12-11T01:00:00+09:00",
       "community_id": "1670204079619055616",
-      "text": "Prompt injection defence that does not depend on the model: the agent never decides who the user is.\n\nTools take the user id from the server session, never from a tool argument. The model can be fooled; your authorization check can't."
+      "text": "Letting an agent send emails or charge cards? Make it ask first, in code.\n\nStop the loop on the gated tool call, store the pending call, show the user the exact arguments, run it once on approval, then resume with the right tool_result."
     },
     {
-      "id": "t-20261211-b",
-      "at": "2026-12-11T23:00:00+09:00",
-      "text": "Claude's web search server tool costs $10 per 1,000 searches, on top of tokens.\n\nSet max_uses, use domain filters where you can, read the citations, and meter searches per user like tokens. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261212-b",
-      "at": "2026-12-12T23:00:00+09:00",
-      "text": "Store Claude agent conversations as content blocks (text, tool calls, tool results, thinking), and append only.\n\nEditing earlier turns breaks prompt caching and can return 400s on current models. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261213-b",
-      "at": "2026-12-13T23:00:00+09:00",
-      "text": "Export my data, delete my account: in an AI product, user data also lives in uploaded files at Anthropic, your email provider, your payment provider and your logs.\n\nStart with one written map of where data lives, and a test that keeps it honest. On our blog, link in profile."
-    },
-    {
-      "id": "t-20261214-a",
-      "at": "2026-12-14T01:00:00+09:00",
+      "id": "h-20261211-a",
+      "at": "2026-12-11T01:00:00+09:00",
       "community_id": "1838763245567369450",
-      "text": "Kill switches for an agent are worth having before the first incident:\n\n- turn off one tool\n- move a route to another model\n- pause one user\n\nA config table with a short cache changes them in seconds, without a deploy."
+      "text": "Claude's web search tool costs $10 per 1,000 searches, on top of tokens.\n\nAn agent that searches 5 times per question spends $0.05 before the first token.\n\nSet max_uses, use domain filters, and meter searches per user like tokens."
     },
     {
-      "id": "t-20261214-b",
+      "id": "h-20261211-b",
+      "at": "2026-12-11T23:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "dev.to's rules say AI-assisted posts must say so, and may not promote a business, including your own.\n\nSo our dev.to posts carry an AI note, teach one thing, and stop. No product pitch.\n\nRead each platform's AI rules before you post. They differ a lot."
+    },
+    {
+      "id": "h-20261212-b",
+      "at": "2026-12-12T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Don't edit earlier turns of an agent conversation.\n\nIt breaks the prompt cache from that point on, and with thinking blocks current models can return 400s.\n\nStore the conversation as content blocks and only append."
+    },
+    {
+      "id": "h-20261213-b",
+      "at": "2026-12-13T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Find the cost floor of one agent task before you pick a price.\n\nSonnet 5.5, 6 turns, 30k input tokens with 80% from cache, 3k output:\ninput $0.012, cache reads $0.0024, output $0.03\n\nAbout $0.044. At $0.10 a task the margin is 56%."
+    },
+    {
+      "id": "h-20261214-a",
+      "at": "2026-12-14T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Kill switches worth having before the first incident:\n\n- turn off one tool\n- move a route to another model\n- pause one user\n\nA config table with a short cache changes them in seconds, without a deploy.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "h-20261214-b",
       "at": "2026-12-14T23:00:00+09:00",
-      "text": "Kill switches for an AI agent: one runtime config table to disable a broken tool, switch a model, lower limits or pause an abusive user in seconds.\n\nWith a short cache, an audit log, safe defaults and the incident runbook. On our blog, link in profile."
+      "community_id": "1838763245567369450",
+      "text": "Haiku 5.5 is 20x cheaper per token than Sonnet 5.5.\n\nIn one agent request, route the easy steps there: classify, tag, extract, check a format. Keep Sonnet for the turns that need judgment.\n\nThen compare cost per passed task, not per call."
     }
   ]
 }
