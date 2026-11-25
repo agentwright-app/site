@@ -47,6 +47,8 @@ export function checkQueue(name, queue, now = Date.now()) {
   const isX = name === "x";
   const seen = new Set();
   const taken = new Set(); // runs already used: the worker posts at most one item per run
+  const communityDays = new Map(); // "<KST day> <community id>" -> item id (X: one post per community per KST day)
+  const texts = new Map(); // text -> item id (never the same text twice)
   const posts = [...(queue.posts ?? [])].sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
   for (const p of posts) {
     const tag = `${name}:${p.id}`;
@@ -67,6 +69,15 @@ export function checkQueue(name, queue, now = Date.now()) {
       );
     }
     taken.add(run);
+
+    if (isX && p.community_id !== undefined) {
+      const key = `${kstDay(run)} ${p.community_id}`;
+      if (communityDays.has(key))
+        errors.push(`${tag}: ${communityDays.get(key)} already goes to community ${p.community_id} on ${kstDay(run)} KST; one post per community per KST day`);
+      else communityDays.set(key, p.id);
+    }
+    if (texts.has(p.text)) errors.push(`${tag}: same text as ${texts.get(p.text)}`);
+    else texts.set(p.text, p.id);
 
     const len = isX ? [...p.text].length : graphemes(p.text);
     const max = isX ? X_MAX : BSKY_MAX;
