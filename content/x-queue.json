@@ -238,6 +238,12 @@
       "text": "A better system prompt won't stop prompt injection.\n\nThe danger is three things in one run:\n- the agent reads private data\n- it reads text someone else wrote\n- it can send data out\n\nTake one of the three away for each run, in code.\n\nMore on our blog, link in profile."
     },
     {
+      "id": "t-20261128-1",
+      "at": "2026-11-28T02:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Claude Sonnet 4.5 retires from the Claude API on Nov 30; requests to it then return a 404.\n\nIn our kit the model is one env variable (AGENT_MODEL), and the agent loop refuses any model without a price row before it spends a token. Switching is one line plus one price row."
+    },
+    {
       "id": "h-20261128-b",
       "at": "2026-11-28T23:00:00+09:00",
       "community_id": "1838763245567369450",
@@ -248,6 +254,12 @@
       "at": "2026-11-29T01:00:00+09:00",
       "community_id": "1670204079619055616",
       "text": "Same agent task, three bills: $2.04, $0.69, $0.26.\n\nFable 5.2 plans in all three (20k in / 2k out). Only the 10 worker calls change model (15k in / 1.5k out each): Fable, Sonnet 5.5, Haiku 5.5.\n\nThe workers are 88% of the all-Fable bill. Test cheaper ones first."
+    },
+    {
+      "id": "t-20261129-1",
+      "at": "2026-11-29T02:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "40 tools at ~250 tokens each = 10,000 input tokens on every turn, before the user types a word.\n\nHypothetical 20-turn session on Sonnet 5.5: $0.40 for tool definitions alone. Cached: $0.044 (one write, 19 reads).\n\nKeep the tool list stable so it stays cached. Drop unused tools."
     },
     {
       "id": "h-20261129-b",
@@ -272,6 +284,12 @@
       "at": "2026-12-01T01:00:00+09:00",
       "community_id": "1838763245567369450",
       "text": "Postgres row-level security can silently do nothing.\n\nThe table owner skips the policies unless you add FORCE ROW LEVEL SECURITY. Superusers always skip them.\n\nConnect the app as a role that does not own the tables.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "t-20261201-1",
+      "at": "2026-12-01T02:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "When people use your SaaS through an MCP server, your product analytics go blind: no page views, no clicks, no session replay.\n\nThe tool calls are the new usage log. Record each one: user, tool, duration, result size, error.\n\nThat table shows which features people actually use."
     },
     {
       "id": "h-20261201-b",

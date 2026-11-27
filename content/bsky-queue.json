@@ -133,6 +133,12 @@
       "link": "https://agentwright.app/claude-agent-saas-boilerplate/"
     },
     {
+      "id": "r-20261127-1",
+      "at": "2026-11-27T16:00:00+09:00",
+      "text": "Agreed, that is the gap. Store each side-effecting tool outcome in your own table, keyed by the request id plus tool name and arguments, before the next model call. On a resend, a matching key returns the saved result instead of running the tool again.",
+      "reply_to": "at://did:plc:f4m4v2ffzkfpnww34o3a6ppa/app.bsky.feed.post/3n32sxxty7v22"
+    },
+    {
       "id": "b-free-template",
       "at": "2026-11-27T23:00:00+09:00",
       "text": "Starting from a free chat template? Before you charge for the product, you add four things: billing webhooks that set each user's plan, a usage row per model call, caps that belong to a plan, and evals.\n\nVercel's free Chatbot template next to our paid kit, and when the free one is the better start.",
