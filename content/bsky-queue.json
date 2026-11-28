@@ -245,6 +245,90 @@
       "at": "2026-12-14T23:00:00+09:00",
       "text": "Kill switches for an AI agent: turn off a tool, change a model, lower limits or pause one user in seconds, without a deploy. A config table, a short cache, an audit log and a runbook. Questions go in the comments on the post; we answer there.",
       "link": "https://agentwright.app/blog/kill-switches-ai-agent-models-tools/"
+    },
+    {
+      "id": "b-parallel-1215",
+      "at": "2026-12-15T23:00:00+09:00",
+      "text": "Parallel tool calls with Claude: run them with Promise.all, return every tool_result in one user message, keep failures as is_error results, limit concurrency per shared resource, and know when to turn parallel calls off.",
+      "link": "https://agentwright.app/blog/parallel-tool-calls-claude-agent-loop/"
+    },
+    {
+      "id": "b-apikeys-1216",
+      "at": "2026-12-16T23:00:00+09:00",
+      "text": "API keys for your users: a scannable prefix, 32 random bytes, a SHA-256 hash in Postgres, the key shown once, two scopes, revoke by timestamp, and the same rate limits and metering as the web app. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/api-keys-for-your-ai-saas-users/"
+    },
+    {
+      "id": "b-byok-1217",
+      "at": "2026-12-17T23:00:00+09:00",
+      "text": "Bring your own Anthropic key: when BYOK is worth offering, AES-256-GCM with the user id as AAD, a free count_tokens check before saving, redaction in every log, and why metering stays on.",
+      "link": "https://agentwright.app/blog/bring-your-own-anthropic-api-key-byok/"
+    },
+    {
+      "id": "b-memory-1218",
+      "at": "2026-12-18T23:00:00+09:00",
+      "text": "Agent memory that survives between conversations: Claude's memory tool backed by per-user Postgres rows, or a strict facts table. Scoping, size caps, what never to store, and a page where users see and delete it. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/agent-memory-across-conversations-claude/"
+    },
+    {
+      "id": "b-images-1219",
+      "at": "2026-12-19T23:00:00+09:00",
+      "text": "Screenshots and photos for a Claude agent: resize on the server, PNG for screenshots and JPEG for photos, what an image costs in tokens, base64 vs the Files API, and limits per plan.",
+      "link": "https://agentwright.app/blog/image-uploads-claude-vision-agent/"
+    },
+    {
+      "id": "b-results-1220",
+      "at": "2026-12-20T23:00:00+09:00",
+      "text": "Big tool results are re-read on every later turn. Five fixes: return only needed fields, cap and page lists, say what was cut, keep large results outside the conversation, clear old ones. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/large-tool-results-agent-token-costs/"
+    },
+    {
+      "id": "b-free-1221",
+      "at": "2026-12-21T23:00:00+09:00",
+      "text": "A free tier for an AI product without paying for abuse: a target cost per free user, the model choice behind it, a dollar ceiling, verified sign-in, normalised emails, signups per IP, and one weekly number.",
+      "link": "https://agentwright.app/blog/free-tier-abuse-ai-saas/"
+    },
+    {
+      "id": "b-usage-1222",
+      "at": "2026-12-22T23:00:00+09:00",
+      "text": "The usage page that prevents \"why did I hit my limit?\" emails: one unit customers understand, the cap, a month-end projection, a 30-day chart, the top conversations, and 80% and 100% warnings, with the SQL. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/usage-page-for-ai-saas-customers/"
+    },
+    {
+      "id": "b-citations-1223",
+      "at": "2026-12-23T23:00:00+09:00",
+      "text": "Claude citations for answers from user documents: enabling them on document blocks, text vs PDF vs custom content, rendering footnotes, the structured-outputs limit, and three grounding tests.",
+      "link": "https://agentwright.app/blog/claude-citations-grounded-answers-documents/"
+    },
+    {
+      "id": "b-titles-1224",
+      "at": "2026-12-24T23:00:00+09:00",
+      "text": "Chat titles and one-line summaries on Claude Haiku 5.5: when to generate, a JSON schema that keeps titles short, running it after the response, idempotent writes, and about $0.28 per thousand conversations. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/conversation-titles-summaries-haiku/"
+    },
+    {
+      "id": "b-effort-1225",
+      "at": "2026-12-25T23:00:00+09:00",
+      "text": "Effort levels on current Claude models: what they control, the defaults that differ between Opus 5.5, Sonnet 5.5 and Haiku 5.5, thinking billed as output, and choosing per route by cost per passed task.",
+      "link": "https://agentwright.app/blog/claude-effort-levels-per-route-cost/"
+    },
+    {
+      "id": "b-prompts-1226",
+      "at": "2026-12-26T23:00:00+09:00",
+      "text": "Version your agent's system prompt like code: one file per version, the version id on every usage row, evals before release, a percentage rollout by user hash, and rollback without a deploy. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/version-system-prompts-rollout-rollback/"
+    },
+    {
+      "id": "b-feedback-1227",
+      "at": "2026-12-27T23:00:00+09:00",
+      "text": "Thumbs up and down on agent answers: one click first, a table tied to the exact message and prompt version, a weekly review, and turning real failures into eval cases with personal data removed.",
+      "link": "https://agentwright.app/blog/thumbs-feedback-agent-answers-evals/"
+    },
+    {
+      "id": "b-subagents-1228",
+      "at": "2026-12-28T23:00:00+09:00",
+      "text": "Subagents in a Claude product: when a second loop pays off and when it only adds cost, building one as a tool in your existing loop, read-only workers on a cheaper model, and metering the whole tree. Questions go in the comments on the post; we answer there.",
+      "link": "https://agentwright.app/blog/subagents-orchestrator-claude-cost/"
     }
   ]
 }

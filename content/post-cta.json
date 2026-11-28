@@ -358,5 +358,100 @@
       "lib/auth/admin.ts",
       "app/admin/licenses/page.tsx"
     ]
+  },
+  "parallel-tool-calls-claude-agent-loop": {
+    "text": "Agentwright Starter's agent loop already does this: lib/agent/loop.ts runs every tool call of a turn with Promise.all, returns a failed call as an is_error result, and sends all results back in one user message.",
+    "files": [
+      "lib/agent/loop.ts"
+    ]
+  },
+  "api-keys-for-your-ai-saas-users": {
+    "text": "Agentwright Starter has no user API keys. Its agent route (app/api/agent/route.ts) signs users in with Auth.js and runs each request through the rate limit (lib/ratelimit/index.ts) and the monthly cap (lib/billing/metering.ts), which is the path an API key from this post should join.",
+    "files": [
+      "app/api/agent/route.ts",
+      "lib/ratelimit/index.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "bring-your-own-anthropic-api-key-byok": {
+    "text": "Agentwright Starter does not include BYOK. It calls Claude with one server-side key from the environment in lib/agent/loop.ts and meters every call per user in lib/billing/metering.ts, the metering a BYOK plan should keep.",
+    "files": [
+      "lib/agent/loop.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "agent-memory-across-conversations-claude": {
+    "text": "Agentwright Starter has no agent memory. It stores each conversation per user in the conversations table (lib/db/schema.ts) and defines tools with Zod schemas in lib/agent/tools.ts; a memory tool would also need the user id passed to it.",
+    "files": [
+      "lib/db/schema.ts",
+      "lib/agent/tools.ts"
+    ]
+  },
+  "image-uploads-claude-vision-agent": {
+    "text": "Agentwright Starter's chat sends text only; it has no image uploads. Its metering in lib/billing/metering.ts records input tokens from every call's usage, which would include image tokens once you add them.",
+    "files": [
+      "lib/billing/metering.ts"
+    ]
+  },
+  "large-tool-results-agent-token-costs": {
+    "text": "Agentwright Starter's loop (lib/agent/loop.ts) returns each tool result as JSON as is, with no trimming, and records input and output tokens per call, so the savings from this post show up on its /usage page.",
+    "files": [
+      "lib/agent/loop.ts",
+      "app/usage/page.tsx"
+    ]
+  },
+  "free-tier-abuse-ai-saas": {
+    "text": "Agentwright Starter seeds a free plan next to paid plans (scripts/seed.ts), signs users in with GitHub or a magic link, and checks a rate limit and a monthly token cap before every agent request. Disposable-email and per-IP signup checks are not included.",
+    "files": [
+      "scripts/seed.ts",
+      "lib/ratelimit/index.ts",
+      "lib/billing/metering.ts"
+    ]
+  },
+  "usage-page-for-ai-saas-customers": {
+    "text": "Agentwright Starter ships a /usage page (app/usage/page.tsx) with tokens and cost against the plan cap, a split by model, a 30-day chart and the latest calls, read from the same usage_events rows its cap check uses. Month-end projection and 80% emails are not included.",
+    "files": [
+      "app/usage/page.tsx",
+      "lib/billing/usage.ts"
+    ]
+  },
+  "claude-citations-grounded-answers-documents": {
+    "text": "Agentwright Starter does not use document blocks or citations yet. Its agent route streams text to a minimal chat UI (components/chat.tsx), which is where footnotes like these would render.",
+    "files": [
+      "components/chat.tsx",
+      "app/api/agent/route.ts"
+    ]
+  },
+  "conversation-titles-summaries-haiku": {
+    "text": "Agentwright Starter titles a conversation with the first 80 characters of its first message (app/api/agent/route.ts) and has no summary column. A Haiku title job from this post would replace that line and be metered like any other call.",
+    "files": [
+      "app/api/agent/route.ts"
+    ]
+  },
+  "claude-effort-levels-per-route-cost": {
+    "text": "Agentwright Starter does not set an effort level: lib/agent/loop.ts sends the model from AGENT_MODEL (default claude-sonnet-5-5) with that model's default effort, and records input and output tokens per call.",
+    "files": [
+      "lib/agent/loop.ts"
+    ]
+  },
+  "version-system-prompts-rollout-rollback": {
+    "text": "Agentwright Starter keeps one system prompt in lib/agent/system-prompt.ts, the same for every request so the prompt cache holds, and runs evals from evals/cases.ts. Prompt versions and a rollout switch are not included.",
+    "files": [
+      "lib/agent/system-prompt.ts",
+      "evals/cases.ts"
+    ]
+  },
+  "thumbs-feedback-agent-answers-evals": {
+    "text": "Agentwright Starter has an eval runner (evals/run.ts, cases in evals/cases.ts) and stores conversations per user; it has no feedback buttons.",
+    "files": [
+      "evals/run.ts",
+      "evals/cases.ts"
+    ]
+  },
+  "subagents-orchestrator-claude-cost": {
+    "text": "Agentwright Starter has no subagent tool. Its runAgent in lib/agent/loop.ts meters every call to the signed-in user and runs a turn's tool calls in parallel, which is what a worker built as a tool would reuse.",
+    "files": [
+      "lib/agent/loop.ts"
+    ]
   }
 }

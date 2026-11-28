@@ -9,5 +9,9 @@
   {"slug": "rate-limit-llm-endpoints-postgres", "date": "2026-12-01", "tags": ["postgres", "nextjs", "ai", "webdev"]},
   {"slug": "claude-api-errors-retries-agent-loop", "date": "2026-12-04", "tags": ["ai", "typescript", "llm", "webdev"]},
   {"slug": "structured-outputs-claude-typescript", "date": "2026-12-08", "tags": ["ai", "typescript", "llm", "json"]},
-  {"slug": "background-agent-jobs-postgres-skip-locked", "date": "2026-12-11", "tags": ["postgres", "ai", "typescript", "architecture"]}
+  {"slug": "background-agent-jobs-postgres-skip-locked", "date": "2026-12-11", "tags": ["postgres", "ai", "typescript", "architecture"]},
+  {"slug": "parallel-tool-calls-claude-agent-loop", "date": "2026-12-15", "tags": ["ai", "typescript", "llm", "performance"]},
+  {"slug": "prompt-injection-defenses-agent-tools", "date": "2026-12-18", "tags": ["ai", "security", "llm", "typescript"]},
+  {"slug": "large-tool-results-agent-token-costs", "date": "2026-12-22", "tags": ["ai", "llm", "typescript", "performance"]},
+  {"slug": "agent-memory-across-conversations-claude", "date": "2026-12-25", "tags": ["ai", "postgres", "typescript", "llm"]}
 ]

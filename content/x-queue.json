@@ -428,6 +428,150 @@
       "at": "2026-12-14T23:00:00+09:00",
       "community_id": "1838763245567369450",
       "text": "Haiku 5.5 is 20x cheaper per token than Sonnet 5.5.\n\nIn one agent request, route the easy steps there: classify, tag, extract, check a format. Keep Sonnet for the turns that need judgment.\n\nThen compare cost per passed task, not per call."
+    },
+    {
+      "id": "h-20261215-a",
+      "at": "2026-12-15T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Your agent asked for 3 tools at once. Send the results back as 3 separate messages and it learns to stop.\n\nRun the calls with Promise.all, return every tool_result in one user message, mark failures with is_error.\n\nOne turn instead of three.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "h-20261215-b",
+      "at": "2026-12-15T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Three sequential tool calls = three model turns, each re-reading the whole conversation.\n\nThree parallel calls = one turn.\n\nWith 20k tokens of mostly cached context on Sonnet 5.5, each skipped turn saves roughly $0.002-0.004 of input, plus its output. It adds up per user."
+    },
+    {
+      "id": "h-20261216-a",
+      "at": "2026-12-16T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Our blog posts are written weeks ahead and uploaded together. A middleware reads each post's date at request time (Asia/Seoul) and returns 404 until its day.\n\nNo deploy per post, no publish cron. A post simply opens at midnight."
+    },
+    {
+      "id": "h-20261216-b",
+      "at": "2026-12-16T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "An API key you give your users is a second front door to your agent.\n\nIf it skips your rate limits, plan caps and usage rows, a customer's script becomes your bill.\n\nResolve keys and browser sessions to the same user id, then run both through one function."
+    },
+    {
+      "id": "h-20261217-a",
+      "at": "2026-12-17T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "BYOK checklist for a Claude app:\n\n- AES-256-GCM, a fresh 12-byte IV per key\n- user id as AAD, so a copied ciphertext won't decrypt for another user\n- encryption key outside the database\n- validate with a free count_tokens call\n- redact x-api-key in every log"
+    },
+    {
+      "id": "h-20261217-b",
+      "at": "2026-12-17T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Bring-your-own-key users still need rate limits and turn caps.\n\nYou don't pay for their tokens, but a loop bug still burns their money, and they will blame you. Fairly.\n\nKeep metering on for BYOK too, so they can see where their spend went."
+    },
+    {
+      "id": "h-20261218-a",
+      "at": "2026-12-18T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Don't put user memories in the system prompt.\n\nIt should be identical for every request so its cache is shared. Per-user text there means a cache miss for everyone.\n\nLoad memories after the cached prefix, in the conversation.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "h-20261218-b",
+      "at": "2026-12-18T23:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Every X post we schedule goes through a check script before it can merge: real posting time, length, one post per community per day, no link to a blog post that isn't open yet.\n\nA content queue is code. It gets tests."
+    },
+    {
+      "id": "h-20261219-b",
+      "at": "2026-12-19T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "A screenshot costs about width x height / 750 tokens.\n\n1600x1000 is ~2,100 tokens: ~$0.004 on Sonnet 5.5 the first time, ~$0.0002 from cache on later turns.\n\nWithout caching, a 10-turn chat pays full price for the same screenshot ten times."
+    },
+    {
+      "id": "h-20261220-b",
+      "at": "2026-12-20T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Say a tool returns 200 full order objects: 30,000 tokens.\n\nEvery later turn re-reads it. On Sonnet 5.5, written to cache once and read 8 more times: about $0.10.\n\nThe same answer in 3,000 tokens: about $0.01.\n\nReturn only the fields the model needs."
+    },
+    {
+      "id": "h-20261221-a",
+      "at": "2026-12-21T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Truncating a tool result silently is worse than not truncating.\n\nThe model treats the partial result as complete and answers confidently from it.\n\nWhen you cut, say so: \"[... 48,000 characters omitted ...]\". Keep the end too. In logs the useful line is often last."
+    },
+    {
+      "id": "h-20261221-b",
+      "at": "2026-12-21T23:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Our kit stores money as integer micro-dollars, never floats.\n\n0.1 + 0.2 is 0.30000000000000004 in JavaScript. Over a million usage rows, rounding drift becomes a number a customer asks about.\n\n$1 = 1,000,000. Sums stay exact."
+    },
+    {
+      "id": "h-20261222-a",
+      "at": "2026-12-22T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Free tier math for a Claude app (an example, not our numbers):\n\n6,000 input + 600 output tokens per request\nHaiku 5.5: $0.0009\nSonnet 5.5: $0.018\n\n$0.30 per free user per month buys ~330 requests on Haiku, ~16 on Sonnet.\n\nPick the model before the cap."
+    },
+    {
+      "id": "h-20261222-b",
+      "at": "2026-12-22T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Most free-tier abuse is many accounts, not one heavy user.\n\nCheap checks that stop most of it:\n- verified sign-in only\n- block disposable email domains\n- one free account per normalised address (j.ane+1@gmail.com = jane@gmail.com)\n- a few signups per IP per day"
+    },
+    {
+      "id": "h-20261223-a",
+      "at": "2026-12-23T01:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "Model prices in our kit are rows with a start date, and a row is never edited.\n\nWhen a price changes we add a new row. Every usage row points at the price it was charged with, so last month's totals never move."
+    },
+    {
+      "id": "h-20261223-b",
+      "at": "2026-12-23T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "\"Why did I hit my limit already?\" is the most predictable support email in a usage-priced product.\n\nAnswer it before it's sent: a usage page with the cap, a month-end projection, and the 5 conversations that used the most.\n\nMore on our blog, link in profile."
+    },
+    {
+      "id": "h-20261224-a",
+      "at": "2026-12-24T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Claude's citations return the quoted passage as cited_text, and it doesn't count toward output tokens.\n\nCheaper than asking the model to quote its sources in the answer, and you get exact character ranges or PDF pages to link to."
+    },
+    {
+      "id": "h-20261224-b",
+      "at": "2026-12-24T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Grounding tests for a document Q&A agent:\n\n1. every cited_text must exist in the source\n2. a question the document doesn't answer gets no confident claim\n3. any number in the answer comes with a citation\n\nThree mechanical checks. No LLM judge needed."
+    },
+    {
+      "id": "h-20261225-a",
+      "at": "2026-12-25T01:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Chat titles on Haiku 5.5: ~2,500 tokens in, ~60 out.\n\n$0.00025 + $0.00003 = about $0.0003 per conversation, roughly $0.28 per thousand.\n\nThe same call on Sonnet 5.5 costs 20x more, for a title nobody reads twice."
+    },
+    {
+      "id": "h-20261225-b",
+      "at": "2026-12-25T23:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Don't name a chat from the first message alone. \"quick question\" makes a bad title.\n\nThe agent's first answer usually says what the conversation is about. Generate the title after the first exchange, after the response is sent, so nobody waits for it."
+    },
+    {
+      "id": "h-20261226-b",
+      "at": "2026-12-26T23:00:00+09:00",
+      "community_id": "1493446837214187523",
+      "text": "The tool list our kit sends to Claude is sorted by name on every request.\n\nWhy: the prompt cache is a byte-exact prefix match. An MCP server listing its tools in a different order would quietly turn every cache read into a full-price write."
+    },
+    {
+      "id": "h-20261227-b",
+      "at": "2026-12-27T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "Your evals test the cases you thought of. Users find the others, and most of them say nothing.\n\nA thumbs-down button is the cheapest way to hear about them. Read every one weekly and turn the real failures into eval cases."
+    },
+    {
+      "id": "h-20261228-a",
+      "at": "2026-12-28T01:00:00+09:00",
+      "community_id": "1838763245567369450",
+      "text": "Thinking tokens are billed as output, even when you never show them.\n\nOn Sonnet 5.5 that's $10 per million. A 400-token answer after 3,000 tokens of thinking pays for 3,400.\n\nSet effort per route and compare cost per passed task, not per call."
+    },
+    {
+      "id": "h-20261228-b",
+      "at": "2026-12-28T23:00:00+09:00",
+      "community_id": "1670204079619055616",
+      "text": "A subagent is a second loop with its own context and its own bill.\n\nWorth it for big reading with a small answer: 45k tokens of tickets read by a Haiku worker, 400 tokens back. Not worth it for a task one tool call can do.\n\nMore on our blog, link in profile."
     }
   ]
 }
