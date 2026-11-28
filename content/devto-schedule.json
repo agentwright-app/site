@@ -6,12 +6,17 @@
   {"slug": "evals-for-claude-agents-typescript", "date": "2026-11-20", "tags": ["ai", "testing", "typescript", "llm"]},
   {"slug": "remote-mcp-server-cloudflare-without-sdk", "date": "2026-11-24", "tags": ["mcp", "cloudflare", "typescript", "ai"]},
   {"slug": "mcp-servers-as-tools-in-your-agent", "date": "2026-11-27", "tags": ["mcp", "ai", "typescript", "llm"]},
+  {"slug": "count-tokens-before-sending-claude", "date": "2026-11-29", "tags": ["ai", "llm", "typescript", "saas"]},
   {"slug": "rate-limit-llm-endpoints-postgres", "date": "2026-12-01", "tags": ["postgres", "nextjs", "ai", "webdev"]},
   {"slug": "claude-api-errors-retries-agent-loop", "date": "2026-12-04", "tags": ["ai", "typescript", "llm", "webdev"]},
+  {"slug": "handle-claude-stop-reasons-agent", "date": "2026-12-06", "tags": ["ai", "llm", "typescript", "webdev"]},
   {"slug": "structured-outputs-claude-typescript", "date": "2026-12-08", "tags": ["ai", "typescript", "llm", "json"]},
   {"slug": "background-agent-jobs-postgres-skip-locked", "date": "2026-12-11", "tags": ["postgres", "ai", "typescript", "architecture"]},
+  {"slug": "write-tool-descriptions-claude-uses-well", "date": "2026-12-13", "tags": ["ai", "llm", "typescript", "agents"]},
   {"slug": "parallel-tool-calls-claude-agent-loop", "date": "2026-12-15", "tags": ["ai", "typescript", "llm", "performance"]},
   {"slug": "prompt-injection-defenses-agent-tools", "date": "2026-12-18", "tags": ["ai", "security", "llm", "typescript"]},
+  {"slug": "pdf-uploads-claude-agent-files-api", "date": "2026-12-20", "tags": ["ai", "nextjs", "typescript", "llm"]},
   {"slug": "large-tool-results-agent-token-costs", "date": "2026-12-22", "tags": ["ai", "llm", "typescript", "performance"]},
-  {"slug": "agent-memory-across-conversations-claude", "date": "2026-12-25", "tags": ["ai", "postgres", "typescript", "llm"]}
+  {"slug": "agent-memory-across-conversations-claude", "date": "2026-12-25", "tags": ["ai", "postgres", "typescript", "llm"]},
+  {"slug": "claude-effort-levels-per-route-cost", "date": "2026-12-27", "tags": ["ai", "llm", "typescript", "performance"]}
 ]
